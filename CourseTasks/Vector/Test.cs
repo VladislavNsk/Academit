@@ -2,7 +2,7 @@
 
 namespace Vector
 {
-    class Program
+    class Test
     {
         static void Main(string[] args)
         {
