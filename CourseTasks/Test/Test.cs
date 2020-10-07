@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace Vector
+namespace Test
 {
     class Test
     {
-        static void Main(string[] args)
+        static void Main()
         {
             Console.WriteLine("Test");
         }
