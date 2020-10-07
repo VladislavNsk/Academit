@@ -2,7 +2,7 @@
 
 namespace RangeProgram
 {
-    class Program
+    class RangeProgram
     {
         static void Main()
         {
