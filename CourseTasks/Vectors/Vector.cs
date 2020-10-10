@@ -2,7 +2,7 @@
 
 namespace Vectors
 {
-    class Vector
+    public class Vector
     {
         public double[] Value { get; set; }
 
@@ -11,7 +11,6 @@ namespace Vectors
             if (size <= 0)
             {
                 throw new ArgumentException("Введен не корректный размер вектора " + nameof(size));
-
             }
 
             Value = new double[size];
