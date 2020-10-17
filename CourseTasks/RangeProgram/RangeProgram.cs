@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace RangeProgram
 {
     class RangeProgram
@@ -6,7 +7,7 @@ namespace RangeProgram
         public static void Main()
         {
             Range range1 = new Range(1, 11);
-            Range range2 = new Range(12, 111);
+            Range range2 = new Range(4, 6);
 
             Console.WriteLine("Введите число");
             double number = double.Parse(Console.ReadLine());
@@ -20,7 +21,7 @@ namespace RangeProgram
                 Console.WriteLine("Число вне диапазона");
             }
 
-            Range crossingRange = range1.GetCrossingRange(range2);
+            Range crossingRange = range1.GetIntersection(range2);
 
             if (crossingRange != null)
             {
@@ -33,7 +34,7 @@ namespace RangeProgram
 
             Console.WriteLine("Диапазон объединения");
 
-            Range[] unitedRanges = range1.GetUnionRanges(range2);
+            Range[] unitedRanges = range1.GetUnion(range2);
             Console.WriteLine($"От {unitedRanges[0].From} до {unitedRanges[0].To}");
 
             if (unitedRanges.Length == 2)
@@ -42,7 +43,7 @@ namespace RangeProgram
             }
 
             Console.WriteLine("Разность диапазонов");
-            Range[] rangesDifference = range1.GetDifferenceRanges(range2);
+            Range[] rangesDifference = range1.GetDifference(range2);
 
             if (rangesDifference.Length > 0)
             {

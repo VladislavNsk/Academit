@@ -1,4 +1,6 @@
-﻿namespace RangeProgram
+﻿using System;
+
+namespace RangeProgram
 {
     class Range
     {
@@ -12,7 +14,7 @@
             To = to;
         }
 
-        public double GetRangeLenght()
+        public double GetLength()
         {
             return To - From;
         }
@@ -22,37 +24,41 @@
             return number >= From && number <= To;
         }
 
-        public Range GetCrossingRange(Range range)
+        public Range GetIntersection(Range range)
         {
             if (From >= range.To || To <= range.From)
             {
                 return null;
             }
 
-            double from = From > range.From ? From : range.From;
-            double to = To < range.To ? To : range.To;
+            double from = Math.Max(From, range.From);
+            double to = Math.Min(To, range.To);
 
             return new Range(from, to);
         }
 
-        public Range[] GetUnionRanges(Range range)
+        public Range[] GetUnion(Range range)
         {
             if (From > range.To || To < range.From)
             {
-                return new Range[] { this, range };
+                return new Range[]
+                {
+                    new Range(From, To),
+                    new Range(range.From, range.To)
+                };
             }
 
-            double from = From < range.From ? From : range.From;
-            double to = To > range.To ? To : range.To;
+            double from = Math.Min(From, range.From);
+            double to = Math.Max(To, range.To);
 
             return new Range[] { new Range(from, to) };
         }
 
-        public Range[] GetDifferenceRanges(Range range)
+        public Range[] GetDifference(Range range)
         {
             if (From >= range.To || To <= range.From)
             {
-                return new Range[] { this, range };
+                return new Range[] { new Range(From, To) };
             }
 
             if (From >= range.From && To <= range.To)
@@ -60,10 +66,21 @@
                 return new Range[0];
             }
 
-            double from = From >= range.From ? range.To : From;
-            double to = To <= range.To ? range.From : To;
+            if (From < range.From)
+            {
+                if (To > range.To)
+                {
+                    return new Range[]
+                    {
+                        new Range(From, range.From - 1),
+                        new Range(range.To + 1, To)
+                    };
+                }
 
-            return new Range[] { new Range(from, to) };
+                return new Range[] { new Range(From, range.From - 1) };
+            }
+
+            return new Range[] { new Range(range.To + 1, To) };
         }
     }
 }
