@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EFF19FB8-BF71-41B0-8E9A-3FE2F6109C88}</ProjectGuid>
+    <ProjectGuid>{80F036E0-833B-46E8-9914-805B794A131E}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Shapes</RootNamespace>
-    <AssemblyName>Shapes</AssemblyName>
+    <RootNamespace>ShapesMain</RootNamespace>
+    <AssemblyName>ShapesMain</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -43,19 +43,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AreaComparer.cs" />
-    <Compile Include="Circle.cs" />
+    <Compile Include="Comparers\AreaComparer.cs" />
+    <Compile Include="Comparers\PerimeterComparer.cs" />
     <Compile Include="IShape.cs" />
-    <Compile Include="PerimeterComparer.cs" />
-    <Compile Include="Shapes.cs" />
+    <Compile Include="ShapesMain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rectangle.cs" />
-    <Compile Include="Shape.cs" />
-    <Compile Include="Square.cs" />
-    <Compile Include="Triangle.cs" />
+    <Compile Include="Shapes\Circle.cs" />
+    <Compile Include="Shapes\Rectangle.cs" />
+    <Compile Include="Shapes\Square.cs" />
+    <Compile Include="Shapes\Triangle.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
