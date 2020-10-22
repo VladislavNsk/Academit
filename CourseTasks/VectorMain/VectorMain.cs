@@ -2,7 +2,7 @@
 
 namespace VectorMain
 {
-    class VectorMain
+    public class VectorMain
     {
         public static void Main()
         {

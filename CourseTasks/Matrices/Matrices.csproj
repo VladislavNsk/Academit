@@ -50,5 +50,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VectorMain\VectorMain.csproj">
+      <Project>{e9dbb7b5-b12a-45b2-8778-44b218ee72ea}</Project>
+      <Name>VectorMain</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

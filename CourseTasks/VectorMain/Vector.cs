@@ -2,7 +2,7 @@
 
 namespace VectorMain
 {
-    class Vector
+   public class Vector
     {
         private double[] vectorComponents;
 

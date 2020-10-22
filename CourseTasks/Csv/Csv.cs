@@ -9,7 +9,18 @@ namespace Csv
         {
             if (args.Length != 2)
             {
-                throw new Exception("Не корректные аргументы, введите путь файла html и csv");
+                Console.WriteLine("Не верное количество аргументов");
+                return;
+            }
+
+            if (!args[0].Contains(".csv"))
+            {
+                throw new IOException("Не верный файл для чтения, расширение должно быть \"csv\""); 
+            }
+
+            if (!args[1].Contains(".html"))
+            {
+                throw new IOException("Не верный файл для записи, расширение должно быть \"html\"");
             }
 
             using (StreamReader reader = new StreamReader(args[0]))
@@ -40,21 +51,11 @@ namespace Csv
 
                         if (quotesInCellCount % 2 == 0)
                         {
-                            writer.Write
-                            (
-                                "<tr>" +
-                                "<td>"
-                            );
+                            writer.Write ("<tr><td>");
                         }
 
                         foreach (char symbol in currentLine)
                         {
-                            if (char.IsLetterOrDigit(symbol) || char.IsWhiteSpace(symbol))
-                            {
-                                writer.Write(symbol);
-                                continue;
-                            }
-
                             if (symbol == '\"')
                             {
                                 quotesInCellCount++;
@@ -74,11 +75,7 @@ namespace Csv
                             {
                                 if (quotesInCellCount % 2 == 0)
                                 {
-                                    writer.Write
-                                    (
-                                        "</td>" +
-                                        "<td>"
-                                    );
+                                    writer.Write("</td><td>");
 
                                     quotesInCellCount = 0;
                                 }
@@ -94,25 +91,23 @@ namespace Csv
                             {
                                 writer.Write("&amp;");
                             }
-
-                            if (symbol == '<')
+                            else if(symbol == '<')
                             {
                                 writer.Write("&lt;");
                             }
-
-                            if (symbol == '>')
+                            else if (symbol == '>')
                             {
                                 writer.Write("&gt;");
+                            }
+                            else
+                            {
+                                writer.Write(symbol);
                             }
                         }
 
                         if (currentLine[currentLine.Length - 1] == ',' || quotesInCellCount % 2 == 0)
                         {
-                            writer.Write
-                            (
-                                "</td>" +
-                                "</tr>"
-                            );
+                            writer.Write("</td></tr>");
 
                             quotesInCellCount = 0;
                             continue;
@@ -121,12 +116,7 @@ namespace Csv
                         writer.Write("<br/>");
                     }
 
-                    writer.Write
-                    (
-                        "</table>" +
-                        "</body>" +
-                        "</html>"
-                    );
+                    writer.Write( "</table></body></html>");
                 }
             }
         }
