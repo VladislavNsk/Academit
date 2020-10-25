@@ -11,7 +11,7 @@ namespace ArrayListHome
             string path = "..\\..\\Text.txt";
             List<string> list = new List<string>();
 
-            ПрочитатьСтрокиВСписок(path, list);
+            ReadAll(path, list);
             Console.WriteLine(list[0]);
 
             List<int> numbersList = new List<int>()
@@ -34,7 +34,7 @@ namespace ArrayListHome
             Console.WriteLine(string.Join(" ", uniqueNumbersList));
         }
 
-        public static void ПрочитатьСтрокиВСписок(string path, List<string> list)
+        public static void ReadAll(string path, List<string> list)
         {
             using (StreamReader reader = new StreamReader(path))
             {

@@ -72,15 +72,15 @@ namespace RangeProgram
                 {
                     return new Range[]
                     {
-                        new Range(From, range.From - 1),
-                        new Range(range.To + 1, To)
+                        new Range(From, range.From),
+                        new Range(range.To, To)
                     };
                 }
 
-                return new Range[] { new Range(From, range.From - 1) };
+                return new Range[] { new Range(From, range.From) };
             }
 
-            return new Range[] { new Range(range.To + 1, To) };
+            return new Range[] { new Range(range.To, To) };
         }
     }
 }
