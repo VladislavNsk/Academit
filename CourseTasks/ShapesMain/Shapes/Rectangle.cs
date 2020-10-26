@@ -2,24 +2,24 @@
 {
     class Rectangle : IShape
     {
-        public double Height { get; set; }
-
         public double Width { get; set; }
 
-        public Rectangle(double height, double width)
+        public double Height { get; set; }
+
+        public Rectangle(double width, double height)
         {
-            Height = height;
             Width = width;
+            Height = height;
         }
 
         public double GetWidth()
         {
-            return Height;
+            return Width;
         }
 
         public double GetHeight()
         {
-            return Width;
+            return Height;
         }
 
         public double GetArea()
@@ -44,12 +44,12 @@
                 return true;
             }
 
-            if (obj.GetType() != this.GetType() || ReferenceEquals(obj, null))
+            if (ReferenceEquals(obj, null) || obj.GetType() != GetType())
             {
                 return false;
             }
 
-            Rectangle rectangle = obj as Rectangle;
+            Rectangle rectangle = (Rectangle)obj;
 
             return rectangle.Width == Width && rectangle.Height == Height;
         }

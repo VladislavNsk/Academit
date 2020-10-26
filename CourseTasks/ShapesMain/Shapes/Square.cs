@@ -31,7 +31,7 @@
 
         public override string ToString()
         {
-            return "Square " + SideLength.ToString();
+            return "Square " + SideLength;
         }
 
         public override bool Equals(object obj)
@@ -41,12 +41,12 @@
                 return true;
             }
 
-            if (obj.GetType() != this.GetType() || ReferenceEquals(obj, null))
+            if (ReferenceEquals(obj, null) || obj.GetType() != GetType())
             {
                 return false;
             }
 
-            Square square = obj as Square;
+            Square square = (Square)obj;
 
             return square.SideLength == SideLength;
         }

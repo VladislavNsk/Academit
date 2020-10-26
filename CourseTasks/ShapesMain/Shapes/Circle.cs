@@ -33,7 +33,7 @@ namespace ShapesMain.Shapes
 
         public override string ToString()
         {
-            return "Circle " + Radius.ToString();
+            return "Circle " + Radius;
         }
 
         public override bool Equals(object obj)
@@ -43,12 +43,12 @@ namespace ShapesMain.Shapes
                 return true;
             }
 
-            if (obj.GetType() != this.GetType() || ReferenceEquals(obj, null))
+            if (ReferenceEquals(obj, null) || obj.GetType() != GetType())
             {
                 return false;
             }
 
-            Circle circle = obj as Circle;
+            Circle circle = (Circle)obj;
 
             return circle.Radius == Radius;
         }

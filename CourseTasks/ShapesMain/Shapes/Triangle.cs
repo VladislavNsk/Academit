@@ -26,7 +26,7 @@ namespace ShapesMain.Shapes
             Y3 = y3;
         }
 
-        private double GetSideLength(double x2, double x1, double y2, double y1)
+        private static double GetSideLength(double x1, double y1, double x2, double y2)
         {
             return Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((y2 - y1), 2));
         }
@@ -48,11 +48,7 @@ namespace ShapesMain.Shapes
 
         public double GetPerimeter()
         {
-            double sideA = Math.Sqrt(Math.Pow((X2 - X1), 2) + Math.Pow((Y2 - Y1), 2));
-            double sideB = Math.Sqrt(Math.Pow((X3 - X1), 2) + Math.Pow((Y3 - Y1), 2));
-            double sideC = Math.Sqrt(Math.Pow((X3 - X2), 2) + Math.Pow((Y3 - Y2), 2));
-
-            return sideA + sideB + sideC;
+            return GetSideLength(X1, Y1, X2, Y2) + GetSideLength(X1, Y1, X3, Y3) + GetSideLength(X2, Y2, X3, Y3);
         }
 
         public override string ToString()
@@ -67,12 +63,12 @@ namespace ShapesMain.Shapes
                 return true;
             }
 
-            if (shape.GetType() != this.GetType() || ReferenceEquals(shape, null))
+            if (ReferenceEquals(shape, null) || shape.GetType() != GetType())
             {
                 return false;
             }
 
-            Triangle triangle = shape as Triangle;
+            Triangle triangle = (Triangle)shape;
 
             return triangle.X1 == X1 && triangle.Y1 == Y1 &&
                    triangle.X2 == X2 && triangle.Y2 == Y2 &&
