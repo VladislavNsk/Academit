@@ -14,6 +14,9 @@ namespace VectorMain
             Vector vector3 = new Vector(vector1);
             Vector vector4 = new Vector(10, array2);
 
+            vector4.Subtract(vector1);
+            Console.WriteLine(vector4);
+
             vector2.Add(vector4);
             Console.WriteLine(vector2.ToString());
 
@@ -49,7 +52,7 @@ namespace VectorMain
             Vector vector5 = Vector.GetSum(vector1, vector4);
             Console.WriteLine("Сумма двух векторов = " + vector5.ToString());
 
-            double scalarMultiplication = Vector.GetScalarMultiplication(vector5, vector1);
+            double scalarMultiplication = Vector.GetScalarProduct(vector5, vector1);
             Console.WriteLine(scalarMultiplication.ToString());
 
             vector5.Reverse();
