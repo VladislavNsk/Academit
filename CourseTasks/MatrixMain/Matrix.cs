@@ -226,11 +226,10 @@ namespace Matrices
         {
             if (vector.GetSize() != matrix[0].GetSize())
             {
-                throw new Exception("Количество строк в векторе-столбце не совпадает с количеством стоблцов в матрице");// error
+                throw new ArgumentException("Количество строк в векторе-столбце не совпадает с количеством стоблцов в матрице", nameof(vector));
             }
 
             Vector newVector = new Vector(vector.GetSize());
-
 
             for (int i = 0; i < matrix.Length; i++)
             {
@@ -252,7 +251,7 @@ namespace Matrices
         {
             if (this.matrix.Length != matrix.matrix.Length || this.matrix[0].GetSize() != matrix.matrix[0].GetSize())
             {
-                throw new Exception("Матрицы разного размера");
+                throw new ArgumentException("Матрицы разного размера", nameof(matrix));
             }
 
             for (int i = 0; i < this.matrix.Length; i++)
@@ -268,7 +267,7 @@ namespace Matrices
         {
             if (this.matrix.Length != matrix.matrix.Length || this.matrix[0].GetSize() != matrix.matrix[0].GetSize())
             {
-                throw new Exception("Матрицы разного размера");
+                throw new ArgumentException("Матрицы разного размера", nameof(matrix));
             }
 
             for (int i = 0; i < this.matrix.Length; i++)
@@ -284,7 +283,7 @@ namespace Matrices
         {
             if (matrix1.GetColumnsCount() != matrix2.GetColumnsCount() || matrix1.GetRowsCount() != matrix2.GetRowsCount())
             {
-                throw new Exception("Матрицы разного размера");
+                throw new ArgumentException("Матрицы разного размера", $"{nameof(matrix1)} и {nameof(matrix2)}");
             }
 
             Matrix newMatrix = new Matrix(matrix1);
@@ -297,7 +296,7 @@ namespace Matrices
         {
             if (matrix1.GetColumnsCount() != matrix2.GetColumnsCount() || matrix1.GetRowsCount() != matrix2.GetRowsCount())
             {
-                throw new Exception("Матрицы разного размера");
+                throw new ArgumentException("Матрицы разного размера", $"{nameof(matrix1)} и {nameof(matrix2)}");
             }
 
             Matrix newMatrix = new Matrix(matrix1);
@@ -310,7 +309,7 @@ namespace Matrices
         {
             if (matrix1.GetColumnsCount() != matrix2.GetRowsCount())
             {
-                throw new Exception("Количество столбцов первой матрицы, не совпадает с количеством строк второй матрицы");
+                throw new ArgumentException("Количество столбцов первой матрицы, не совпадает с количеством строк второй матрицы", $"{nameof(matrix1)} и {nameof(matrix2)}");
             }
 
             Matrix newMatrix = new Matrix(matrix1.GetRowsCount(), matrix2.GetColumnsCount());
