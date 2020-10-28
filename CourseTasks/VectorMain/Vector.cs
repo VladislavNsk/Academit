@@ -64,7 +64,7 @@ namespace VectorMain
 
         public override string ToString()
         {
-            return "{ " + string.Join("; ", components) + " }";
+            return "{ " + string.Join(", ", components) + " }";
         }
 
         public void Add(Vector vector)
