@@ -9,18 +9,8 @@ namespace Csv
         {
             if (args.Length != 2)
             {
-                Console.WriteLine("Не верное количество аргументов");
+                Console.WriteLine("Должно быть два аргумента, путь до файла для чтения и путь до файла для записи");
                 return;
-            }
-
-            if (!args[0].Contains(".csv"))
-            {
-                throw new IOException("Не верный файл для чтения, расширение должно быть \"csv\""); 
-            }
-
-            if (!args[1].Contains(".html"))
-            {
-                throw new IOException("Не верный файл для записи, расширение должно быть \"html\"");
             }
 
             using (StreamReader reader = new StreamReader(args[0]))

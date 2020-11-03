@@ -28,7 +28,7 @@ namespace ShapesMain.Shapes
 
         private static double GetSideLength(double x1, double y1, double x2, double y2)
         {
-            return Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((y2 - y1), 2));
+            return Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
         }
 
         public double GetWidth()
@@ -43,7 +43,13 @@ namespace ShapesMain.Shapes
 
         public double GetArea()
         {
-            return GetWidth() * GetHeight() / 2;
+            double semiPerimeter = GetPerimeter() / 2;
+
+            return Math.Sqrt(semiPerimeter * 
+                            (semiPerimeter - GetSideLength(X1, Y1, X2, Y2)) * 
+                            (semiPerimeter - GetSideLength(X1, Y1, X3, Y3)) * 
+                            (semiPerimeter - GetSideLength(X2, Y2, X3, Y3))
+                            );
         }
 
         public double GetPerimeter()
