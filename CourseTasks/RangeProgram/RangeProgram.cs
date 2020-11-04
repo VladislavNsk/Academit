@@ -21,11 +21,11 @@ namespace RangeProgram
                 Console.WriteLine("Число вне диапазона");
             }
 
-            Range crossingRange = range1.GetIntersection(range2);
+            Range intersection = range1.GetIntersection(range2);
 
-            if (crossingRange != null)
+            if (intersection != null)
             {
-                Console.WriteLine($"Диапазон пересечения от {crossingRange.From} до {crossingRange.To}");
+                Console.WriteLine($"Диапазон пересечения от {intersection.From} до {intersection.To}");
             }
             else
             {
@@ -34,29 +34,29 @@ namespace RangeProgram
 
             Console.WriteLine("Диапазон объединения");
 
-            Range[] unitedRanges = range1.GetUnion(range2);
-            Console.WriteLine($"От {unitedRanges[0].From} до {unitedRanges[0].To}");
+            Range[] union = range1.GetUnion(range2);
+            Console.WriteLine($"От {union[0].From} до {union[0].To}");
 
-            if (unitedRanges.Length == 2)
+            if (union.Length == 2)
             {
-                Console.WriteLine($"От {unitedRanges[1].From} до {unitedRanges[1].To}");
+                Console.WriteLine($"От {union[1].From} до {union[1].To}");
             }
 
             Console.WriteLine("Разность диапазонов");
-            Range[] rangesDifference = range1.GetDifference(range2);
+            Range[] difference = range1.GetDifference(range2);
 
-            if (rangesDifference.Length > 0)
+            if (difference.Length > 0)
             {
-                Console.WriteLine($"От {rangesDifference[0].From} до {rangesDifference[0].To}");
+                Console.WriteLine($"От {difference[0].From} до {difference[0].To}");
 
-                if (rangesDifference.Length == 2)
+                if (difference.Length == 2)
                 {
-                    Console.WriteLine($"От {rangesDifference[1].From} до {rangesDifference[1].To}");
+                    Console.WriteLine($"От {difference[1].From} до {difference[1].To}");
                 }
             }
             else
             {
-                Console.WriteLine("От 0 до 0");
+                Console.WriteLine("Результат разности пустой");
             }
         }
     }
