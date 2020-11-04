@@ -40,17 +40,20 @@ namespace VectorMain
                 throw new ArgumentOutOfRangeException(nameof(array), $"Введен не корректный размер вектора size: \"{size}\", должен быть больше 0");
             }
 
-            components = new double[size];
+            if (array.Length > size)
+            {
+                components = new double[array.Length];
+            }
+            else
+            {
+                components = new double[size];
+            }
+
             array.CopyTo(components, 0);
         }
 
-        private void EqualizeNumberComponents(Vector vector)
+        private void EqualizeComponentsCount(Vector vector)
         {
-            if (components.Length == vector.components.Length)
-            {
-                return;
-            }
-
             if (components.Length < vector.components.Length)
             {
                 Array.Resize(ref components, vector.components.Length);
@@ -69,7 +72,7 @@ namespace VectorMain
 
         public void Add(Vector vector)
         {
-            EqualizeNumberComponents(vector);
+            EqualizeComponentsCount(vector);
 
             for (int i = 0; i < vector.components.Length; i++)
             {
@@ -79,7 +82,7 @@ namespace VectorMain
 
         public void Subtract(Vector vector)
         {
-            EqualizeNumberComponents(vector);
+            EqualizeComponentsCount(vector);
 
             for (int i = 0; i < vector.components.Length; i++)
             {
@@ -124,33 +127,28 @@ namespace VectorMain
 
         public static Vector GetSum(Vector vector1, Vector vector2)
         {
-            Vector tempVector1 = new Vector(vector1);
-            Vector tempVector2 = new Vector(vector2);
-            tempVector1.Add(tempVector2);
+            Vector resultVector = new Vector(vector1);
+            resultVector.Add(vector2);
 
-            return tempVector1;
+            return resultVector;
         }
 
         public static Vector GetDifference(Vector vector1, Vector vector2)
         {
-            Vector tempVector1 = new Vector(vector1);
-            Vector tempVector2 = new Vector(vector2);
-            tempVector1.Subtract(tempVector2);
+            Vector resultVector = new Vector(vector1);
+            resultVector.Subtract(vector2);
 
-            return tempVector1;
+            return resultVector;
         }
 
         public static double GetScalarProduct(Vector vector1, Vector vector2)
         {
-            Vector tempVector1 = new Vector(vector1);
-            Vector tempVector2 = new Vector(vector2);
-
-            tempVector1.EqualizeNumberComponents(tempVector2);
+            vector1.EqualizeComponentsCount(vector2);
             double scalarProduct = 0;
 
-            for (int i = 0; i < tempVector2.components.Length; i++)
+            for (int i = 0; i < vector2.components.Length; i++)
             {
-                scalarProduct += tempVector1.components[i] * tempVector2.components[i];
+                scalarProduct += vector1.components[i] * vector2.components[i];
             }
 
             return scalarProduct;
