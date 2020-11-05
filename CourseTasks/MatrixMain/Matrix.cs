@@ -3,36 +3,40 @@ using System.Collections.Generic;
 using System.Text;
 using VectorMain;
 
-namespace Matrices
+namespace MatrixMain
 {
     class Matrix
     {
-        private Vector[] matrix;
+        private Vector[] rows;
 
         public Matrix(int rowsCount, int columnsCount)
         {
             if (rowsCount <= 0)
             {
-                throw new ArgumentException("Введено не корректное кол-во строк \"rowsCount\", строк должно быть больше 0", nameof(rowsCount));
+                throw new ArgumentException($"Введено не корректное кол-во строк rowsCount = {rowsCount}, строк должно быть больше 0", nameof(rowsCount));
             }
 
             if (columnsCount <= 0)
             {
-                throw new ArgumentException("Введено не корректное кол-во столбцов \"columnsCount\", столбцов должно быть больше 0", nameof(columnsCount));
+                throw new ArgumentException($"Введено не корректное кол-во столбцов columnsCount = {columnsCount}, столбцов должно быть больше 0", nameof(columnsCount));
             }
 
-            matrix = new Vector[rowsCount];
+            rows = new Vector[rowsCount];
 
-            for (int i = 0; i < matrix.Length; i++)
+            for (int i = 0; i < rows.Length; i++)
             {
-                matrix[i] = new Vector(columnsCount);
+                rows[i] = new Vector(columnsCount);
             }
         }
 
         public Matrix(Matrix matrix)
         {
-            this.matrix = new Vector[matrix.GetRowsCount()];
-            matrix.matrix.CopyTo(this.matrix, 0);
+            rows = new Vector[matrix.GetRowsCount()];
+
+            for (int i = 0; i < rows.Length; i++)
+            {
+                rows[i] = new Vector(matrix.GetRow(i));
+            }
         }
 
         public Matrix(double[,] array)
@@ -42,128 +46,123 @@ namespace Matrices
                 throw new ArgumentException($"Пытаетесь присвоить пустой массив array.Length: \"{array.Length}\"", nameof(array));
             }
 
-            matrix = new Vector[array.GetLength(0)];
+            rows = new Vector[array.GetLength(0)];
 
             for (int i = 0; i < array.GetLength(0); i++)
             {
-                matrix[i] = new Vector(array.GetLength(1));
+                rows[i] = new Vector(array.GetLength(1));
 
                 for (int j = 0; j < array.GetLength(1); j++)
                 {
-                    matrix[i].SetComponent(j, array[i, j]);
+                    rows[i].SetComponent(j, array[i, j]);
                 }
             }
         }
 
-        public Matrix(Vector[] vectorsArray)
+        public Matrix(Vector[] rows)
         {
-            if (vectorsArray.Length == 0)
+            if (rows.Length == 0)
             {
-                throw new ArgumentException($"Пытаетесь присвоить пустой массив array.Length: \"{vectorsArray.Length}\"", nameof(vectorsArray));
+                throw new ArgumentException($"Пытаетесь присвоить пустой массив array.Length: \"{rows.Length}\"", nameof(rows));
             }
 
-            int maxSize = GetMaxSizeVector(vectorsArray);
+            this.rows = new Vector[rows.Length];
+            int maxSize = GetMaxRowSize(rows);
 
-            for (int i = 0; i < vectorsArray.Length; i++)
+            for (int i = 0; i < rows.Length; i++)
             {
-                if (vectorsArray[i].GetSize() < maxSize)
+                if (rows[i].GetSize() < maxSize)
                 {
-                    Vector tempVector = vectorsArray[i];
-                    vectorsArray[i] = new Vector(maxSize);
-                    vectorsArray[i].Add(tempVector);
+                    this.rows[i] = new Vector(maxSize);
+                    this.rows[i].Add(rows[i]);
+                }
+                else
+                {
+                    this.rows[i] = new Vector(rows[i]);
                 }
             }
-
-            matrix = new Vector[vectorsArray.Length];
-            vectorsArray.CopyTo(matrix, 0);
         }
 
         public int GetRowsCount()
         {
-            return matrix.Length;
+            return rows.Length;
         }
 
         public int GetColumnsCount()
         {
-            return matrix[0].GetSize();
+            return rows[0].GetSize();
         }
 
         public Vector GetColumn(int columnIndex)
         {
-            if (columnIndex <= 0 || matrix[0].GetSize() < columnIndex)
+            if (columnIndex < 0 || rows[0].GetSize() <= columnIndex)
             {
-                throw new ArgumentException("Искомового столбца нет", nameof(columnIndex));
+                throw new ArgumentOutOfRangeException(nameof(columnIndex), $"Столбца {columnIndex} нет");
             }
 
-            double[] tempArray = new double[matrix.Length];
+            double[] array = new double[rows.Length];
 
-            for (int i = 0; i < matrix.Length; i++)
+            for (int i = 0; i < rows.Length; i++)
             {
-                tempArray[i] = matrix[i].GetComponent(columnIndex);
+                array[i] = rows[i].GetComponent(columnIndex);
             }
 
-            return new Vector(tempArray);
+            return new Vector(array);
         }
 
         public Vector GetRow(int rowIndex)
         {
-            if (rowIndex <= 0 || matrix.Length < rowIndex)
+            if (rowIndex < 0 || rows.Length <= rowIndex)
             {
-                throw new ArgumentException("Искомой строки нет", nameof(rowIndex));
+                throw new ArgumentOutOfRangeException(nameof(rowIndex), $"Строки {rowIndex} нет, всего строк в матрице {rows.Length}");
             }
 
-            return matrix[rowIndex];
+            return new Vector(rows[rowIndex]);
         }
 
         public void SetRow(int rowIndex, Vector vector)
         {
-            if (rowIndex <= 0 || matrix.Length < rowIndex)
+            if (rowIndex < 0 || rows.Length <= rowIndex)
             {
-                throw new ArgumentException("Искомой строки нет", nameof(rowIndex));
+                throw new ArgumentOutOfRangeException(nameof(rowIndex), $"Строки {rowIndex} нет, всего строк в матрице {rows.Length}");
             }
 
-            if (matrix[0].GetSize() != vector.GetSize())
+            if (rows[0].GetSize() != vector.GetSize())
             {
                 throw new ArgumentException("Размеры строк должны совпадать", nameof(vector));
             }
 
-            Vector tempVector = new Vector(vector);
-            matrix[rowIndex] = tempVector;
+            rows[rowIndex] = new Vector(vector);
         }
 
         public void Transpose()
         {
-            Vector[] tempMatrix = new Vector[matrix[0].GetSize()];
+            Vector[] rows = new Vector[this.rows[0].GetSize()];
 
-            for (int i = 0; i < matrix[0].GetSize(); i++)
+            for (int i = 0; i < this.rows[0].GetSize(); i++)
             {
-                tempMatrix[i] = new Vector(matrix.Length);
-
-                for (int j = 0; j < matrix.Length; j++)
-                {
-                    tempMatrix[i].SetComponent(j, matrix[j].GetComponent(i));
-                }
+                rows[i] = GetColumn(i);
             }
 
-            matrix = tempMatrix;
+            this.rows = rows;
         }
 
         public void Multiply(double number)
         {
-            for (int i = 0; i < matrix.Length; i++)
+            for (int i = 0; i < rows.Length; i++)
             {
-                matrix[i].Multiply(number);
+                rows[i].Multiply(number);
             }
         }
 
         public double GetDeterminant()
         {
-            if (matrix[0].GetSize() != matrix.Length)
+            if (rows[0].GetSize() != rows.Length)
             {
-                throw new Exception("Матрица не квадратная, найти определитель не возможно");
+                throw new InvalidOperationException("Матрица не квадратная, найти определитель не возможно");
             }
 
-            return GetDeterminant(matrix);
+            return GetDeterminant(rows);
         }
 
         private double GetDeterminant(Vector[] matrix)
@@ -197,12 +196,10 @@ namespace Matrices
             {
                 for (int j = 0; j < matrix.Length; j++)
                 {
-                    if (j == columnIndex)
+                    if (j != columnIndex)
                     {
-                        continue;
+                        row.Add(matrix[i].GetComponent(j));
                     }
-
-                    row.Add(matrix[i].GetComponent(j));
                 }
 
                 SetAlgebraicComplement(algebraicComplement, row, i - 1);
@@ -224,116 +221,112 @@ namespace Matrices
 
         public Vector MultiplyByVector(Vector vector)
         {
-            if (vector.GetSize() != matrix[0].GetSize())
+            if (vector.GetSize() != GetColumnsCount())
             {
-                throw new ArgumentException("Количество строк в векторе-столбце не совпадает с количеством стоблцов в матрице", nameof(vector));
+                throw new ArgumentException("Количество строк в векторе-столбце не совпадает с количеством столбцов в матрице", nameof(vector));
             }
 
-            Vector newVector = new Vector(vector.GetSize());
+            Vector result = new Vector(GetRowsCount());
 
-            for (int i = 0; i < matrix.Length; i++)
+            for (int i = 0; i < rows.Length; i++)
             {
-                double temp = 0;
-
-                for (int j = 0; j < matrix[0].GetSize(); j++)
-                {
-                    temp += matrix[i].GetComponent(j) * vector.GetComponent(j);
-
-                }
-
-                newVector.SetComponent(i, temp);
+                double component = Vector.GetScalarProduct(rows[i], vector);
+                result.SetComponent(i, component);
             }
 
-            return newVector;
+            return result;
         }
 
         public void Add(Matrix matrix)
         {
-            if (this.matrix.Length != matrix.matrix.Length || this.matrix[0].GetSize() != matrix.matrix[0].GetSize())
+            if (IsMatricesEqual(this, matrix))
             {
-                throw new ArgumentException("Матрицы разного размера", nameof(matrix));
+                throw new ArgumentException($"Матрицы разного размера: matrix1.rows = {GetRowsCount()} matrix1.columns = {GetColumnsCount()}, " +
+                                            $"matrix2.rows = {matrix.GetRowsCount()} matrix2.columns = {matrix.GetColumnsCount()}", nameof(matrix));
             }
 
-            for (int i = 0; i < this.matrix.Length; i++)
+            for (int i = 0; i < GetRowsCount(); i++)
             {
-                for (int j = 0; j < this.matrix[0].GetSize(); j++)
-                {
-                    this.matrix[i].SetComponent(j, this.matrix[i].GetComponent(j) + matrix.matrix[i].GetComponent(j));
-                }
+                rows[i].Add(matrix.rows[i]);
             }
         }
 
         public void Subtract(Matrix matrix)
         {
-            if (this.matrix.Length != matrix.matrix.Length || this.matrix[0].GetSize() != matrix.matrix[0].GetSize())
+            if (IsMatricesEqual(this, matrix))
             {
-                throw new ArgumentException("Матрицы разного размера", nameof(matrix));
+                throw new ArgumentException($"Матрицы разного размера: matrix1.rows = {GetRowsCount()} matrix1.columns = {GetColumnsCount()}, " +
+                                            $"matrix2.rows = {matrix.GetRowsCount()} matrix2.columns = {matrix.GetColumnsCount()}", nameof(matrix));
             }
 
-            for (int i = 0; i < this.matrix.Length; i++)
+            for (int i = 0; i < GetRowsCount(); i++)
             {
-                for (int j = 0; j < this.matrix[0].GetSize(); j++)
-                {
-                    this.matrix[i].SetComponent(j, this.matrix[i].GetComponent(j) - matrix.matrix[i].GetComponent(j));
-                }
+                rows[i].Subtract(matrix.rows[i]);
             }
         }
 
-        public static Matrix GetAmount(Matrix matrix1, Matrix matrix2)
+        public static Matrix GetSum(Matrix matrix1, Matrix matrix2)
         {
-            if (matrix1.GetColumnsCount() != matrix2.GetColumnsCount() || matrix1.GetRowsCount() != matrix2.GetRowsCount())
+            if (IsMatricesEqual(matrix1, matrix2))
             {
                 throw new ArgumentException("Матрицы разного размера", $"{nameof(matrix1)} и {nameof(matrix2)}");
             }
 
-            Matrix newMatrix = new Matrix(matrix1);
-            newMatrix.Add(matrix2);
+            Matrix resultMatrix = new Matrix(matrix1);
+            resultMatrix.Add(matrix2);
 
-            return newMatrix;
+            return resultMatrix;
         }
 
         public static Matrix GetDifference(Matrix matrix1, Matrix matrix2)
         {
-            if (matrix1.GetColumnsCount() != matrix2.GetColumnsCount() || matrix1.GetRowsCount() != matrix2.GetRowsCount())
+            if (IsMatricesEqual(matrix1, matrix2))
             {
                 throw new ArgumentException("Матрицы разного размера", $"{nameof(matrix1)} и {nameof(matrix2)}");
             }
 
-            Matrix newMatrix = new Matrix(matrix1);
-            newMatrix.Subtract(matrix2);
+            Matrix resultMatrix = new Matrix(matrix1);
+            resultMatrix.Subtract(matrix2);
 
-            return newMatrix;
+            return resultMatrix;
+        }
+
+        private static bool IsMatricesEqual(Matrix matrix1, Matrix matrix2)
+        {
+            return matrix1.GetColumnsCount() != matrix2.GetColumnsCount() || matrix1.GetRowsCount() != matrix2.GetRowsCount();
         }
 
         public static Matrix GetProduct(Matrix matrix1, Matrix matrix2)
         {
             if (matrix1.GetColumnsCount() != matrix2.GetRowsCount())
             {
-                throw new ArgumentException("Количество столбцов первой матрицы, не совпадает с количеством строк второй матрицы", $"{nameof(matrix1)} и {nameof(matrix2)}");
+                throw new ArgumentException($"Количество столбцов первой матрицы matrix1.columns = {matrix1.GetColumnsCount()}," + 
+                                            $"не совпадает с количеством строк второй матрицы matrix2.rows = {matrix2.GetRowsCount()}",
+                                            $"{nameof(matrix1)} и {nameof(matrix2)}");
             }
 
-            Matrix newMatrix = new Matrix(matrix1.GetRowsCount(), matrix2.GetColumnsCount());
+            Matrix resultMatrix = new Matrix(matrix1.GetRowsCount(), matrix2.GetColumnsCount());
 
             for (int i = 0; i < matrix1.GetRowsCount(); i++)
             {
                 for (int j = 0; j < matrix2.GetColumnsCount(); j++)
                 {
-                    newMatrix.matrix[i].SetComponent(j, matrix1.matrix[i].GetComponent(j) * matrix2.matrix[j].GetComponent(i));
+                    resultMatrix.rows[i].SetComponent(j, Vector.GetScalarProduct(matrix1.rows[i], matrix2.GetColumn(j)));
                 }
             }
 
-            return newMatrix;
+            return resultMatrix;
         }
 
-        private int GetMaxSizeVector(Vector[] matrix)
+        private static int GetMaxRowSize(Vector[] rows)
         {
-            int maxSize = matrix[0].GetSize();
+            int maxSize = rows[0].GetSize();
 
-            for (int i = 0; i < matrix.Length; i++)
+            for (int i = 1; i < rows.Length; i++)
             {
-                if (maxSize < matrix[i].GetSize())
+                if (maxSize < rows[i].GetSize())
                 {
-                    maxSize = matrix[i].GetSize();
+                    maxSize = rows[i].GetSize();
                 }
             }
 
@@ -342,31 +335,15 @@ namespace Matrices
 
         public override string ToString()
         {
-            StringBuilder stringBuilder = new StringBuilder("{ ");
+            StringBuilder stringBuilder = new StringBuilder("{");
 
-            for (int i = 0; i < matrix.Length; i++)
+            for (int i = 0; i < rows.Length - 1; i++)
             {
-                stringBuilder.Append("{ ");
-
-                for (int j = 0; j < matrix[0].GetSize() - 1; j++)
-                {
-                    stringBuilder.Append(matrix[i].GetComponent(j).ToString());
-                    stringBuilder.Append(", ");
-                }
-
-                stringBuilder.Append(matrix[i].GetComponent(matrix[0].GetSize() - 1).ToString());
-                stringBuilder.Append(" ");
-
-                if (i == matrix.Length - 1)
-                {
-                    stringBuilder.Append("} ");
-                }
-                else
-                {
-                    stringBuilder.Append("}, ");
-                }
+                stringBuilder.Append(rows[i]);
+                stringBuilder.Append(", ");
             }
 
+            stringBuilder.Append(rows[rows.Length - 1]);
             stringBuilder.Append("}");
 
             return stringBuilder.ToString();
