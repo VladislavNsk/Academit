@@ -14,7 +14,7 @@ namespace SinglyLinkedListMain
 
         public SinglyLinkedList(ListItem<T> head)
         {
-            if(head == null)
+            if (head == null)
             {
                 throw new NullReferenceException($"Элемент списка head = null");
             }
@@ -142,8 +142,6 @@ namespace SinglyLinkedListMain
             }
         }
 
-
-
         public T DeleteAtIndex(int index)
         {
             if (index >= count || index < 0)
@@ -174,7 +172,7 @@ namespace SinglyLinkedListMain
 
                 itemIndex++;
             }
-            // если делать ретерн в иф то варнинг
+
             return data;
         }
 
