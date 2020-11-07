@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectorMain", "VectorMain\Ve
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatrixMain", "MatrixMain\MatrixMain.csproj", "{6E6894A8-0816-47A3-BBAC-92BEE51C6689}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SinglyLinkedListMain", "ListMain\SinglyLinkedListMain.csproj", "{A11CD1A6-77B7-4A81-BD0A-5458496C400D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{6E6894A8-0816-47A3-BBAC-92BEE51C6689}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E6894A8-0816-47A3-BBAC-92BEE51C6689}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E6894A8-0816-47A3-BBAC-92BEE51C6689}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A11CD1A6-77B7-4A81-BD0A-5458496C400D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A11CD1A6-77B7-4A81-BD0A-5458496C400D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A11CD1A6-77B7-4A81-BD0A-5458496C400D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A11CD1A6-77B7-4A81-BD0A-5458496C400D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
