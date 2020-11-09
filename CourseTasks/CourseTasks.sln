@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SinglyLinkedListMain", "Lis
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyListMain", "MyListMain\MyListMain.csproj", "{D4487F30-4EE1-4C82-8732-15AFC63AD7DB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashTableMain", "HashTableMain\HashTableMain.csproj", "{F627ABCC-1451-4BE9-94C4-14C301803D94}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{D4487F30-4EE1-4C82-8732-15AFC63AD7DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4487F30-4EE1-4C82-8732-15AFC63AD7DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4487F30-4EE1-4C82-8732-15AFC63AD7DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F627ABCC-1451-4BE9-94C4-14C301803D94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F627ABCC-1451-4BE9-94C4-14C301803D94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F627ABCC-1451-4BE9-94C4-14C301803D94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F627ABCC-1451-4BE9-94C4-14C301803D94}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

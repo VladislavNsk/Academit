@@ -131,7 +131,7 @@ namespace MyListMain
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            if (Count + arrayIndex > array.Length)
+            if (Count + arrayIndex > array.Length || arrayIndex < 0)
             {
                 throw new ArgumentException($"Длинны  массива назначения не хватает для копирования, длинна массива = {array.Length}, нужно {Count + arrayIndex + 1}");
             }

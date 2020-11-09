@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System; 
 
 namespace MyListMain
 {
@@ -10,6 +10,9 @@ namespace MyListMain
             myList.Insert(1, 105);
             myList.RemoveAt(0);
             myList.Remove(50);
+
+            int[] tt = new int[10];
+            myList.CopyTo(tt, -5);
 
             Console.Write("Значения списка: ");
             Console.WriteLine(string.Join(", ", myList));
