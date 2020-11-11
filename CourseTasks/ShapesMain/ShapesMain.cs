@@ -20,18 +20,19 @@ namespace ShapesMain
                 new Square(9.9)
             };
 
-            Console.WriteLine(shapes[2]);
+            Console.WriteLine("Третья фигура = " + shapes[2]);
 
             Console.WriteLine("Фигуры равны - " + shapes[2].Equals(shapes[3]));
             Console.WriteLine("Фигуры не равны - " + shapes[2].Equals(shapes[4]));
 
             Console.WriteLine("Hash фигуры - " + shapes[0].GetHashCode());
+            Console.WriteLine();
 
             foreach (IShape s in shapes)
             {
-                Console.WriteLine();
-                Console.WriteLine($"Площадь {s.GetType().Name} = " + s.GetArea());
-                Console.WriteLine($"Периметр {s.GetType().Name} = " + s.GetPerimeter());
+                Console.WriteLine(s.GetType().Name);
+                Console.WriteLine($"Площадь = " + s.GetArea());
+                Console.WriteLine($"Периметр = " + s.GetPerimeter());
                 Console.WriteLine();
             }
 
@@ -64,6 +65,12 @@ namespace ShapesMain
             if (shapes.Length == 0)
             {
                 Console.WriteLine("Массив пустой");
+                return;
+            }
+
+            if (shapes.Length == 1)
+            {
+                Console.WriteLine("В массиве один элемент");
                 return;
             }
 

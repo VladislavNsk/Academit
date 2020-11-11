@@ -62,19 +62,19 @@ namespace ShapesMain.Shapes
             return $"Triangle ({X1}; {Y1}), ({X2}; {Y2}), ({X3}; {Y3})";
         }
 
-        public override bool Equals(object shape)
+        public override bool Equals(object obj)
         {
-            if (ReferenceEquals(shape, this))
+            if (ReferenceEquals(obj, this))
             {
                 return true;
             }
 
-            if (ReferenceEquals(shape, null) || shape.GetType() != GetType())
+            if (ReferenceEquals(obj, null) || obj.GetType() != GetType())
             {
                 return false;
             }
 
-            Triangle triangle = (Triangle)shape;
+            Triangle triangle = (Triangle)obj;
 
             return triangle.X1 == X1 && triangle.Y1 == Y1 &&
                    triangle.X2 == X2 && triangle.Y2 == Y2 &&
