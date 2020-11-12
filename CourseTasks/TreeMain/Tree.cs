@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace TreeMain
 {
@@ -362,6 +363,7 @@ namespace TreeMain
         {
             RecursionDepthVisit(root);
         }
+
         private void RecursionDepthVisit(TreeNode<T> node)
         {
             if (node != null)
@@ -377,14 +379,13 @@ namespace TreeMain
 
         public void DepthVisit()
         {
-            Stack<TreeNode<T>> stack = new Stack<TreeNode<T>>();
-
             if(root == null)
             {
                 Console.WriteLine("Дерево пустое");
                 return;
             }
 
+            Stack<TreeNode<T>> stack = new Stack<TreeNode<T>>();
             stack.Push(root);
 
             while (stack.Count != 0)

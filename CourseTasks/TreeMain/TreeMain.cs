@@ -27,6 +27,7 @@ namespace TreeMain
             TreeNode<int> treeNode19 = new TreeNode<int>(171);
             TreeNode<int> treeNode20 = new TreeNode<int>(220);
             TreeNode<int> treeNode21 = new TreeNode<int>(250);
+            TreeNode<int> treeNode22 = new TreeNode<int>(222);
 
             Tree<int> tree = new Tree<int>(treeNode1);
 
@@ -50,22 +51,18 @@ namespace TreeMain
             tree.Add(treeNode19);
             tree.Add(treeNode20);
             tree.Add(treeNode21);
+            tree.Add(treeNode22);
 
-            if (tree.Contains(treeNode6))
-            {
-                Console.WriteLine("good");
-            }
-            else
-            {
-                Console.WriteLine("not good");
-            }
-
-            //tree.Remove(treeNode1);
+            tree.Remove(treeNode1);
+            
+            Console.WriteLine("Рекурсивный обход в глубину");
             tree.RecursionDepthVisit();
-            Console.WriteLine();
-            tree.VisitInWidth();
-            Console.WriteLine();
+
+            Console.WriteLine("Обход в глубину без рекурсии");
             tree.DepthVisit();
+
+            Console.WriteLine("Обход в ширину");
+            tree.VisitInWidth();
         }
     }
 }
