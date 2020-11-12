@@ -53,10 +53,10 @@ namespace VectorMain
             Console.WriteLine("Сумма двух векторов = " + vector5);
 
             double scalarMultiplication = Vector.GetScalarProduct(vector5, vector1);
-            Console.WriteLine(scalarMultiplication);
+            Console.WriteLine("Произведение двух векторов = " + scalarMultiplication);
 
             vector5.Reverse();
-            Console.WriteLine(vector5);
+            Console.WriteLine("Вектор после разворота " + vector5);
         }
     }
 }

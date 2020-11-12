@@ -40,16 +40,17 @@ namespace VectorMain
                 throw new ArgumentOutOfRangeException(nameof(array), $"Введен не корректный размер вектора size: \"{size}\", должен быть больше 0");
             }
 
-            if (array.Length > size)
+            components = new double[size];
+
+            if(array.Length > size)
             {
-                components = new double[array.Length];
+                Array.Copy(array, components, size);
             }
             else
             {
-                components = new double[size];
+                Array.Copy(array, components, array.Length);
             }
-
-            array.CopyTo(components, 0);
+            
         }
 
         private void EqualizeComponentsCount(Vector vector)
@@ -143,10 +144,10 @@ namespace VectorMain
 
         public static double GetScalarProduct(Vector vector1, Vector vector2)
         {
-            vector1.EqualizeComponentsCount(vector2);
             double scalarProduct = 0;
+            int minVectorLength = vector1.GetSize() > vector2.GetSize() ? vector1.GetSize() : vector2.GetSize();
 
-            for (int i = 0; i < vector2.components.Length; i++)
+            for (int i = 0; i < minVectorLength; i++)
             {
                 scalarProduct += vector1.components[i] * vector2.components[i];
             }
