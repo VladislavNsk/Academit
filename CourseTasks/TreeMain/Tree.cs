@@ -6,87 +6,76 @@ namespace TreeMain
     class Tree<T>
     {
         private TreeNode<T> root;
-        private int count;
-        private TreeNode<T> currentNode;
-        private TreeNode<T> currentNodeParent;
-        IComparer<T> comparer;
+        public int count;
+        private readonly IComparer<T> comparer;
 
         public Tree()
         {
-            count = 0;
+            Count = 0;
         }
 
-        public Tree(TreeNode<T> root) : this(root, null)
+        public Tree(TreeNode<T> root)
         {
+            this.root = root ?? throw new Exception();
+            Count = 1 + root.GetChildrenCount();
         }
 
         public Tree(TreeNode<T> root, IComparer<T> comparer)
         {
-            count = 1 + root.GetChildrenCount();
             this.root = root ?? throw new Exception();
             this.comparer = comparer;
+            Count = 1 + root.GetChildrenCount();
+        }
+
+        public int Count
+        {
+            get
+            {
+                return count;
+            }
+
+            private set
+            {
+                count = value;
+            }
         }
 
         public void Add(TreeNode<T> treeNode)
         {
-            if (root == null)
-            {
-                root = treeNode;
-                count++;
-                return;
-            }
-
-            currentNode = root;
-
-            if (currentNode.Data is IComparable<T>)
-            {
-                while (true)
-                {
-                    IComparable<T> comparable = currentNode.Data as IComparable<T>;
-
-                    if (comparable.CompareTo(treeNode.Data) > 0)
-                    {
-                        if (currentNode.LeftChild == null)
-                        {
-                            currentNode.LeftChild = treeNode;
-                            count++;
-                            return;
-                        }
-
-                        currentNodeParent = currentNode;
-                        currentNode = currentNode.LeftChild;
-                        continue;
-                    }
-
-                    if (currentNode.RightChild == null)
-                    {
-                        currentNode.RightChild = treeNode;
-                        count++;
-                        return;
-                    }
-
-                    currentNodeParent = currentNode;
-                    currentNode = currentNode.RightChild;
-                }
-            }
-
-            if (comparer == null)
+            if (treeNode == null)
             {
                 // ex
             }
 
-            while (true)
+            if (root == null)
             {
-                if (comparer.Compare(currentNode.Data, treeNode.Data) > 0)
+                root = treeNode;
+                Count++;
+                return;
+            }
+
+            TreeNode<T> currentNode = root;
+
+            if (!(currentNode.Data is IComparable<T>))
+            {
+                AddWithComparer(treeNode);
+                return;
+            }
+
+            while (currentNode != null)
+            {
+                IComparable<T> comparable = (IComparable<T>)currentNode.Data;
+
+                if (comparable.CompareTo(treeNode.Data) > 0)
                 {
                     if (currentNode.LeftChild == null)
                     {
                         currentNode.LeftChild = treeNode;
-                        count++;
+                        treeNode.Parent = currentNode;
+                        Count++;
                         return;
                     }
 
-                    currentNodeParent = currentNode;
                     currentNode = currentNode.LeftChild;
                     continue;
                 }
@@ -94,58 +83,102 @@ namespace TreeMain
                 if (currentNode.RightChild == null)
                 {
                     currentNode.RightChild = treeNode;
-                    count++;
+                    treeNode.Parent = currentNode;
+                    Count++;
                     return;
                 }
 
-                currentNodeParent = currentNode;
+                currentNode = currentNode.RightChild;
+            }
+        }
+
+        private void AddWithComparer(TreeNode<T> treeNode)
+        {
+            if (comparer == null)
+            {
+                // ex
+            }
+
+            TreeNode<T> currentNode = root;
+
+            while (currentNode != null)
+            {
+                if (comparer.Compare(currentNode.Data, treeNode.Data) > 0)
+                {
+                    if (currentNode.LeftChild == null)
+                    {
+                        currentNode.LeftChild = treeNode;
+                        treeNode.Parent = currentNode;
+                        Count++;
+                        return;
+                    }
+
+                    currentNode = currentNode.LeftChild;
+                    continue;
+                }
+
+                if (currentNode.RightChild == null)
+                {
+                    currentNode.RightChild = treeNode;
+                    treeNode.Parent = currentNode;
+                    Count++;
+                    return;
+                }
+
                 currentNode = currentNode.RightChild;
             }
         }
 
         public bool Contains(TreeNode<T> treeNode)
         {
-            currentNode = root;
+            TreeNode<T> currentNode = root;
 
-            if (currentNode.Data is IComparable<T>)
+            if (!(currentNode.Data is IComparable<T>))
             {
-                while (true)
+                return ContainsWithComparer(treeNode);
+            }
+
+            while (currentNode != null)
+            {
+                IComparable<T> comparable = currentNode.Data as IComparable<T>;
+
+                if (comparable.CompareTo(treeNode.Data) == 0)
                 {
-                    IComparable<T> comparable = currentNode.Data as IComparable<T>;
+                    return true;
+                }
 
-                    if (comparable.CompareTo(treeNode.Data) == 0)
-                    {
-                        return true;
-                    }
-
-                    if (comparable.CompareTo(treeNode.Data) > 0)
-                    {
-                        if (currentNode.LeftChild == null)
-                        {
-                            return false;
-                        }
-
-                        currentNodeParent = currentNode;
-                        currentNode = currentNode.LeftChild;
-                        continue;
-                    }
-
-                    if (currentNode.RightChild == null)
+                if (comparable.CompareTo(treeNode.Data) > 0)
+                {
+                    if (currentNode.LeftChild == null)
                     {
                         return false;
                     }
 
-                    currentNodeParent = currentNode;
-                    currentNode = currentNode.RightChild;
+                    currentNode = currentNode.LeftChild;
+                    continue;
                 }
+
+                if (currentNode.RightChild == null)
+                {
+                    return false;
+                }
+
+                currentNode = currentNode.RightChild;
             }
 
+            return false;
+        }
+
+        private bool ContainsWithComparer(TreeNode<T> treeNode)
+        {
             if (comparer == null)
             {
                 // ex
             }
 
-            while (true)
+            TreeNode<T> currentNode = root;
+
+            while (currentNode != null)
             {
                 if (comparer.Compare(currentNode.Data, treeNode.Data) == 0)
                 {
@@ -159,7 +192,6 @@ namespace TreeMain
                         return false;
                     }
 
-                    currentNodeParent = currentNode;
                     currentNode = currentNode.LeftChild;
                     continue;
                 }
@@ -169,82 +201,227 @@ namespace TreeMain
                     return false;
                 }
 
-                currentNodeParent = currentNode;
                 currentNode = currentNode.RightChild;
             }
+
+            return false;
         }
 
-        public void Remove(TreeNode<T> treeNode)
+        public bool Remove(TreeNode<T> treeNode)
         {
             if (!Contains(treeNode))
             {
-                Console.WriteLine("Элемента нет в дереве");
+                Console.WriteLine("Узла нет в дереве");
+                return false;
+            }
+
+            if (treeNode.GetChildrenCount() == 0)
+            {
+                RemoveSheet(treeNode);
+                return true;
+            }
+
+            if (treeNode.GetChildrenCount() == 1)
+            {
+                RemoveNodeWithOneChild(treeNode);
+                return true;
+            }
+
+            RemoveNodeWithTwoChildren(treeNode);
+            return true;
+        }
+
+        private void RemoveSheet(TreeNode<T> treeNode)
+        {
+            if (treeNode.Parent.LeftChild.Equals(treeNode))
+            {
+                treeNode.Parent.LeftChild = null;
+            }
+            else
+            {
+                treeNode.Parent.RightChild = null;
+            }
+
+
+            Count--;
+            return;
+        }
+
+        private void RemoveNodeWithOneChild(TreeNode<T> treeNode)
+        {
+            TreeNode<T>[] child = treeNode.GetChildren();
+
+            if (treeNode.Parent.LeftChild.Equals(treeNode))
+            {
+                treeNode.Parent.LeftChild = child[0] ?? child[1];
+                treeNode.Parent.LeftChild.Parent = treeNode.Parent;
+            }
+            else
+            {
+                treeNode.Parent.RightChild = child[0] ?? child[1];
+                treeNode.Parent.RightChild.Parent = treeNode.Parent;
+            }
+
+            Count--;
+            return;
+        }
+
+        private void RemoveNodeWithTwoChildren(TreeNode<T> treeNode)
+        {
+            if (treeNode.Equals(root))
+            {
+                RemoveRoot();
                 return;
             }
 
-            if (currentNode.GetChildrenCount() == 0)
+            TreeNode<T> minLeftNode = GetMinLeftNode(treeNode.RightChild);
+
+            if (minLeftNode.Parent.Equals(treeNode))
             {
-                if (currentNodeParent.LeftChild.Equals(currentNode))
+                if (treeNode.Parent.LeftChild.Equals(treeNode))
                 {
-                    currentNodeParent.LeftChild = null;
+                    treeNode.Parent.LeftChild = minLeftNode;
                 }
                 else
                 {
-                    currentNodeParent.RightChild = null;
+                    treeNode.Parent.RightChild = minLeftNode;
                 }
 
-                count--;
+                minLeftNode.LeftChild = treeNode.LeftChild;
                 return;
             }
 
-            if (currentNode.GetChildrenCount() == 1)
+            if (minLeftNode.RightChild != null)
             {
-                TreeNode<T>[] child = currentNode.GetChildren();
+                minLeftNode.Parent.LeftChild = minLeftNode.RightChild;
+            }
+            else
+            {
+                minLeftNode.Parent.LeftChild = null;
+            }
 
-                if (currentNodeParent.LeftChild.Equals(currentNode))
-                {
-                    currentNodeParent.LeftChild = child[0] ?? child[1];
-                }
-                else
-                {
-                    currentNodeParent.RightChild = child[0] ?? child[1];
-                }
+            if (treeNode.Parent.LeftChild.Equals(treeNode))
+            {
+                treeNode.Parent.LeftChild = minLeftNode;
+            }
+            else
+            {
+                treeNode.Parent.RightChild = minLeftNode;
+            }
 
-                count--;
+            minLeftNode.LeftChild = treeNode.LeftChild;
+            minLeftNode.RightChild = treeNode.RightChild;
+
+            Count--;
+        }
+
+        private void RemoveRoot()
+        {
+            TreeNode<T> minLeftNode = GetMinLeftNode(root.RightChild);
+
+            if (minLeftNode.Parent.Equals(root))
+            {
+                minLeftNode.LeftChild = root.LeftChild;
+                minLeftNode.Parent = null;
+                root = minLeftNode;
                 return;
             }
 
+            if (minLeftNode.RightChild != null)
+            {
+                minLeftNode.Parent.LeftChild = minLeftNode.RightChild;
+                minLeftNode.RightChild.Parent = minLeftNode.Parent;
+            }
+            else
+            {
+                minLeftNode.Parent.LeftChild = null;
+            }
+
+            minLeftNode.LeftChild = root.LeftChild;
+            minLeftNode.RightChild = root.RightChild;
+            minLeftNode.Parent = null;
+            root = minLeftNode;
+            Count--;
+        }
+
+        private static TreeNode<T> GetMinLeftNode(TreeNode<T> minLeftNode)
+        {
             Stack<TreeNode<T>> stack = new Stack<TreeNode<T>>();
-            TreeNode<T> minLeftNodeParent = currentNode;
-            TreeNode<T> minLeftNode = currentNode.RightChild;
             stack.Push(minLeftNode);
 
             while (stack.Peek().LeftChild != null)
             {
                 minLeftNode = stack.Pop();
                 stack.Push(minLeftNode.LeftChild);
-                minLeftNodeParent = minLeftNode;
             }
 
-            if(minLeftNode.RightChild != null)
+            return stack.Pop();
+        }
+
+        public void RecursionDepthVisit()
+        {
+            RecursionDepthVisit(root);
+        }
+        private void RecursionDepthVisit(TreeNode<T> node)
+        {
+            if (node != null)
             {
-                minLeftNodeParent.LeftChild = minLeftNode.RightChild;
+                Console.WriteLine(node.Data);
+
+                foreach (TreeNode<T> child in node.GetChildren())
+                {
+                    RecursionDepthVisit(child);
+                }
             }
-            else
+        }
+
+        public void DepthVisit()
+        {
+            Stack<TreeNode<T>> stack = new Stack<TreeNode<T>>();
+
+            if(root == null)
             {
-                minLeftNodeParent.LeftChild = null;
+                Console.WriteLine("Дерево пустое");
+                return;
             }
 
-            if (currentNodeParent.LeftChild.Equals(currentNode))
-            {
-                currentNodeParent.LeftChild = minLeftNode;
-            }
-            else
-            {
-                currentNodeParent.RightChild = minLeftNode;
-            }
+            stack.Push(root);
 
-            count--;
+            while (stack.Count != 0)
+            {
+                TreeNode<T> node = stack.Peek();
+                Console.WriteLine(stack.Pop().Data);
+                TreeNode<T>[] children = node.GetChildren();
+
+                for (int i = children.Length - 1; i >= 0; i--)
+                {
+                    if(children[i] != null)
+                    {
+                        stack.Push(children[i]);
+                    }
+                }
+            }
+        }
+
+        public void VisitInWidth()
+        {
+            Queue<TreeNode<T>> queue = new Queue<TreeNode<T>>();
+            queue.Enqueue(root);
+
+            while (queue.Count != 0)
+            {
+                TreeNode<T> node = queue.Dequeue();
+
+                foreach (TreeNode<T> child in node.GetChildren())
+                {
+                    if (child != null)
+                    {
+                        queue.Enqueue(child);
+                    }
+                }
+
+                Console.WriteLine(node.Data);
+            }
         }
     }
 }

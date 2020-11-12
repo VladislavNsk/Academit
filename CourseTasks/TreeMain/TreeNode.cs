@@ -1,11 +1,12 @@
 ﻿namespace TreeMain
-
 {
     class TreeNode<T>
     {
         public TreeNode<T> LeftChild { get; set; }
 
         public TreeNode<T> RightChild { get; set; }
+
+        public TreeNode<T> Parent { get; set; }
 
         private T data;
 
