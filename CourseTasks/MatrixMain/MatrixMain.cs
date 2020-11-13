@@ -41,14 +41,14 @@ namespace MatrixMain
 
             Console.WriteLine("Матрица3: " + matrix3);
             matrix3.Transpose();
-            Console.WriteLine("Матрица 3 после транспонирования: " + matrix3);
+            Console.WriteLine("Матрица3 после транспонирования: " + matrix3);
 
             matrix1.Subtract(matrix2);
             Console.WriteLine("Матрица1 после вычитания матрицы2: " + matrix1);
 
             Vector vector2 = new Vector(new double[] { 1, 20, -1 });
             Vector vector3 = matrix1.MultiplyByVector(vector2);
-            Console.WriteLine("Результат умнажения матрицы на вектор: " + vector3);
+            Console.WriteLine("Результат умножения матрицы на вектор: " + vector3);
 
             double determinant = matrix3.GetDeterminant();
             Console.WriteLine("Определитель матрицы3 = " + determinant);

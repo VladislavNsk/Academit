@@ -43,7 +43,7 @@ namespace MatrixMain
         {
             if (array.Length == 0)
             {
-                throw new ArgumentException($"Пытаетесь присвоить пустой массив array.Length: \"{array.Length}\"", nameof(array));
+                throw new ArgumentException($"Размер массива должен быть больше 0, текущий массива = 0", nameof(array));
             }
 
             rows = new Vector[array.GetLength(0)];
@@ -63,7 +63,7 @@ namespace MatrixMain
         {
             if (rows.Length == 0)
             {
-                throw new ArgumentException($"Пытаетесь присвоить пустой массив array.Length: \"{rows.Length}\"", nameof(rows));
+                throw new ArgumentException($"Размер массива должен быть больше 0, текущий массива = 0", nameof(rows));
             }
 
             this.rows = new Vector[rows.Length];
@@ -95,9 +95,9 @@ namespace MatrixMain
 
         public Vector GetColumn(int columnIndex)
         {
-            if (columnIndex < 0 || rows[0].GetSize() <= columnIndex)
+            if (columnIndex < 0 || GetColumnsCount() <= columnIndex)
             {
-                throw new ArgumentOutOfRangeException(nameof(columnIndex), $"Столбца {columnIndex} нет");
+                throw new ArgumentOutOfRangeException(nameof(columnIndex), $"Столбца по индексу {columnIndex} нет, всего столбцом в матрице {GetColumnsCount()}");
             }
 
             double[] array = new double[rows.Length];
@@ -114,7 +114,7 @@ namespace MatrixMain
         {
             if (rowIndex < 0 || rows.Length <= rowIndex)
             {
-                throw new ArgumentOutOfRangeException(nameof(rowIndex), $"Строки {rowIndex} нет, всего строк в матрице {rows.Length}");
+                throw new ArgumentOutOfRangeException(nameof(rowIndex), $"Строки по индексу {rowIndex} нет, всего строк в матрице {rows.Length}");
             }
 
             return new Vector(rows[rowIndex]);
@@ -124,12 +124,12 @@ namespace MatrixMain
         {
             if (rowIndex < 0 || rows.Length <= rowIndex)
             {
-                throw new ArgumentOutOfRangeException(nameof(rowIndex), $"Строки {rowIndex} нет, всего строк в матрице {rows.Length}");
+                throw new ArgumentOutOfRangeException(nameof(rowIndex), $"Строки по индексу {rowIndex} нет, всего строк в матрице {rows.Length}");
             }
 
-            if (rows[0].GetSize() != vector.GetSize())
+            if (GetColumnsCount() != vector.GetSize())
             {
-                throw new ArgumentException("Размеры строк должны совпадать", nameof(vector));
+                throw new ArgumentException($"Размеры строк должны совпадать, длинна строки матрицы = {GetColumnsCount()}, длинна вектора = {vector.GetSize()}", nameof(vector));
             }
 
             rows[rowIndex] = new Vector(vector);
@@ -137,57 +137,57 @@ namespace MatrixMain
 
         public void Transpose()
         {
-            Vector[] rows = new Vector[this.rows[0].GetSize()];
+            Vector[] newRows = new Vector[GetColumnsCount()];
 
-            for (int i = 0; i < this.rows[0].GetSize(); i++)
+            for (int i = 0; i < newRows.Length; i++)
             {
-                rows[i] = GetColumn(i);
+                newRows[i] = GetColumn(i);
             }
 
-            this.rows = rows;
+            rows = newRows;
         }
 
         public void Multiply(double number)
         {
-            for (int i = 0; i < rows.Length; i++)
+            foreach(Vector row in rows)
             {
-                rows[i].Multiply(number);
+                row.Multiply(number);
             }
         }
 
         public double GetDeterminant()
         {
-            if (rows[0].GetSize() != rows.Length)
+            if (GetColumnsCount() != rows.Length)
             {
-                throw new InvalidOperationException("Матрица не квадратная, найти определитель не возможно");
+                throw new InvalidOperationException($"Матрица не квадратная, найти определитель не возможно, количество строк = {GetRowsCount()}, столбцом = {GetColumnsCount()}");
             }
 
             return GetDeterminant(rows);
         }
 
-        private double GetDeterminant(Vector[] matrix)
+        private static double GetDeterminant(Vector[] rows)
         {
-            if (matrix.Length == 1)
+            if (rows.Length == 1)
             {
-                return matrix[0].GetComponent(0);
+                return rows[0].GetComponent(0);
             }
 
-            if (matrix.Length == 2)
+            if (rows.Length == 2)
             {
-                return matrix[0].GetComponent(0) * matrix[1].GetComponent(1) - matrix[0].GetComponent(1) * matrix[1].GetComponent(0);
+                return rows[0].GetComponent(0) * rows[1].GetComponent(1) - rows[0].GetComponent(1) * rows[1].GetComponent(0);
             }
 
             double determinant = 0;
 
-            for (int i = 0; i < matrix[0].GetSize(); i++)
+            for (int i = 0; i < rows[0].GetSize(); i++)
             {
-                determinant += matrix[0].GetComponent(i) * Math.Pow(-1, 1 + i + 1) * GetAlgebraicComplement(matrix, i);
+                determinant += rows[0].GetComponent(i) * Math.Pow(-1, 1 + i + 1) * GetAlgebraicComplement(rows, i);
             }
 
             return determinant;
         }
 
-        private double GetAlgebraicComplement(Vector[] matrix, int columnIndex)
+        private static double GetAlgebraicComplement(Vector[] matrix, int columnIndex)
         {
             Vector[] algebraicComplement = new Vector[matrix.Length - 1];
             List<double> row = new List<double>();
@@ -209,7 +209,7 @@ namespace MatrixMain
             return GetDeterminant(algebraicComplement);
         }
 
-        private void SetAlgebraicComplement(Vector[] algebraicComplement, List<double> row, int rowIndex)
+        private static void SetAlgebraicComplement(Vector[] algebraicComplement, List<double> row, int rowIndex)
         {
             algebraicComplement[rowIndex] = new Vector(algebraicComplement.Length);
 
@@ -223,15 +223,15 @@ namespace MatrixMain
         {
             if (vector.GetSize() != GetColumnsCount())
             {
-                throw new ArgumentException("Количество строк в векторе-столбце не совпадает с количеством столбцов в матрице", nameof(vector));
+                throw new ArgumentException($"Количество строк в векторе-столбце не совпадает с количеством столбцов в матрице, " + 
+                                             "строк в матрице {GetColumnsCount()}, в векторе {vector.GetSize()}", nameof(vector));
             }
 
             Vector result = new Vector(GetRowsCount());
 
             for (int i = 0; i < rows.Length; i++)
             {
-                double component = Vector.GetScalarProduct(rows[i], vector);
-                result.SetComponent(i, component);
+                result.SetComponent(i, Vector.GetScalarProduct(rows[i], vector));
             }
 
             return result;
@@ -239,13 +239,9 @@ namespace MatrixMain
 
         public void Add(Matrix matrix)
         {
-            if (IsMatricesEqual(this, matrix))
-            {
-                throw new ArgumentException($"Матрицы разного размера: matrix1.rows = {GetRowsCount()} matrix1.columns = {GetColumnsCount()}, " +
-                                            $"matrix2.rows = {matrix.GetRowsCount()} matrix2.columns = {matrix.GetColumnsCount()}", nameof(matrix));
-            }
+            CheckMatricesSize(this, matrix);
 
-            for (int i = 0; i < GetRowsCount(); i++)
+            for (int i = 0; i < rows.Length; i++)
             {
                 rows[i].Add(matrix.rows[i]);
             }
@@ -253,13 +249,9 @@ namespace MatrixMain
 
         public void Subtract(Matrix matrix)
         {
-            if (IsMatricesEqual(this, matrix))
-            {
-                throw new ArgumentException($"Матрицы разного размера: matrix1.rows = {GetRowsCount()} matrix1.columns = {GetColumnsCount()}, " +
-                                            $"matrix2.rows = {matrix.GetRowsCount()} matrix2.columns = {matrix.GetColumnsCount()}", nameof(matrix));
-            }
+            CheckMatricesSize(this, matrix);
 
-            for (int i = 0; i < GetRowsCount(); i++)
+            for (int i = 0; i < rows.Length; i++)
             {
                 rows[i].Subtract(matrix.rows[i]);
             }
@@ -267,10 +259,7 @@ namespace MatrixMain
 
         public static Matrix GetSum(Matrix matrix1, Matrix matrix2)
         {
-            if (IsMatricesEqual(matrix1, matrix2))
-            {
-                throw new ArgumentException("Матрицы разного размера", $"{nameof(matrix1)} и {nameof(matrix2)}");
-            }
+            CheckMatricesSize(matrix1, matrix2);
 
             Matrix resultMatrix = new Matrix(matrix1);
             resultMatrix.Add(matrix2);
@@ -280,10 +269,7 @@ namespace MatrixMain
 
         public static Matrix GetDifference(Matrix matrix1, Matrix matrix2)
         {
-            if (IsMatricesEqual(matrix1, matrix2))
-            {
-                throw new ArgumentException("Матрицы разного размера", $"{nameof(matrix1)} и {nameof(matrix2)}");
-            }
+            CheckMatricesSize(matrix1, matrix2);
 
             Matrix resultMatrix = new Matrix(matrix1);
             resultMatrix.Subtract(matrix2);
@@ -291,9 +277,13 @@ namespace MatrixMain
             return resultMatrix;
         }
 
-        private static bool IsMatricesEqual(Matrix matrix1, Matrix matrix2)
+        private static void CheckMatricesSize(Matrix matrix1, Matrix matrix2)
         {
-            return matrix1.GetColumnsCount() != matrix2.GetColumnsCount() || matrix1.GetRowsCount() != matrix2.GetRowsCount();
+            if(matrix1.GetColumnsCount() != matrix2.GetColumnsCount() || matrix1.GetRowsCount() != matrix2.GetRowsCount())
+            {
+                throw new ArgumentException($"Матрицы разного размера: matrix1.rows = {matrix1.GetRowsCount()} matrix1.columns = {matrix1.GetColumnsCount()}, " +
+                                            $"matrix2.rows = {matrix2.GetRowsCount()} matrix2.columns = {matrix2.GetColumnsCount()}", "matrix1, matrix2");
+            }
         }
 
         public static Matrix GetProduct(Matrix matrix1, Matrix matrix2)
@@ -318,9 +308,9 @@ namespace MatrixMain
             return resultMatrix;
         }
 
-        private static int GetMaxRowSize(Vector[] rows)
+        private int GetMaxRowSize(Vector[] rows)
         {
-            int maxSize = rows[0].GetSize();
+            int maxSize = GetColumnsCount();
 
             for (int i = 1; i < rows.Length; i++)
             {
