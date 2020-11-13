@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace TreeMain
 {
@@ -45,7 +44,7 @@ namespace TreeMain
         {
             if (treeNode == null)
             {
-                // ex
+                throw new NullReferenceException($"Элемент списка treeNode = null");
             }
 
             if (root == null)
@@ -97,7 +96,7 @@ namespace TreeMain
         {
             if (comparer == null)
             {
-                // ex
+                throw new NullReferenceException($"Компаратор = null, класс не реализует интерфейс IComparable");
             }
 
             TreeNode<T> currentNode = root;
@@ -174,7 +173,7 @@ namespace TreeMain
         {
             if (comparer == null)
             {
-                // ex
+                throw new NullReferenceException($"Компаратор = null, класс не реализует интерфейс IComparable");
             }
 
             TreeNode<T> currentNode = root;
