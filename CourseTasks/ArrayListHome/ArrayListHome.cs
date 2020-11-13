@@ -9,14 +9,14 @@ namespace ArrayListHome
         public static void Main()
         {
             string path = "..\\..\\Text.txt";
-            List<string> stringList = GetListFromFile(path);
-            Console.WriteLine(string.Join("|", stringList));
+            List<string> stringsList = GetStringsListFromFile(path);
+            Console.WriteLine(string.Join("|", stringsList));
 
             List<int> numbersList = new List<int> { 1, 2, 2, 2, 26, 5, 6, 7, 8, 9, 10 };
             RemoveEvenNumbers(numbersList);
             Console.WriteLine(string.Join(" ", numbersList));
 
-            List<int> duplicateNumbersList = new List<int>
+            List<int> duplicatedNumbersList = new List<int>
             {
                 1, 2, 3, 4, 5,
                 1, 2, 3, 4, 5,
@@ -24,11 +24,11 @@ namespace ArrayListHome
                 6, 7, 8, 9, 0
             };
 
-            List<int> uniqueNumbersList = GetUniqueNumbersList(duplicateNumbersList);
+            List<int> uniqueNumbersList = GetUniqueNumbersList(duplicatedNumbersList);
             Console.WriteLine(string.Join(" ", uniqueNumbersList));
         }
 
-        public static List<string> GetListFromFile(string path)
+        public static List<string> GetStringsListFromFile(string path)
         {
             List<string> stringList = new List<string>();
 
@@ -41,14 +41,13 @@ namespace ArrayListHome
                         stringList.Add(reader.ReadLine());
                     }
                 }
-
-                return stringList;
             }
             catch (FileNotFoundException e)
             {
                 Console.WriteLine($"Файл \"{e.FileName}\" не найден");
-                return stringList;
             }
+
+            return stringList;
         }
 
         public static void RemoveEvenNumbers(List<int> numbersList)
