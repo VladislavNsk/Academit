@@ -6,48 +6,46 @@ namespace HashTableMain
     {
         static void Main()
         {
-            int number1 = 9;
-            int number2 = 4;
-            int number3 = 52;
-            int number4 = -45;
-            int number5 = 566;
-            int number6 = 99;
+            string word1 = "car";
+            string word2 = "moto";
+            string word3 = "home";
+            string word4 = "phone";
+            string word5 = "mouse";
+            string word6 = "dog";
 
-            HashTable<int> hashTable = new HashTable<int>()
-                {
-                     number1,
-                     number2,
-                     number3,
-                     number4,
-                     number5,
-                     number6
-                };
-
-            if(hashTable.Remove(number4))
+            HashTable<string> hashTable = new HashTable<string>
             {
-                Console.WriteLine($"Элемент {number4} удален");
+                word1,
+                word2,
+                word3,
+                word4,
+                null,
+                word5,
+                word6
+            };
+
+            if (hashTable.Remove(word4))
+            {
+                Console.WriteLine($"Элемент {word4} удален");
             }
             else
             {
-                Console.WriteLine($"Элемент {number4} не найден");
+                Console.WriteLine($"Элемент {word4} не найден");
             }
 
-            if(hashTable .Contains(number6))
+            if (hashTable.Contains(word6))
             {
-                Console.WriteLine("Хэш-таблица содержит эелемент " + number6);
+                Console.WriteLine("Хэш-таблица содержит эелемент " + word6);
             }
             else
             {
-                Console.WriteLine("Хэш-таблица не содержит эелемент " + number6);
+                Console.WriteLine("Хэш-таблица не содержит эелемент " + word6);
             }
 
-            foreach(int item in hashTable)
-            {
-                Console.WriteLine(item);
-            }
+            string[] array = new string[10];
+            hashTable.CopyTo(array, 0);
 
-            int[] array = new int[10];
-            hashTable.CopyTo(array, 6);
+            Console.WriteLine(hashTable);
         }
     }
 }

@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 
 namespace HashTableMain
 {
     class HashTable<T> : ICollection<T>
     {
-        private List<T>[] array;
-        private int count;
-        private int size;
+        private List<T>[] lists;
         private int modCount;
 
         public HashTable() : this(10)
@@ -17,138 +16,150 @@ namespace HashTableMain
 
         public HashTable(int size)
         {
-            this.size = size;
-            array = new List<T>[size];
-            count = 0;
+            if (size <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(size), $"Размер таблицы должен быть больше 0, сейчас размер = {size}");
+            }
+
+            lists = new List<T>[size];
         }
 
-        public int Count
-        {
-            get
-            {
-                return count;
-            }
-        }
+        public int Count { get; private set; }
 
-        public bool IsReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool IsReadOnly => false;
 
         public void Add(T item)
         {
-            int index = GetIndexItem(item);
-
-            if (array[index] == null)
+            if (item == null)
             {
-                array[index] = new List<T>();
+                return;
             }
 
-            array[index].Add(item);
-            count++;
+            int index = GetItemIndex(item);
+
+            if (lists[index] == null)
+            {
+                lists[index] = new List<T>();
+            }
+
+            lists[index].Add(item);
+            Count++;
             modCount++;
         }
 
-        private int GetIndexItem(T item)
+        private int GetItemIndex(T item)
         {
-            return Math.Abs(item.GetHashCode() % array.Length);
+            return Math.Abs(item.GetHashCode() % lists.Length);
         }
 
         public void Clear()
         {
-            array = new List<T>[size];
-            count = 0;
+            Array.Clear(lists, 0, lists.Length);
+            Count = 0;
             modCount++;
         }
 
         public bool Contains(T item)
         {
-            int index = GetIndexItem(item);
-
-            if (array[index] != null)
+            if (item == null)
             {
-                return array[index].Contains(item);
+                return false;
             }
 
-            return false;
+            int index = GetItemIndex(item);
+            return lists[index] != null && lists[index].Contains(item);
         }
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            if (arrayIndex >= array.Length || arrayIndex < 0)
+            if (array == null)
             {
-                throw new IndexOutOfRangeException($"Индекс {arrayIndex} за пределами диапазона. Всего элементов в списке {array.Length}");
+                throw new ArgumentNullException(nameof(array), "Массив равен null");
             }
 
-            if (Count + arrayIndex > array.Length)
+            if (arrayIndex < 0)
             {
-                throw new ArgumentException($"Длинны  массива назначения не хватает для копирования, длинна массива = {array.Length}, нужно {Count + arrayIndex}");
+                throw new ArgumentOutOfRangeException(nameof(arrayIndex), $"Индекс должен быть не меньше 0, сейчас = {arrayIndex}");
             }
 
-            for (int i = 0; i < array.Length; i++)
+            if (Count > array.Length - arrayIndex)
             {
-                if (this.array[i] != null)
+                throw new ArgumentException($"Длинны  массива назначения не хватает для копирования, индекс начала копирования = {arrayIndex}, длинна массива = {array.Length}, нужно {Count + arrayIndex + 1}");
+            }
+
+            int i = arrayIndex;
+
+            foreach (T item in this)
+            {
+                array[i] = item;
+                i++;
+            }
+        }
+
+        public bool Remove(T item)
+        {
+            if (item == null)
+            {
+                return false;
+            }
+
+            int index = GetItemIndex(item);
+
+            if (lists[index] != null && lists[index].Remove(item))
+            {
+                if (lists[index].Count == 0)
                 {
-                    for (int j = 0; j < this.array[i].Count; j++)
-                    {
-                        array[arrayIndex++] = this.array[i][j];
-                    }
+                    lists[index] = null;
                 }
+
+                Count--;
+                modCount++;
+                return true;
             }
+
+            return false;
         }
 
         public IEnumerator<T> GetEnumerator()
         {
             int fixedModCount = modCount;
 
-            for (int i = 0; i < array.Length; i++)
+            foreach (List<T> list in lists)
             {
-                if (array[i] != null)
+                if (list != null)
                 {
-                    foreach (var j in array[i])
+                    foreach (T listItem in list)
                     {
-                        if (j != null)
-                        {
-                            yield return j;
-                        }
-
                         if (modCount != fixedModCount)
                         {
                             throw new InvalidOperationException("Коллекция была изменена");
                         }
+
+                        yield return listItem;
                     }
                 }
             }
-        }
-
-        public bool Remove(T item)
-        {
-            int index = GetIndexItem(item);
-
-            if (array[index] != null)
-            {
-                if (array[index].Remove(item))
-                {
-                    if (array[index].Count == 0)
-                    {
-                        array[index] = null;
-                    }
-
-                    count--;
-                    modCount++;
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public override string ToString()
+        {
+            StringBuilder stringBuilder = new StringBuilder("{");
+
+            foreach (T item in this)
+            {
+                stringBuilder.Append(item);
+                stringBuilder.Append(", ");
+            }
+
+            stringBuilder.Remove(stringBuilder.Length - 2, 2);
+            stringBuilder.Append("}");
+
+            return stringBuilder.ToString();
         }
     }
 }
