@@ -41,7 +41,7 @@ namespace MyListMain
                 throw new ArgumentOutOfRangeException(nameof(capacity), $"Вместимость должна быть больше 0, сейчас = {capacity}");
             }
 
-            items = new T[capacity];
+            Capacity = capacity;
         }
 
         public T this[int index]

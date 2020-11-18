@@ -6,7 +6,7 @@ namespace MyListMain
     {
         static void Main()
         {
-            MyList<string> myList = new MyList<string>(10) { "word" , "world", "price", null, "home" };
+            MyList<string> myList = new MyList<string>(10) { "word", "world", "price", null, "home" };
 
             myList.Insert(5, "roof");
             myList.RemoveAt(5);
