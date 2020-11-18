@@ -1,176 +1,145 @@
 ﻿using System;
+using System.Text;
 
 namespace SinglyLinkedListMain
 {
     class SinglyLinkedList<T>
     {
         private ListItem<T> head;
-        private int count;
+
+        public int Count { get; private set; }
 
         public SinglyLinkedList()
         {
-            count = 0;
         }
 
-        public SinglyLinkedList(ListItem<T> head)
+        public SinglyLinkedList(T value)
         {
-            if (head == null)
+            head = new ListItem<T>(value);
+            Count++;
+        }
+
+        public T GetFirst()
+        {
+            return head.Data;
+        }
+
+        private void CheckIndex(int index)
+        {
+            if (index < 0 || index >= Count)
             {
-                throw new NullReferenceException($"Элемент списка head = null");
+                throw new IndexOutOfRangeException($"Элемента с индексом {index} нет, всего элементов в списке {Count}");
+            }
+        }
+
+        private ListItem<T> GetItem(int index)
+        {
+            int i = 0;
+            ListItem<T> item;
+
+            for (item = head; item != null; item = item.Next)
+            {
+                if (i == index)
+                {
+                    return item;
+                }
+
+                i++;
             }
 
-            this.head = new ListItem<T>(head);
-
-            for (ListItem<T> item = head; item != null; item = item.NextItem)
-            {
-                count++;
-            }
+            return item;
         }
 
-        public int GetSize()
+        public T Get(int index)
         {
-            return count;
-        }
+            CheckIndex(index);
 
-        public T GetFirstItemData()
-        {
-            if (head != null)
+            if (index == 0)
             {
                 return head.Data;
             }
 
-            throw new IndexOutOfRangeException("Первого элемента не существует, список  пустой");
+            return GetItem(index).Data;
         }
 
-        public T GetData(int index)
+        public T Set(int index, T data)
         {
-            if (index >= count || index < 0)
-            {
-                throw new IndexOutOfRangeException($"Индекса по номеру {index} не существует, всего элементов в списке {count}");
-            }
-
-            int itemIndex = 0;
-            T data = head.Data;
-
-            for (ListItem<T> item = head; item != null; item = item.NextItem)
-            {
-                if (itemIndex == index)
-                {
-                    data = item.Data;
-                    return data;
-                }
-
-                itemIndex++;
-            }
-
-            return data;
-        }
-
-        public T SetData(T data, int index)
-        {
-            if (index >= count || index < 0)
-            {
-                throw new IndexOutOfRangeException($"Индекса по номеру {index} не существует, всего элементов в списке {count}");
-            }
-
-            int itemIndex = 0;
+            CheckIndex(index);
             T oldData = head.Data;
 
-            for (ListItem<T> item = head; item != null; item = item.NextItem)
+            if (index == 0)
             {
-                if (itemIndex == index)
-                {
-                    oldData = item.Data;
-                    item.Data = data;
-                    return oldData;
-                }
-
-                itemIndex++;
+                head.Data = data;
+                return oldData;
             }
+
+            ListItem<T> item = GetItem(index);
+            oldData = item.Data;
+            item.Data = data;
 
             return oldData;
         }
 
-        public void Set(ListItem<T> item, int index)
+        public void Add(int index, T data)
         {
-            if (index >= count || index < 0)
-            {
-                throw new IndexOutOfRangeException($"Индекса по номеру {index} не существует, всего элементов в списке {count}");
-            }
+            CheckIndex(index);
 
             if (index == 0)
             {
-                item.NextItem = head;
-                head = item;
-                count++;
+                AddFirst(data);
                 return;
             }
 
-            int itemIndex = 1;
+            int i = 1;
 
-            for (ListItem<T> i = head.NextItem, previousItem = head; i != null; previousItem = i, i = i.NextItem)
+            for (ListItem<T> current = head.Next, previous = head; current != null; previous = current, current = current.Next)
             {
-                if (itemIndex == index)
+                if (i == index)
                 {
-                    item.NextItem = i;
-                    previousItem.NextItem = item;
-                    count++;
+                    previous.Next = new ListItem<T>(data, current);
+                    Count++;
                     return;
                 }
 
-                itemIndex++;
+                i++;
             }
         }
 
-        public void Set(ListItem<T> item)
+        public void Add(T data)
         {
-            if (count == 0)
+            if (Count == 0)
             {
-                head = item;
-                count++;
+                AddFirst(data);
                 return;
             }
 
-            for (ListItem<T> i = head; i != null; i = i.NextItem)
-            {
-                if (i.NextItem == null)
-                {
-                    i.NextItem = item;
-                    count++;
-                    return;
-                }
-            }
+            GetItem(Count - 1).Next = new ListItem<T>(data);
+            Count++;
         }
 
         public T DeleteAtIndex(int index)
         {
-            if (index >= count || index < 0)
-            {
-                throw new IndexOutOfRangeException($"Индекса по номеру {index} не существует, всего элементов в списке {count}");
-            }
-
-            T data = head.Data;
+            CheckIndex(index);
 
             if (index == 0)
             {
-                head = head.NextItem;
-                count--;
-                return data;
+                return DeleteFirst();
             }
 
-            int itemIndex = 1;
+            int i = 1;
+            T data = head.Data;
 
-            for (ListItem<T> item = head.NextItem, previousItem = head; item != null; previousItem = item, item = item.NextItem)
+            for (ListItem<T> current = head.Next, previous = head; current != null; previous = current, current = current.Next)
             {
-                if (itemIndex == index)
+                if (i == index)
                 {
-                    data = item.Data;
-                    previousItem.NextItem = item.NextItem;
-                    count--;
+                    data = current.Data;
+                    previous.Next = current.Next;
+                    Count--;
                     return data;
                 }
 
-                itemIndex++;
+                i++;
             }
 
             return data;
@@ -178,24 +147,24 @@ namespace SinglyLinkedListMain
 
         public bool Delete(T data)
         {
-            if (head == null)
+            for (ListItem<T> current = head, previous = null; current != null; previous = current, current = current.Next)
             {
-                throw new NullReferenceException("Список  пустой");
-            }
-
-            for (ListItem<T> item = head, previousItem = null; item != null; previousItem = item, item = item.NextItem)
-            {
-                if (item.Data.Equals(data))
+                if (current.Data == null)
                 {
-                    if (previousItem == null)
+                    continue;
+                }
+
+                if (current.Data.Equals(data))
+                {
+                    if (previous == null)
                     {
-                        head = null;
-                        count--;
+                        head = head.Next;
+                        Count--;
                         return true;
                     }
 
-                    previousItem.NextItem = item.NextItem;
-                    count--;
+                    previous.Next = current.Next;
+                    Count--;
                     return true;
                 }
             }
@@ -203,33 +172,37 @@ namespace SinglyLinkedListMain
             return false;
         }
 
-        public T DeleteFirstItem()
+        public T DeleteFirst()
         {
-            return DeleteAtIndex(0);
+            T data = head.Data;
+            head = head.Next;
+            Count--;
+            return data;
         }
 
-        public void SetInFirstItem(ListItem<T> item)
+        public void AddFirst(T data)
         {
-            Set(item, 0);
+            ListItem<T> item = new ListItem<T>(data) { Next = head };
+            head = item;
+            Count++;
         }
 
         public void Reverse()
         {
             if (head == null)
             {
-                throw new NullReferenceException("Список пустой");
+                return;
             }
 
-            ListItem<T> nextItem = head.NextItem;
-            ListItem<T> item = head;
+            ListItem<T> current = head;
+            ListItem<T> next = head.Next;
 
-            while (nextItem != null)
+            while (next != null)
             {
-                item.NextItem = nextItem.NextItem;
-                SetInFirstItem(nextItem);
-                nextItem = item.NextItem;
-
-                count--;
+                current.Next = next.Next;
+                next.Next = head;
+                head = next;
+                next = current.Next;
             }
         }
 
@@ -240,7 +213,39 @@ namespace SinglyLinkedListMain
                 return new SinglyLinkedList<T>();
             }
 
-            return new SinglyLinkedList<T>(head);
+            SinglyLinkedList<T> singly = new SinglyLinkedList<T>() { head = new ListItem<T>(head.Data), Count = Count };
+
+            for (ListItem<T> item1 = singly.head, item2 = head; item2.Next != null; item2 = item2.Next, item1 = item1.Next)
+            {
+                item1.Next = new ListItem<T>(item2.Next.Data);
+            }
+
+            return singly;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder stringBuilder = new StringBuilder("{");
+
+            for (ListItem<T> item = head; item != null; item = item.Next)
+            {
+                if (item.Data == null)
+                {
+                    stringBuilder.Append("null");
+                }
+                else
+                {
+                    stringBuilder.Append(item.Data);
+                }
+
+                if (item.Next != null)
+                {
+                    stringBuilder.Append(", ");
+                }
+            }
+
+            stringBuilder.Append("}");
+            return stringBuilder.ToString();
         }
     }
 }

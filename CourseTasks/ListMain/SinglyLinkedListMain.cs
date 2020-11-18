@@ -6,31 +6,31 @@ namespace SinglyLinkedListMain
     {
         static void Main()
         {
-            ListItem<int> item1 = new ListItem<int>(5);
-            SinglyLinkedList<int> singlyLinkedList1 = new SinglyLinkedList<int>(item1);
+            SinglyLinkedList<string> singlyLinkedList1 = new SinglyLinkedList<string>();
 
-            ListItem<int> item2 = new ListItem<int>(3);
-            ListItem<int> item3 = new ListItem<int>(84);
-            ListItem<int> item4 = new ListItem<int>(11);
-            ListItem<int> item5 = new ListItem<int>(-8);
+            singlyLinkedList1.Add("a");
+            singlyLinkedList1.Add("b");
+            singlyLinkedList1.Add("c");
+            singlyLinkedList1.Add("d");
+            singlyLinkedList1.Add(null);
+            singlyLinkedList1.Add("f");
+            singlyLinkedList1.Add("g");
+            singlyLinkedList1.Add("h");
+            singlyLinkedList1.Add(6, "test");
 
-            singlyLinkedList1.Set(item2);
-            singlyLinkedList1.Set(item3);
-            singlyLinkedList1.Set(item4);
-            singlyLinkedList1.Set(item5);
+            SinglyLinkedList<string> singlyLinkedList2 = singlyLinkedList1.Copy();
 
-            SinglyLinkedList<int> singlyLinkedList2 = singlyLinkedList1.Copy();
-
-            ListItem<int> item6 = new ListItem<int>(777);
-            ListItem<int> item7 = new ListItem<int>(555);
-
-            singlyLinkedList2.SetInFirstItem(item6);
-            singlyLinkedList2.Set(item7, 3);
-
+            Console.WriteLine("Первый список до реверса " + singlyLinkedList1);
             singlyLinkedList1.Reverse();
+            Console.WriteLine("После " + singlyLinkedList1);
 
-            Console.WriteLine("Размер первого списка = " + singlyLinkedList1.GetSize());
-            Console.WriteLine("Размер торого списка = " + singlyLinkedList2.GetSize());
+            Console.WriteLine("Второй список " + singlyLinkedList2);
+            singlyLinkedList2.Delete("b");
+            singlyLinkedList2.DeleteAtIndex(3);
+            Console.WriteLine("Второй список после удаления элементов " + singlyLinkedList2);
+
+            Console.WriteLine("Размер первого списка = " + singlyLinkedList1.Count);
+            Console.WriteLine("Размер второго списка = " + singlyLinkedList2.Count);
         }
     }
 }
