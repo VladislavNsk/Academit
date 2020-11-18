@@ -49,14 +49,15 @@ namespace ShapesMain
             }
 
             Array.Sort(shapes, new AreaComparer());
+            int lastIndex = shapes.Length - 1;
 
             Console.WriteLine
             (
-                shapes[shapes.Length - 1] +
-                " Площадь = " + shapes[shapes.Length - 1].GetArea() +
-                " Периметр = " + shapes[shapes.Length - 1].GetPerimeter() +
-                " Ширина = " + shapes[shapes.Length - 1].GetWidth() +
-                " Высота = " + shapes[shapes.Length - 1].GetHeight()
+                shapes[lastIndex] +
+                " Площадь = " + shapes[lastIndex].GetArea() +
+                " Периметр = " + shapes[lastIndex].GetPerimeter() +
+                " Ширина = " + shapes[lastIndex].GetWidth() +
+                " Высота = " + shapes[lastIndex].GetHeight()
             );
         }
 
@@ -75,14 +76,15 @@ namespace ShapesMain
             }
 
             Array.Sort(shapes, new PerimeterComparer());
+            int penultimateIndex = shapes.Length - 1;
 
             Console.WriteLine
             (
-                shapes[shapes.Length - 2] +
-                " Площадь = " + shapes[shapes.Length - 2].GetArea() +
-                " Периметр = " + shapes[shapes.Length - 2].GetPerimeter() +
-                " Ширина = " + shapes[shapes.Length - 2].GetWidth() +
-                " Высота = " + shapes[shapes.Length - 2].GetHeight()
+                shapes[penultimateIndex] +
+                " Площадь = " + shapes[penultimateIndex].GetArea() +
+                " Периметр = " + shapes[penultimateIndex].GetPerimeter() +
+                " Ширина = " + shapes[penultimateIndex].GetWidth() +
+                " Высота = " + shapes[penultimateIndex].GetHeight()
             );
         }
     }
