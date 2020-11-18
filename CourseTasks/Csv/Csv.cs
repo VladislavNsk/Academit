@@ -13,101 +13,109 @@ namespace Csv
                 return;
             }
 
-            using (StreamReader reader = new StreamReader(args[0]))
+            try
             {
-                using (StreamWriter writer = new StreamWriter(args[1]))
+                using (StreamReader reader = new StreamReader(args[0]))
                 {
-                    writer.WriteLine
-                    (
-                        "<!DOCTYPE html>" +
-                        "<html lang=\"ru\">" +
-                        "<head>" +
-                        "<meta charset=\"utf-8\">" +
-                        "</head>" +
-                        "<body>" +
-                        "<table border=\"1\">"
-                     );
-
-                    int quotesInCellCount = 0;
-
-                    while (!reader.EndOfStream)
+                    using (StreamWriter writer = new StreamWriter(args[1]))
                     {
-                        string currentLine = reader.ReadLine();
+                        writer.WriteLine
+                        (
+                            "<!DOCTYPE html>" +
+                            "<html lang=\"ru\">" +
+                            "<head>" +
+                            "<meta charset=\"utf-8\">" +
+                            "</head>" +
+                            "<body>" +
+                            "<table border=\"1\">"
+                         );
 
-                        if (string.IsNullOrEmpty(currentLine))
-                        {
-                            continue;
-                        }
+                        int quotesInCellCount = 0;
 
-                        if (quotesInCellCount % 2 == 0)
+                        while (!reader.EndOfStream)
                         {
-                            writer.Write ("<tr><td>");
-                        }
+                            string currentLine = reader.ReadLine();
 
-                        foreach (char symbol in currentLine)
-                        {
-                            if (symbol == '\"')
+                            if (string.IsNullOrEmpty(currentLine))
                             {
-                                quotesInCellCount++;
-
-                                if (quotesInCellCount != 1)
-                                {
-                                    if (quotesInCellCount % 2 == 1)
-                                    {
-                                        writer.Write(symbol);
-                                    }
-                                }
-
                                 continue;
                             }
 
-                            if (symbol == ',')
+                            if (quotesInCellCount % 2 == 0)
                             {
-                                if (quotesInCellCount % 2 == 0)
-                                {
-                                    writer.Write("</td><td>");
+                                writer.Write("<tr><td>");
+                            }
 
-                                    quotesInCellCount = 0;
+                            foreach (char symbol in currentLine)
+                            {
+                                if (symbol == '\"')
+                                {
+                                    quotesInCellCount++;
+
+                                    if (quotesInCellCount != 1)
+                                    {
+                                        if (quotesInCellCount % 2 == 1)
+                                        {
+                                            writer.Write(symbol);
+                                        }
+                                    }
+
+                                    continue;
+                                }
+
+                                if (symbol == ',')
+                                {
+                                    if (quotesInCellCount % 2 == 0)
+                                    {
+                                        writer.Write("</td><td>");
+
+                                        quotesInCellCount = 0;
+                                    }
+                                    else
+                                    {
+                                        writer.Write(symbol);
+                                    }
+
+                                    continue;
+                                }
+
+                                if (symbol == '&')
+                                {
+                                    writer.Write("&amp;");
+                                }
+                                else if (symbol == '<')
+                                {
+                                    writer.Write("&lt;");
+                                }
+                                else if (symbol == '>')
+                                {
+                                    writer.Write("&gt;");
                                 }
                                 else
                                 {
                                     writer.Write(symbol);
                                 }
+                            }
 
+                            if (currentLine[currentLine.Length - 1] == ',' || quotesInCellCount % 2 == 0)
+                            {
+                                writer.Write("</td></tr>");
+
+                                quotesInCellCount = 0;
                                 continue;
                             }
 
-                            if (symbol == '&')
-                            {
-                                writer.Write("&amp;");
-                            }
-                            else if(symbol == '<')
-                            {
-                                writer.Write("&lt;");
-                            }
-                            else if (symbol == '>')
-                            {
-                                writer.Write("&gt;");
-                            }
-                            else
-                            {
-                                writer.Write(symbol);
-                            }
+                            writer.Write("<br/>");
                         }
 
-                        if (currentLine[currentLine.Length - 1] == ',' || quotesInCellCount % 2 == 0)
-                        {
-                            writer.Write("</td></tr>");
-
-                            quotesInCellCount = 0;
-                            continue;
-                        }
-
-                        writer.Write("<br/>");
+                        writer.Write("</table></body></html>");
                     }
-
-                    writer.Write( "</table></body></html>");
                 }
+
+            }
+            catch (FileNotFoundException exception)
+            {
+                Console.WriteLine(exception.Message);
             }
         }
     }
