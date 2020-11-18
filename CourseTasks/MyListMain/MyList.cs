@@ -116,7 +116,7 @@ namespace MyListMain
 
             if (arrayIndex < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(arrayIndex), $"Индекс должен быть больше 0, сейчас = {arrayIndex}");
+                throw new ArgumentOutOfRangeException(nameof(arrayIndex), $"Индекс должен быть не меньше 0, сейчас = {arrayIndex}");
             }
 
             if (Count > array.Length - arrayIndex)
