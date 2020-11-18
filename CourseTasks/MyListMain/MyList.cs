@@ -1,39 +1,32 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 
 namespace MyListMain
 {
     class MyList<T> : IList<T>
     {
-        private T[] array;
-        private int count;
-        private int capacity;
-        private byte modCount;
+        private T[] items;
+        private int modCount;
+
+        public int Count { get; private set; }
 
         public int Capacity
         {
             get
             {
-                return capacity;
+                return items.Length;
             }
 
             set
             {
-                if (value < Count)
+                if (value < 0 || value < Count)
                 {
-                    throw new ArgumentOutOfRangeException("value", "Емкость меньше размера списка");
+                    throw new ArgumentOutOfRangeException(nameof(value), $"Вместимость должна быть больше 0 и больше количества элементов в списке, сейчас = {value}");
                 }
 
-                capacity = value;
-            }
-        }
-
-        public int Count
-        {
-            get
-            {
-                return count;
+                Array.Resize(ref items, value);
             }
         }
 
@@ -43,10 +36,12 @@ namespace MyListMain
 
         public MyList(int capacity)
         {
-            modCount = 0;
-            count = 0;
-            Capacity = capacity;
-            array = new T[Capacity];
+            if (capacity < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(capacity), $"Вместимость должна быть больше 0, сейчас = {capacity}");
+            }
+
+            items = new T[capacity];
         }
 
         public T this[int index]
@@ -54,61 +49,47 @@ namespace MyListMain
             get
             {
                 CheckOutBounds(index);
-                return array[index];
+                return items[index];
             }
 
             set
             {
                 CheckOutBounds(index);
-                array[index] = value;
+                items[index] = value;
                 modCount++;
             }
         }
 
-        public bool IsReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool IsReadOnly => false;
 
         public void Add(T item)
         {
-            if (Count == array.Length)
+            if (Count == Capacity)
             {
                 IncreaseCapacity();
             }
 
-            array[Count] = item;
-            count++;
+            items[Count] = item;
+            Count++;
             modCount++;
         }
 
         private void IncreaseCapacity()
         {
-            Capacity = capacity * 2;
-            T[] oldArray = array;
-            array = new T[Capacity];
-            Array.Copy(oldArray, 0, array, 0, oldArray.Length);
+            Capacity = (Capacity + 1) * 2;
         }
 
-        private void TrimExcess()
+        public void TrimExcess()
         {
-            Capacity = count;
-            T[] oldArray = array;
-            array = new T[Count];
-            Array.Copy(oldArray, 0, array, 0, array.Length);
-        }
-
-        private bool IsNeedTrimExcess()
-        {
-            return (double)count / Capacity < 0.2;
+            if (Count / Capacity * 100 < 90)
+            {
+                Capacity = Count;
+            }
         }
 
         private void CheckOutBounds(int index)
         {
-            if (index >= Count || index < 0)
+            if (index < 0 || index >= Count)
             {
                 throw new IndexOutOfRangeException($"Индекс {index} за пределами диапазона. Всего элементов в списке {Count}");
             }
@@ -116,12 +97,9 @@ namespace MyListMain
 
         public void Clear()
         {
-            count = 0;
-
-            if (IsNeedTrimExcess())
-            {
-                TrimExcess();
-            }
+            Array.Clear(items, 0, Count);
+            modCount++;
+            Count = 0;
         }
 
         public bool Contains(T item)
@@ -131,15 +109,87 @@ namespace MyListMain
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            if (Count + arrayIndex > array.Length || arrayIndex < 0)
+            if (array == null)
             {
-                throw new ArgumentException($"Длинны  массива назначения не хватает для копирования, длинна массива = {array.Length}, нужно {Count + arrayIndex + 1}");
+                throw new ArgumentNullException(nameof(array), "Массив равен null");
             }
 
+            if (arrayIndex < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(arrayIndex), $"Индекс должен быть больше 0, сейчас = {arrayIndex}");
+            }
+
+            if (Count > array.Length - arrayIndex)
+            {
+                throw new ArgumentException($"Длинны  массива назначения не хватает для копирования, индекс начала копирования = {arrayIndex}, длинна массива = {array.Length}, нужно {Count + arrayIndex + 1}");
+            }
+
+            Array.Copy(items, 0, array, arrayIndex, Count);
+        }
+
+        public int IndexOf(T item)
+        {
             for (int i = 0; i < Count; i++)
             {
-                array[arrayIndex++] = this.array[i];
+                if (item != null)
+                {
+                    if (item.Equals(items[i]))
+                    {
+                        return i;
+                    }
+                }
             }
+
+            return -1;
+        }
+
+        public void Insert(int index, T item)
+        {
+            if (Count == Capacity)
+            {
+                IncreaseCapacity();
+            }
+
+            if (index == Count)
+            {
+                items[Count] = item;
+            }
+            else
+            {
+                CheckOutBounds(index);
+                Array.Copy(items, index, items, index + 1, Count - index);
+                items[index] = item;
+            }
+
+            Count++;
+            modCount++;
+        }
+
+        public bool Remove(T item)
+        {
+            int itemIndex = IndexOf(item);
+
+            if (itemIndex == -1)
+            {
+                return false;
+            }
+
+            RemoveAt(itemIndex);
+            return true;
+        }
+
+        public void RemoveAt(int index)
+        {
+            CheckOutBounds(index);
+
+            if (index < Count - 1)
+            {
+                Array.Copy(items, index + 1, items, index, Count - index - 1);
+            }
+
+            items[Count - 1] = default;
+            Count--;
+            modCount++;
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -153,70 +203,33 @@ namespace MyListMain
                     throw new InvalidOperationException("Коллекция была изменена");
                 }
 
-                yield return array[i];
-            }
-        }
-
-        public int IndexOf(T item)
-        {
-            for (int i = 0; i < Count; i++)
-            {
-                if (item.Equals(array[i]))
-                {
-                    return i;
-                }
-            }
-
-            return -1;
-        }
-
-        public void Insert(int index, T item)
-        {
-            CheckOutBounds(index);
-
-            if (Count == array.Length)
-            {
-                IncreaseCapacity();
-            }
-
-            Array.Copy(array, index, array, index + 1, Count - index);
-            array[index] = item;
-            count++;
-            modCount++;
-        }
-
-        public bool Remove(T item)
-        {
-            if (IndexOf(item) == -1)
-            {
-                return false;
-            }
-
-            RemoveAt(IndexOf(item));
-            return true;
-        }
-
-        public void RemoveAt(int index)
-        {
-            CheckOutBounds(index);
-
-            if (index < Count - 1)
-            {
-                Array.Copy(array, index + 1, array, index, Count - index - 1);
-            }
-
-            count--;
-            modCount++;
-
-            if (IsNeedTrimExcess())
-            {
-                TrimExcess();
+                yield return items[i];
             }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public override string ToString()
+        {
+            if (Count == 0)
+            {
+                return "";
+            }
+            StringBuilder stringBuilder = new StringBuilder("{");
+
+            for (int i = 0; i < Count - 2; i++)
+            {
+                stringBuilder.Append(items[i]);
+                stringBuilder.Append(", ");
+            }
+
+            stringBuilder.Append(items[Count - 1]);
+            stringBuilder.Append("}");
+
+            return stringBuilder.ToString();
         }
     }
 }

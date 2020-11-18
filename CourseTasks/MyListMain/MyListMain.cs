@@ -1,4 +1,4 @@
-﻿using System; 
+﻿using System;
 
 namespace MyListMain
 {
@@ -6,16 +6,17 @@ namespace MyListMain
     {
         static void Main()
         {
-            MyList<int> myList = new MyList<int> { 10, 20, 30, 40, 50 };
-            myList.Insert(1, 105);
-            myList.RemoveAt(0);
-            myList.Remove(50);
+            MyList<string> myList = new MyList<string>(10) { "word" , "world", "price", null, "home" };
 
-            int[] tt = new int[10];
-            myList.CopyTo(tt, -5);
+            myList.Insert(5, "roof");
+            myList.RemoveAt(5);
+            myList.Remove("world");
 
-            Console.Write("Значения списка: ");
-            Console.WriteLine(string.Join(", ", myList));
+            string[] words = new string[10];
+            myList.CopyTo(words, 6);
+
+            Console.Write("Значения массива: ");
+            Console.WriteLine(string.Join(", ", words));
 
             myList.Clear();
             Console.WriteLine("Размер списка после удаления = " + myList.Count);
