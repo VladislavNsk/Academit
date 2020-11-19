@@ -41,16 +41,7 @@ namespace VectorMain
             }
 
             components = new double[size];
-
-            if(array.Length > size)
-            {
-                Array.Copy(array, components, size);
-            }
-            else
-            {
-                Array.Copy(array, components, array.Length);
-            }
-            
+            Array.Copy(array, components, Math.Min(array.Length, size));
         }
 
         private void EqualizeComponentsCount(Vector vector)
@@ -145,9 +136,9 @@ namespace VectorMain
         public static double GetScalarProduct(Vector vector1, Vector vector2)
         {
             double scalarProduct = 0;
-            int minVectorLength = vector1.GetSize() > vector2.GetSize() ? vector1.GetSize() : vector2.GetSize();
+            int minVectorSize = Math.Min(vector1.GetSize(), vector2.GetSize());
 
-            for (int i = 0; i < minVectorLength; i++)
+            for (int i = 0; i < minVectorSize; i++)
             {
                 scalarProduct += vector1.components[i] * vector2.components[i];
             }
