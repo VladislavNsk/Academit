@@ -6,8 +6,9 @@ namespace TreeMain
     class Tree<T>
     {
         private TreeNode<T> root;
-        public int count;
         private readonly IComparer<T> comparer;
+
+        public int Count { get; private set; }
 
         public Tree()
         {
@@ -25,19 +26,6 @@ namespace TreeMain
             this.root = root ?? throw new Exception();
             this.comparer = comparer;
             Count = 1 + root.GetChildrenCount();
-        }
-
-        public int Count
-        {
-            get
-            {
-                return count;
-            }
-
-            private set
-            {
-                count = value;
-            }
         }
 
         public void Add(TreeNode<T> treeNode)
@@ -378,7 +366,7 @@ namespace TreeMain
 
         public void DepthVisit()
         {
-            if(root == null)
+            if (root == null)
             {
                 Console.WriteLine("Дерево пустое");
                 return;
@@ -395,7 +383,7 @@ namespace TreeMain
 
                 for (int i = children.Length - 1; i >= 0; i--)
                 {
-                    if(children[i] != null)
+                    if (children[i] != null)
                     {
                         stack.Push(children[i]);
                     }

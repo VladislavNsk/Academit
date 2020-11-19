@@ -147,6 +147,11 @@ namespace SinglyLinkedListMain
 
         public bool Delete(T data)
         {
+            if(data == head.Data)
+            {
+
+            }
+
             for (ListItem<T> current = head, previous = null; current != null; previous = current, current = current.Next)
             {
                 if (current.Data == null)
