@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 
 namespace TreeMain
 {
@@ -131,9 +132,7 @@ namespace TreeMain
 
         public bool Contains(T item)
         {
-            TreeNode<T> treeNode = GetTreeNode(item);
-
-            return treeNode != null;
+            return GetTreeNode(item) != null;
         }
 
         private TreeNode<T> GetTreeNode(T item)
@@ -477,6 +476,36 @@ namespace TreeMain
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public override string ToString()
+        {
+            StringBuilder stringBuilder = new StringBuilder("{");
+            Queue<TreeNode<T>> queue = new Queue<TreeNode<T>>();
+            queue.Enqueue(root);
+
+            while (queue.Count != 0)
+            {
+                TreeNode<T> node = queue.Dequeue();
+
+                foreach (TreeNode<T> child in node.GetChildren())
+                {
+                    if (child != null)
+                    {
+                        queue.Enqueue(child);
+                    }
+                }
+
+                stringBuilder.Append(node.Data);
+
+                if(queue.Count != 0)
+                {
+                    stringBuilder.Append(", ");
+                }
+            }
+
+            stringBuilder.Append("}");
+            return stringBuilder.ToString();
         }
     }
 }
