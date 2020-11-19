@@ -131,12 +131,9 @@ namespace MyListMain
         {
             for (int i = 0; i < Count; i++)
             {
-                if (item != null)
+                if(Equals(items[i], item))
                 {
-                    if (item.Equals(items[i]))
-                    {
-                        return i;
-                    }
+                    return i;
                 }
             }
 

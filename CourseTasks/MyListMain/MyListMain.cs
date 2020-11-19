@@ -6,11 +6,12 @@ namespace MyListMain
     {
         static void Main()
         {
-            MyList<string> myList = new MyList<string>(10) { "word", "world", "price", null, "home" };
+            string word = null;
+            MyList<string> myList = new MyList<string>(10) { "word", "world", "price", word, "home" };
 
             myList.Insert(5, "roof");
             myList.RemoveAt(5);
-            myList.Remove("world");
+            myList.Remove(word);
 
             string[] words = new string[10];
             myList.CopyTo(words, 6);
