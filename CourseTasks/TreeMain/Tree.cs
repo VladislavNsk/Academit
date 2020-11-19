@@ -97,7 +97,7 @@ namespace TreeMain
         {
             if (comparer == null)
             {
-                throw new NullReferenceException($"Компаратор = null, класс не реализует интерфейс IComparable");
+                throw new InvalidOperationException($"Компаратор = null, класс не реализует интерфейс IComparable");
             }
 
             TreeNode<T> currentNode = root;
