@@ -8,6 +8,7 @@ namespace TreeMain
     {
         private TreeNode<T> root;
         private readonly IComparer<T> comparer;
+        private int modCount;
 
         public int Count { get; private set; }
 
@@ -49,6 +50,7 @@ namespace TreeMain
             {
                 root = new TreeNode<T>(item);
                 Count++;
+                modCount++;
                 return;
             }
 
@@ -70,6 +72,7 @@ namespace TreeMain
                     {
                         currentNode.LeftChild = new TreeNode<T>(item) { Parent = currentNode };
                         Count++;
+                        modCount++;
                         return;
                     }
 
@@ -81,6 +84,7 @@ namespace TreeMain
                 {
                     currentNode.RightChild = new TreeNode<T>(item) { Parent = currentNode };
                     Count++;
+                    modCount++;
                     return;
                 }
 
@@ -105,6 +109,7 @@ namespace TreeMain
                     {
                         currentNode.LeftChild = new TreeNode<T>(item) { Parent = currentNode };
                         Count++;
+                        modCount++;
                         return;
                     }
 
@@ -116,6 +121,7 @@ namespace TreeMain
                 {
                     currentNode.RightChild = new TreeNode<T>(item) { Parent = currentNode };
                     Count++;
+                    modCount++;
                     return;
                 }
 
@@ -125,80 +131,9 @@ namespace TreeMain
 
         public bool Contains(T item)
         {
-            TreeNode<T> currentNode = root;
+            TreeNode<T> treeNode = GetTreeNode(item);
 
-            if (!(currentNode.Data is IComparable<T>))
-            {
-                return ContainsWithComparer(item);
-            }
-
-            while (currentNode != null)
-            {
-                IComparable<T> comparable = (IComparable<T>)currentNode.Data;
-
-                if (comparable.CompareTo(item) == 0)
-                {
-                    return true;
-                }
-
-                if (comparable.CompareTo(item) > 0)
-                {
-                    if (currentNode.LeftChild == null)
-                    {
-                        return false;
-                    }
-
-                    currentNode = currentNode.LeftChild;
-                    continue;
-                }
-
-                if (currentNode.RightChild == null)
-                {
-                    return false;
-                }
-
-                currentNode = currentNode.RightChild;
-            }
-
-            return false;
-        }
-
-        private bool ContainsWithComparer(T item)
-        {
-            if (comparer == null)
-            {
-                throw new NullReferenceException($"Компаратор = null, класс не реализует интерфейс IComparable");
-            }
-
-            TreeNode<T> currentNode = root;
-
-            while (currentNode != null)
-            {
-                if (comparer.Compare(currentNode.Data, item) == 0)
-                {
-                    return true;
-                }
-
-                if (comparer.Compare(currentNode.Data, item) > 0)
-                {
-                    if (currentNode.LeftChild == null)
-                    {
-                        return false;
-                    }
-
-                    currentNode = currentNode.LeftChild;
-                    continue;
-                }
-
-                if (currentNode.RightChild == null)
-                {
-                    return false;
-                }
-
-                currentNode = currentNode.RightChild;
-            }
-
-            return false;
+            return treeNode != null;
         }
 
         private TreeNode<T> GetTreeNode(T item)
@@ -292,16 +227,19 @@ namespace TreeMain
             if (treeNode.GetChildrenCount() == 0)
             {
                 RemoveSheet(treeNode);
+                modCount++;
                 return true;
             }
 
             if (treeNode.GetChildrenCount() == 1)
             {
                 RemoveNodeWithOneChild(treeNode);
+                modCount++;
                 return true;
             }
 
             RemoveNodeWithTwoChildren(treeNode);
+            modCount++;
             return true;
         }
 
@@ -315,7 +253,6 @@ namespace TreeMain
             {
                 treeNode.Parent.RightChild = null;
             }
-
 
             Count--;
             return;
@@ -512,7 +449,29 @@ namespace TreeMain
 
         public IEnumerator<T> GetEnumerator()
         {
-            throw new Exception();
+            int fixedModCount = modCount;
+            Queue<TreeNode<T>> queue = new Queue<TreeNode<T>>();
+            queue.Enqueue(root);
+
+            while (queue.Count != 0)
+            {
+                TreeNode<T> node = queue.Dequeue();
+
+                foreach (TreeNode<T> child in node.GetChildren())
+                {
+                    if (child != null)
+                    {
+                        queue.Enqueue(child);
+                    }
+                }
+
+                if(fixedModCount != modCount)
+                {
+                    throw new InvalidOperationException("Коллекция была изменена");
+                }
+
+                yield return node.Data;
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
