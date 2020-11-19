@@ -8,24 +8,16 @@
 
         public TreeNode<T> Parent { get; set; }
 
-        private T data;
-
-        public T Data
-        {
-            get
-            {
-                return data;
-            }
-        }
+        public T Data { get; private set; }
 
         public TreeNode(T data)
         {
-            this.data = data;
+            Data = data;
         }
 
         public TreeNode(TreeNode<T> treeNode)
         {
-            data = treeNode.data;
+            Data = treeNode.Data;
             LeftChild = treeNode.LeftChild;
             RightChild = treeNode.RightChild;
         }

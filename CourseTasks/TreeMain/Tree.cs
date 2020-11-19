@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace TreeMain
 {
-    class Tree<T>
+    class Tree<T> : IEnumerable<T>
     {
         private TreeNode<T> root;
         private readonly IComparer<T> comparer;
@@ -12,32 +13,41 @@ namespace TreeMain
 
         public Tree()
         {
-            Count = 0;
         }
 
-        public Tree(TreeNode<T> root)
+        public Tree(T item)
         {
-            this.root = root ?? throw new Exception();
-            Count = 1 + root.GetChildrenCount();
-        }
-
-        public Tree(TreeNode<T> root, IComparer<T> comparer)
-        {
-            this.root = root ?? throw new Exception();
-            this.comparer = comparer;
-            Count = 1 + root.GetChildrenCount();
-        }
-
-        public void Add(TreeNode<T> treeNode)
-        {
-            if (treeNode == null)
+            if(item == null)
             {
-                throw new NullReferenceException($"Элемент списка treeNode = null");
+                throw new ArgumentNullException(nameof(root), $"Корень дерева не может быть null");
+            }
+
+            root = new TreeNode<T>(item);
+            Count++;
+        }
+
+        public Tree(T item, IComparer<T> comparer)
+        {
+            if (item == null)
+            {
+                throw new ArgumentNullException(nameof(item), $"Корень дерева не может быть null");
+            }
+
+            root = new TreeNode<T>(item);
+            this.comparer = comparer;
+            Count++;
+        }
+
+        public void Add(T item)
+        {
+            if (item == null)
+            {
+                throw new ArgumentNullException($"Элемент дерева не может быть null");
             }
 
             if (root == null)
             {
-                root = treeNode;
+                root = new TreeNode<T>(item);
                 Count++;
                 return;
             }
@@ -46,7 +56,7 @@ namespace TreeMain
 
             if (!(currentNode.Data is IComparable<T>))
             {
-                AddWithComparer(treeNode);
+                AddWithComparer(item);
                 return;
             }
 
@@ -54,12 +64,11 @@ namespace TreeMain
             {
                 IComparable<T> comparable = (IComparable<T>)currentNode.Data;
 
-                if (comparable.CompareTo(treeNode.Data) > 0)
+                if (comparable.CompareTo(item) > 0)
                 {
                     if (currentNode.LeftChild == null)
                     {
-                        currentNode.LeftChild = treeNode;
-                        treeNode.Parent = currentNode;
+                        currentNode.LeftChild = new TreeNode<T>(item) { Parent = currentNode };
                         Count++;
                         return;
                     }
@@ -70,8 +79,7 @@ namespace TreeMain
 
                 if (currentNode.RightChild == null)
                 {
-                    currentNode.RightChild = treeNode;
-                    treeNode.Parent = currentNode;
+                    currentNode.RightChild = new TreeNode<T>(item) { Parent = currentNode };
                     Count++;
                     return;
                 }
@@ -80,7 +88,7 @@ namespace TreeMain
             }
         }
 
-        private void AddWithComparer(TreeNode<T> treeNode)
+        private void AddWithComparer(T item)
         {
             if (comparer == null)
             {
@@ -91,12 +99,11 @@ namespace TreeMain
 
             while (currentNode != null)
             {
-                if (comparer.Compare(currentNode.Data, treeNode.Data) > 0)
+                if (comparer.Compare(currentNode.Data, item) > 0)
                 {
                     if (currentNode.LeftChild == null)
                     {
-                        currentNode.LeftChild = treeNode;
-                        treeNode.Parent = currentNode;
+                        currentNode.LeftChild = new TreeNode<T>(item) { Parent = currentNode };
                         Count++;
                         return;
                     }
@@ -107,8 +114,7 @@ namespace TreeMain
 
                 if (currentNode.RightChild == null)
                 {
-                    currentNode.RightChild = treeNode;
-                    treeNode.Parent = currentNode;
+                    currentNode.RightChild = new TreeNode<T>(item) { Parent = currentNode };
                     Count++;
                     return;
                 }
@@ -117,25 +123,25 @@ namespace TreeMain
             }
         }
 
-        public bool Contains(TreeNode<T> treeNode)
+        public bool Contains(T item)
         {
             TreeNode<T> currentNode = root;
 
             if (!(currentNode.Data is IComparable<T>))
             {
-                return ContainsWithComparer(treeNode);
+                return ContainsWithComparer(item);
             }
 
             while (currentNode != null)
             {
-                IComparable<T> comparable = currentNode.Data as IComparable<T>;
+                IComparable<T> comparable = (IComparable<T>)currentNode.Data;
 
-                if (comparable.CompareTo(treeNode.Data) == 0)
+                if (comparable.CompareTo(item) == 0)
                 {
                     return true;
                 }
 
-                if (comparable.CompareTo(treeNode.Data) > 0)
+                if (comparable.CompareTo(item) > 0)
                 {
                     if (currentNode.LeftChild == null)
                     {
@@ -157,7 +163,7 @@ namespace TreeMain
             return false;
         }
 
-        private bool ContainsWithComparer(TreeNode<T> treeNode)
+        private bool ContainsWithComparer(T item)
         {
             if (comparer == null)
             {
@@ -168,12 +174,12 @@ namespace TreeMain
 
             while (currentNode != null)
             {
-                if (comparer.Compare(currentNode.Data, treeNode.Data) == 0)
+                if (comparer.Compare(currentNode.Data, item) == 0)
                 {
                     return true;
                 }
 
-                if (comparer.Compare(currentNode.Data, treeNode.Data) > 0)
+                if (comparer.Compare(currentNode.Data, item) > 0)
                 {
                     if (currentNode.LeftChild == null)
                     {
@@ -195,9 +201,89 @@ namespace TreeMain
             return false;
         }
 
-        public bool Remove(TreeNode<T> treeNode)
+        private TreeNode<T> GetTreeNode(T item)
         {
-            if (!Contains(treeNode))
+            TreeNode<T> currentNode = root;
+
+            if (!(currentNode.Data is IComparable<T>))
+            {
+                return GetTreeNodeWithComparer(item);
+            }
+
+            while (currentNode != null)
+            {
+                IComparable<T> comparable = (IComparable<T>)currentNode.Data;
+
+                if (comparable.CompareTo(item) == 0)
+                {
+                    return currentNode;
+                }
+
+                if (comparable.CompareTo(item) > 0)
+                {
+                    if (currentNode.LeftChild == null)
+                    {
+                        return null;
+                    }
+
+                    currentNode = currentNode.LeftChild;
+                    continue;
+                }
+
+                if (currentNode.RightChild == null)
+                {
+                    return null;
+                }
+
+                currentNode = currentNode.RightChild;
+            }
+
+            return null;
+        }
+
+        private TreeNode<T> GetTreeNodeWithComparer(T item)
+        {
+            if (comparer == null)
+            {
+                throw new NullReferenceException($"Компаратор = null, класс не реализует интерфейс IComparable");
+            }
+
+            TreeNode<T> currentNode = root;
+
+            while (currentNode != null)
+            {
+                if (comparer.Compare(currentNode.Data, item) == 0)
+                {
+                    return currentNode;
+                }
+
+                if (comparer.Compare(currentNode.Data, item) > 0)
+                {
+                    if (currentNode.LeftChild == null)
+                    {
+                        return null;
+                    }
+
+                    currentNode = currentNode.LeftChild;
+                    continue;
+                }
+
+                if (currentNode.RightChild == null)
+                {
+                    return null;
+                }
+
+                currentNode = currentNode.RightChild;
+            }
+
+            return null;
+        }
+
+        public bool Remove(T item)
+        {
+            TreeNode<T> treeNode = GetTreeNode(item);
+
+            if (treeNode == null)
             {
                 Console.WriteLine("Узла нет в дереве");
                 return false;
@@ -348,6 +434,12 @@ namespace TreeMain
 
         public void RecursionDepthVisit()
         {
+            if (root == null)
+            {
+                Console.WriteLine("Дерево пустое");
+                return;
+            }
+
             RecursionDepthVisit(root);
         }
 
@@ -393,6 +485,12 @@ namespace TreeMain
 
         public void VisitInWidth()
         {
+            if (root == null)
+            {
+                Console.WriteLine("Дерево пустое");
+                return;
+            }
+
             Queue<TreeNode<T>> queue = new Queue<TreeNode<T>>();
             queue.Enqueue(root);
 
@@ -410,6 +508,16 @@ namespace TreeMain
 
                 Console.WriteLine(node.Data);
             }
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            throw new Exception();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }
