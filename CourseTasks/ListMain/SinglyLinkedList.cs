@@ -145,29 +145,19 @@ namespace SinglyLinkedListMain
             return data;
         }
 
-        public bool Delete(T data)
+        public bool Delete(T data) 
         {
-            if(data == head.Data)
+            if(Equals(head.Data, data))
             {
-
+                head = head.Next;
+                Count--;
+                return true;
             }
 
             for (ListItem<T> current = head, previous = null; current != null; previous = current, current = current.Next)
             {
-                if (current.Data == null)
+                if (Equals(current.Data, data))
                 {
-                    continue;
-                }
-
-                if (current.Data.Equals(data))
-                {
-                    if (previous == null)
-                    {
-                        head = head.Next;
-                        Count--;
-                        return true;
-                    }
-
                     previous.Next = current.Next;
                     Count--;
                     return true;

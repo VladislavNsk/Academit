@@ -25,7 +25,7 @@ namespace SinglyLinkedListMain
             Console.WriteLine("После " + singlyLinkedList1);
 
             Console.WriteLine("Второй список " + singlyLinkedList2);
-            singlyLinkedList2.Delete("b");
+            singlyLinkedList2.Delete("f");
             singlyLinkedList2.DeleteAtIndex(3);
             Console.WriteLine("Второй список после удаления элементов " + singlyLinkedList2);
 
