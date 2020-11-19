@@ -37,7 +37,7 @@ namespace VectorMain
         {
             if (size <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(array), $"Введен не корректный размер вектора size: \"{size}\", должен быть больше 0");
+                throw new ArgumentOutOfRangeException(nameof(array), $"Введен не корректный размер вектора {nameof(size)}: \"{size}\", должен быть больше 0");
             }
 
             components = new double[size];
