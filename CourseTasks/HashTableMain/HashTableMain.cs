@@ -15,6 +15,7 @@ namespace HashTableMain
 
             HashTable<string> hashTable = new HashTable<string>
             {
+                null,
                 word1,
                 word2,
                 word3,
@@ -45,7 +46,7 @@ namespace HashTableMain
             string[] array = new string[10];
             hashTable.CopyTo(array, 0);
 
-            Console.WriteLine(hashTable);
+            Console.WriteLine("Элементы хэш таблицы " + hashTable);
         }
     }
 }

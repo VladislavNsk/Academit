@@ -30,11 +30,6 @@ namespace HashTableMain
 
         public void Add(T item)
         {
-            if (item == null)
-            {
-                return;
-            }
-
             int index = GetItemIndex(item);
 
             if (lists[index] == null)
@@ -49,7 +44,7 @@ namespace HashTableMain
 
         private int GetItemIndex(T item)
         {
-            return Math.Abs(item.GetHashCode() % lists.Length);
+            return item == null ? 0 : Math.Abs(item.GetHashCode() % lists.Length);
         }
 
         public void Clear()
@@ -152,7 +147,15 @@ namespace HashTableMain
 
             foreach (T item in this)
             {
-                stringBuilder.Append(item);
+                if(item == null)
+                {
+                    stringBuilder.Append("null");
+                }
+                else
+                {
+                    stringBuilder.Append(item);
+                }
+                
                 stringBuilder.Append(", ");
             }
 
