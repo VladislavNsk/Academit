@@ -30,7 +30,7 @@ namespace ArrayListHome
 
         public static List<string> GetStringsListFromFile(string path)
         {
-            List<string> stringList = new List<string>();
+            List<string> stringsList = new List<string>();
 
             try
             {
@@ -38,7 +38,7 @@ namespace ArrayListHome
                 {
                     while (!reader.EndOfStream)
                     {
-                        stringList.Add(reader.ReadLine());
+                        stringsList.Add(reader.ReadLine());
                     }
                 }
             }
@@ -47,7 +47,7 @@ namespace ArrayListHome
                 Console.WriteLine($"Файл \"{e.FileName}\" не найден");
             }
 
-            return stringList;
+            return stringsList;
         }
 
         public static void RemoveEvenNumbers(List<int> numbersList)
@@ -62,11 +62,11 @@ namespace ArrayListHome
             }
         }
 
-        public static List<int> GetUniqueNumbersList(List<int> duplicateNumbersList)
+        public static List<int> GetUniqueNumbersList(List<int> duplicatedNumbersList)
         {
-            List<int> uniqueNumbersList = new List<int>(duplicateNumbersList.Count);
+            List<int> uniqueNumbersList = new List<int>(duplicatedNumbersList.Count);
 
-            foreach (int number in duplicateNumbersList)
+            foreach (int number in duplicatedNumbersList)
             {
                 if (!uniqueNumbersList.Contains(number))
                 {
