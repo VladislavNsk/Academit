@@ -44,7 +44,12 @@ namespace Lambda
             int avarageAge = (int)peoplesUnder18.Select(people => people.Age).Average();
             Console.WriteLine("Средний возраст людей до 18 лет = " + avarageAge);
 
-            Dictionary<string, int> personsByAvarageAge = persons.GroupBy(person => person.Name).ToDictionary(group => group.Key, group => (int)group.Select(person => person.Age).Average());
+            var personsByAvarageAge = persons.GroupBy(person => person.Name).ToDictionary(group => group.Key, group => (int)group.Select(person => person.Age).Average());
+
+            foreach(var pair in personsByAvarageAge)
+            {
+                Console.WriteLine("Имя = " + pair.Key + ", Средний возраст = " + pair.Value);
+            }
 
             List<string> peopleFrom20To45 = persons.Where(person => person.Age >= 20 && person.Age <= 45).OrderByDescending(person => person.Age).Select(person => person.Name).ToList();
             Console.WriteLine(string.Join(", ", peopleFrom20To45));
