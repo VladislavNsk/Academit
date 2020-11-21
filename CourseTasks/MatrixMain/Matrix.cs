@@ -129,7 +129,7 @@ namespace MatrixMain
 
             if (GetColumnsCount() != vector.GetSize())
             {
-                throw new ArgumentException($"Размеры строк должны совпадать, длинна строки матрицы = {GetColumnsCount()}, размерность вектора = {vector.GetSize()}", nameof(vector));
+                throw new ArgumentException($"Размеры строк должны совпадать, количество столбцов матрицы = {GetColumnsCount()}, размерность вектора = {vector.GetSize()}", nameof(vector));
             }
 
             rows[rowIndex] = new Vector(vector);
