@@ -43,7 +43,7 @@ namespace MatrixMain
         {
             if (array.Length == 0)
             {
-                throw new ArgumentException($"Размер массива должен быть больше 0, текущий массива = 0", nameof(array));
+                throw new ArgumentException("Размер массива должен быть больше 0, текущий массива = 0", nameof(array));
             }
 
             rows = new Vector[array.GetLength(0)];
