@@ -21,7 +21,7 @@ namespace TreeMain
         {
             if(item == null)
             {
-                throw new ArgumentNullException(nameof(root), $"Корень дерева не может быть null");
+                throw new ArgumentNullException(nameof(root), "Корень дерева не может быть null");
             }
 
             root = new TreeNode<T>(item);
@@ -32,7 +32,7 @@ namespace TreeMain
         {
             if (item == null)
             {
-                throw new ArgumentNullException(nameof(item), $"Корень дерева не может быть null");
+                throw new ArgumentNullException(nameof(item), "Корень дерева не может быть null");
             }
 
             root = new TreeNode<T>(item);
@@ -44,7 +44,7 @@ namespace TreeMain
         {
             if (item == null)
             {
-                throw new ArgumentNullException($"Элемент дерева не может быть null");
+                throw new ArgumentNullException(nameof(item), "Элемент дерева не может быть null");
             }
 
             if (root == null)
@@ -97,7 +97,7 @@ namespace TreeMain
         {
             if (comparer == null)
             {
-                throw new InvalidOperationException($"Компаратор = null, класс не реализует интерфейс IComparable");
+                throw new InvalidOperationException("Компаратор = null, класс не реализует интерфейс IComparable");
             }
 
             TreeNode<T> currentNode = root;
@@ -179,7 +179,7 @@ namespace TreeMain
         {
             if (comparer == null)
             {
-                throw new NullReferenceException($"Компаратор = null, класс не реализует интерфейс IComparable");
+                throw new InvalidOperationException("Компаратор = null, класс не реализует интерфейс IComparable");
             }
 
             TreeNode<T> currentNode = root;
