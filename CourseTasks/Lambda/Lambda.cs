@@ -20,7 +20,11 @@ namespace Lambda
                 new Person("Михаил", 60)
             };
 
-            List<string> uniqueNames = persons.Select(person => person.Name).Distinct().ToList();
+            List<string> uniqueNames = persons
+                .Select(person => person.Name)
+                .Distinct()
+                .ToList();
+
             Console.WriteLine("Имена: " + string.Join(", ", uniqueNames));
 
             uniqueNames.ForEach(name =>
@@ -40,18 +44,32 @@ namespace Lambda
                }
            });
 
-            List<Person> peoplesUnder18 = persons.Where(person => person.Age < 18).ToList();
-            int avarageAge = (int)peoplesUnder18.Select(people => people.Age).Average();
+            List<Person> peoplesUnder18 = persons
+                .Where(person => person.Age < 18)
+                .ToList();
+
+            int avarageAge = (int)peoplesUnder18
+                .Select(people => people.Age)
+                .Average();
+
             Console.WriteLine("Средний возраст людей до 18 лет = " + avarageAge);
 
-            var personsByAvarageAge = persons.GroupBy(person => person.Name).ToDictionary(group => group.Key, group => (int)group.Select(person => person.Age).Average());
+            var personsByAvarageAge = persons
+                .GroupBy(person => person.Name)
+                .ToDictionary(group => group.Key, group => (int)group.Select(person => person.Age)
+                .Average());
 
-            foreach(var pair in personsByAvarageAge)
+            foreach (var pair in personsByAvarageAge)
             {
                 Console.WriteLine("Имя = " + pair.Key + ", Средний возраст = " + pair.Value);
             }
 
-            List<string> peopleFrom20To45 = persons.Where(person => person.Age >= 20 && person.Age <= 45).OrderByDescending(person => person.Age).Select(person => person.Name).ToList();
+            List<string> peopleFrom20To45 = persons
+                .Where(person => person.Age >= 20 && person.Age <= 45)
+                .OrderByDescending(person => person.Age)
+                .Select(person => person.Name)
+                .ToList();
+
             Console.WriteLine(string.Join(", ", peopleFrom20To45));
         }
     }
