@@ -21,9 +21,9 @@ namespace MyListMain
 
             set
             {
-                if (value < 0 || value < Count)
+                if (value < Count)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(value), $"Вместимость должна быть больше 0 и больше количества элементов в списке, сейчас = {value}");
+                    throw new ArgumentOutOfRangeException(nameof(value), $"Вместимость должна быть больше количества элементов в списке, сейчас = {value}");
                 }
 
                 Array.Resize(ref items, value);
@@ -48,13 +48,13 @@ namespace MyListMain
         {
             get
             {
-                CheckOutBounds(index);
+                CheckIndex(index);
                 return items[index];
             }
 
             set
             {
-                CheckOutBounds(index);
+                CheckIndex(index);
                 items[index] = value;
                 modCount++;
             }
@@ -81,13 +81,13 @@ namespace MyListMain
 
         public void TrimExcess()
         {
-            if (Count / Capacity * 100 < 90)
+            if ((double)Count / Capacity < 0.9)
             {
                 Capacity = Count;
             }
         }
 
-        private void CheckOutBounds(int index)
+        private void CheckIndex(int index)
         {
             if (index < 0 || index >= Count)
             {
@@ -131,7 +131,7 @@ namespace MyListMain
         {
             for (int i = 0; i < Count; i++)
             {
-                if(Equals(items[i], item))
+                if (Equals(items[i], item))
                 {
                     return i;
                 }
@@ -142,6 +142,11 @@ namespace MyListMain
 
         public void Insert(int index, T item)
         {
+            if (index < 0 || index > Count)
+            {
+                throw new IndexOutOfRangeException($"Индекс {index} за пределами диапазона. Всего элементов в списке {Count}");
+            }
+
             if (Count == Capacity)
             {
                 IncreaseCapacity();
@@ -153,7 +158,6 @@ namespace MyListMain
             }
             else
             {
-                CheckOutBounds(index);
                 Array.Copy(items, index, items, index + 1, Count - index);
                 items[index] = item;
             }
@@ -177,7 +181,7 @@ namespace MyListMain
 
         public void RemoveAt(int index)
         {
-            CheckOutBounds(index);
+            CheckIndex(index);
 
             if (index < Count - 1)
             {
@@ -213,8 +217,9 @@ namespace MyListMain
         {
             if (Count == 0)
             {
-                return "";
+                return "{}";
             }
+
             StringBuilder stringBuilder = new StringBuilder("{");
 
             for (int i = 0; i < Count - 2; i++)
