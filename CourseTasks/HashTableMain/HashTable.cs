@@ -30,7 +30,7 @@ namespace HashTableMain
 
         public void Add(T item)
         {
-            int index = GetItemIndex(item);
+            int index = GetIndex(item);
 
             if (lists[index] == null)
             {
@@ -42,7 +42,7 @@ namespace HashTableMain
             modCount++;
         }
 
-        private int GetItemIndex(T item)
+        private int GetIndex(T item)
         {
             return item == null ? 0 : Math.Abs(item.GetHashCode() % lists.Length);
         }
@@ -56,12 +56,7 @@ namespace HashTableMain
 
         public bool Contains(T item)
         {
-            if (item == null)
-            {
-                return false;
-            }
-
-            int index = GetItemIndex(item);
+            int index = GetIndex(item);
             return lists[index] != null && lists[index].Contains(item);
         }
 
@@ -93,12 +88,7 @@ namespace HashTableMain
 
         public bool Remove(T item)
         {
-            if (item == null)
-            {
-                return false;
-            }
-
-            int index = GetItemIndex(item);
+            int index = GetIndex(item);
 
             if (lists[index] != null && lists[index].Remove(item))
             {
@@ -147,7 +137,7 @@ namespace HashTableMain
 
             foreach (T item in this)
             {
-                if(item == null)
+                if (item == null)
                 {
                     stringBuilder.Append("null");
                 }
@@ -155,7 +145,7 @@ namespace HashTableMain
                 {
                     stringBuilder.Append(item);
                 }
-                
+
                 stringBuilder.Append(", ");
             }
 
