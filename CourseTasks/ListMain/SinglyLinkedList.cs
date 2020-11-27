@@ -13,14 +13,19 @@ namespace SinglyLinkedListMain
         {
         }
 
-        public SinglyLinkedList(T value)
+        public SinglyLinkedList(T data)
         {
-            head = new ListItem<T>(value);
+            head = new ListItem<T>(data);
             Count++;
         }
 
         public T GetFirst()
         {
+            if (Count == 0)
+            {
+                throw new NullReferenceException("Список пуст");
+            }
+
             return head.Data;
         }
 
@@ -54,27 +59,15 @@ namespace SinglyLinkedListMain
         {
             CheckIndex(index);
 
-            if (index == 0)
-            {
-                return head.Data;
-            }
-
             return GetItem(index).Data;
         }
 
         public T Set(int index, T data)
         {
             CheckIndex(index);
-            T oldData = head.Data;
-
-            if (index == 0)
-            {
-                head.Data = data;
-                return oldData;
-            }
 
             ListItem<T> item = GetItem(index);
-            oldData = item.Data;
+            T oldData = item.Data;
             item.Data = data;
 
             return oldData;
@@ -82,7 +75,10 @@ namespace SinglyLinkedListMain
 
         public void Add(int index, T data)
         {
-            CheckIndex(index);
+            if (index < 0 || index > Count)
+            {
+                throw new IndexOutOfRangeException($"Индекс {index} за пределами диапазона. Всего элементов в списке {Count}");
+            }
 
             if (index == 0)
             {
@@ -90,19 +86,9 @@ namespace SinglyLinkedListMain
                 return;
             }
 
-            int i = 1;
-
-            for (ListItem<T> current = head.Next, previous = head; current != null; previous = current, current = current.Next)
-            {
-                if (i == index)
-                {
-                    previous.Next = new ListItem<T>(data, current);
-                    Count++;
-                    return;
-                }
-
-                i++;
-            }
+            ListItem<T> previous = GetItem(index - 1);
+            previous.Next = new ListItem<T>(data, previous.Next);
+            Count++;
         }
 
         public void Add(T data)
@@ -113,8 +99,7 @@ namespace SinglyLinkedListMain
                 return;
             }
 
-            GetItem(Count - 1).Next = new ListItem<T>(data);
-            Count++;
+            Add(Count, data);
         }
 
         public T DeleteAtIndex(int index)
@@ -126,31 +111,24 @@ namespace SinglyLinkedListMain
                 return DeleteFirst();
             }
 
-            int i = 1;
-            T data = head.Data;
-
-            for (ListItem<T> current = head.Next, previous = head; current != null; previous = current, current = current.Next)
-            {
-                if (i == index)
-                {
-                    data = current.Data;
-                    previous.Next = current.Next;
-                    Count--;
-                    return data;
-                }
-
-                i++;
-            }
+            ListItem<T> previous = GetItem(index - 1);
+            T data = previous.Next.Data;
+            previous.Next = previous.Next.Next;
+            Count--;
 
             return data;
         }
 
-        public bool Delete(T data) 
+        public bool Delete(T data)
         {
-            if(Equals(head.Data, data))
+            if (Count == 0)
             {
-                head = head.Next;
-                Count--;
+                return false;
+            }
+
+            if (Equals(head.Data, data))
+            {
+                DeleteFirst();
                 return true;
             }
 
@@ -169,16 +147,21 @@ namespace SinglyLinkedListMain
 
         public T DeleteFirst()
         {
+            if (Count == 0)
+            {
+                throw new NullReferenceException("Список пуст");
+            }
+
             T data = head.Data;
             head = head.Next;
             Count--;
+
             return data;
         }
 
         public void AddFirst(T data)
         {
-            ListItem<T> item = new ListItem<T>(data) { Next = head };
-            head = item;
+            head = new ListItem<T>(data, head);
             Count++;
         }
 
@@ -208,14 +191,15 @@ namespace SinglyLinkedListMain
                 return new SinglyLinkedList<T>();
             }
 
-            SinglyLinkedList<T> singly = new SinglyLinkedList<T>() { head = new ListItem<T>(head.Data), Count = Count };
+            SinglyLinkedList<T> listCopy = new SinglyLinkedList<T>(head.Data);
+            listCopy.Count = Count;
 
-            for (ListItem<T> item1 = singly.head, item2 = head; item2.Next != null; item2 = item2.Next, item1 = item1.Next)
+            for (ListItem<T> itemCopy = listCopy.head, nextSourceItem = head.Next; nextSourceItem != null; nextSourceItem = nextSourceItem.Next, itemCopy = itemCopy.Next)
             {
-                item1.Next = new ListItem<T>(item2.Next.Data);
+                itemCopy.Next = new ListItem<T>(nextSourceItem.Data);
             }
 
-            return singly;
+            return listCopy;
         }
 
         public override string ToString()
@@ -240,6 +224,7 @@ namespace SinglyLinkedListMain
             }
 
             stringBuilder.Append("}");
+
             return stringBuilder.ToString();
         }
     }
