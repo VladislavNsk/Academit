@@ -43,7 +43,7 @@ namespace MatrixMain
         {
             if (array.Length == 0)
             {
-                throw new ArgumentException("Размер массива должен быть больше 0, текущий массива = 0", nameof(array));
+                throw new ArgumentException("Размер массива должен быть больше 0, текущий размер массива = 0", nameof(array));
             }
 
             rows = new Vector[array.GetLength(0)];
@@ -95,7 +95,7 @@ namespace MatrixMain
 
         public Vector GetColumn(int columnIndex)
         {
-            if (columnIndex < 0 || GetColumnsCount() <= columnIndex)
+            if (columnIndex < 0 || columnIndex >= GetColumnsCount())
             {
                 throw new ArgumentOutOfRangeException(nameof(columnIndex), $"Столбца по индексу {columnIndex} нет, всего столбцов в матрице {GetColumnsCount()}");
             }
@@ -112,7 +112,7 @@ namespace MatrixMain
 
         public Vector GetRow(int rowIndex)
         {
-            if (rowIndex < 0 || rows.Length <= rowIndex)
+            if (rowIndex < 0 || rowIndex >= rows.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(rowIndex), $"Строки по индексу {rowIndex} нет, всего строк в матрице {rows.Length}");
             }
@@ -122,7 +122,7 @@ namespace MatrixMain
 
         public void SetRow(int rowIndex, Vector vector)
         {
-            if (rowIndex < 0 || rows.Length <= rowIndex)
+            if (rowIndex < 0 || rowIndex  >= rows.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(rowIndex), $"Строки по индексу {rowIndex} нет, количество столбцов матрицы {rows.Length}");
             }
