@@ -7,10 +7,10 @@ namespace TreeMain
         static void Main()
         {
             Tree<int> tree = new Tree<int>(123) { 20, 22, 8, 25, 2, 10, 1, 28, 22, 26, 30, 27, 40, 50, 200, 180, 170, 171, 220, 250, 222 };
-            
-            tree.Remove(10);
 
-            if(tree.Contains(170))
+            tree.Remove(123);
+
+            if (tree.Contains(8))
             {
                 Console.WriteLine("Дерево содержит искомый элемент");
             }

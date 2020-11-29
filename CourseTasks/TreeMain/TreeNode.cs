@@ -6,9 +6,7 @@
 
         public TreeNode<T> RightChild { get; set; }
 
-        public TreeNode<T> Parent { get; set; }
-
-        public T Data { get; private set; }
+        public T Data { get; set; }
 
         public TreeNode(T data)
         {
