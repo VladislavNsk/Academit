@@ -15,6 +15,5 @@ namespace TemperatureConverterMain.View
         string SourseDegrees { get; }
 
         event EventHandler ConvertButton_ClickEventHandler;
-        event Action Changes;
     }
 }

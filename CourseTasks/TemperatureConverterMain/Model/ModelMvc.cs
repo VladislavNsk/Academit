@@ -13,7 +13,7 @@ namespace TemperatureConverterMain.Model
         public event Action Changes;
         public event Action Error;
 
-        public string Message 
+        public string Message
         {
             get
             {
@@ -95,7 +95,7 @@ namespace TemperatureConverterMain.Model
                 return;
             }
 
-            if (sourceScale == "" )
+            if (sourceScale == "")
             {
                 Message = "Не задана исходная шкалы градусов";
                 return;

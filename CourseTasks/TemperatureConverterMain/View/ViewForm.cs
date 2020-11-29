@@ -12,7 +12,6 @@ namespace TemperatureConverterMain
         }
 
         public event EventHandler ConvertButton_ClickEventHandler;
-        public event Action Changes;
 
         public string SourseDegrees => sourceDegreesBox.Text;
 
