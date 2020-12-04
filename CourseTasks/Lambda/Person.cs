@@ -6,7 +6,7 @@
 
         public int Age { get; private set; }
 
-        public Person (string name, int age)
+        public Person(string name, int age)
         {
             Name = name;
             Age = age;
