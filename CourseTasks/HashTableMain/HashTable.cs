@@ -7,7 +7,7 @@ namespace HashTableMain
 {
     class HashTable<T> : ICollection<T>
     {
-        private List<T>[] lists;
+        private readonly List<T>[] lists;
         private int modCount;
 
         public HashTable() : this(10)
@@ -133,6 +133,11 @@ namespace HashTableMain
 
         public override string ToString()
         {
+            if(Count == 0)
+            {
+                return "{}";
+            }
+
             StringBuilder stringBuilder = new StringBuilder("{");
 
             foreach (T item in this)
