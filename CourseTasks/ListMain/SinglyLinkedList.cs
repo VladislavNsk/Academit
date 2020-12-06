@@ -23,7 +23,7 @@ namespace SinglyLinkedListMain
         {
             if (Count == 0)
             {
-                throw new NullReferenceException("Список пуст");
+                throw new InvalidOperationException("Список пуст");
             }
 
             return head.Data;
@@ -33,7 +33,7 @@ namespace SinglyLinkedListMain
         {
             if (index < 0 || index >= Count)
             {
-                throw new IndexOutOfRangeException($"Элемента с индексом {index} нет, всего элементов в списке {Count}");
+                throw new IndexOutOfRangeException($"Элемента с индексом {index} нет. Индекс должен быть от 0 до {Count - 1} включительно");
             }
         }
 
@@ -77,7 +77,7 @@ namespace SinglyLinkedListMain
         {
             if (index < 0 || index > Count)
             {
-                throw new IndexOutOfRangeException($"Индекс {index} за пределами диапазона. Всего элементов в списке {Count}");
+                throw new IndexOutOfRangeException($"Индекс {index} за пределами диапазона. Индекс должен быть от 0 до {Count} включительно");
             }
 
             if (index == 0)
@@ -93,12 +93,6 @@ namespace SinglyLinkedListMain
 
         public void Add(T data)
         {
-            if (Count == 0)
-            {
-                AddFirst(data);
-                return;
-            }
-
             Add(Count, data);
         }
 
@@ -149,7 +143,7 @@ namespace SinglyLinkedListMain
         {
             if (Count == 0)
             {
-                throw new NullReferenceException("Список пуст");
+                throw new InvalidOperationException("Список пуст");
             }
 
             T data = head.Data;
