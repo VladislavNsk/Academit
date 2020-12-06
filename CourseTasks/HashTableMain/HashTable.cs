@@ -133,7 +133,7 @@ namespace HashTableMain
 
         public override string ToString()
         {
-            if(Count == 0)
+            if (Count == 0)
             {
                 return "{}";
             }
