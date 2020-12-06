@@ -91,7 +91,7 @@ namespace MyListMain
         {
             if (index < 0 || index >= Count)
             {
-                throw new IndexOutOfRangeException($"Индекс {index} за пределами диапазона. Всего элементов в списке {Count}");
+                throw new IndexOutOfRangeException($"Индекс {index} за пределами диапазона. Индекс должен быть от 0 до {Count - 1} включительно");
             }
         }
 
@@ -144,7 +144,7 @@ namespace MyListMain
         {
             if (index < 0 || index > Count)
             {
-                throw new IndexOutOfRangeException($"Индекс {index} за пределами диапазона. Всего элементов в списке {Count}");
+                throw new IndexOutOfRangeException($"Индекс {index} за пределами диапазона. Индекс должен быть от 0 до {Count} включительно");
             }
 
             if (Count == Capacity)
@@ -222,13 +222,21 @@ namespace MyListMain
 
             StringBuilder stringBuilder = new StringBuilder("{");
 
-            for (int i = 0; i < Count - 2; i++)
+            for (int i = 0; i < Count; i++)
             {
-                stringBuilder.Append(items[i]);
+                if (items[i] == null)
+                {
+                    stringBuilder.Append("null");
+                }
+                else
+                {
+                    stringBuilder.Append(items[i]);
+                }
+
                 stringBuilder.Append(", ");
             }
 
-            stringBuilder.Append(items[Count - 1]);
+            stringBuilder.Remove(stringBuilder.Length - 2, 2);
             stringBuilder.Append("}");
 
             return stringBuilder.ToString();
