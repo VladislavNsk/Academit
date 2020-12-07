@@ -1,9 +1,9 @@
 ﻿using System;
-using TemperatureConverterMain.MvcModel.Scales;
+using TemperatureConverterMain.MvpModel.Scales;
 
-namespace TemperatureConverterMain.MvcModel
+namespace TemperatureConverterMain.MvpModel
 {
-    public class Model 
+    public class Model
     {
         private readonly ScalesList scalesList;
         public event Action Changes;
@@ -17,7 +17,7 @@ namespace TemperatureConverterMain.MvcModel
             scalesList.RemoveScale += Scales_RemoveScale;
 
             scalesList.Add(new Celsius());
-            scalesList.Add( new Kelvin());
+            scalesList.Add(new Kelvin());
             scalesList.Add(new Fahrenheit());
         }
 

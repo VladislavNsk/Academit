@@ -1,4 +1,4 @@
-﻿namespace TemperatureConverterMain.MvcModel.Scales
+﻿namespace TemperatureConverterMain.MvpModel.Scales
 {
     class Kelvin : IScale
     {
@@ -8,12 +8,12 @@
 
         public double GetDefoultValue()
         {
-          return  Degrees - 273.15;
+            return Degrees - 273.15;
         }
 
         public double GetValueAboutOtherScale(IScale otherScale)
         {
-            return otherScale.GetDefoultValue() +273.15;
+            return otherScale.GetDefoultValue() + 273.15;
         }
     }
 }

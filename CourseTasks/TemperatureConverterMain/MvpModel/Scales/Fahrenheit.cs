@@ -1,4 +1,4 @@
-﻿namespace TemperatureConverterMain.MvcModel.Scales
+﻿namespace TemperatureConverterMain.MvpModel.Scales
 {
     class Fahrenheit : IScale
     {

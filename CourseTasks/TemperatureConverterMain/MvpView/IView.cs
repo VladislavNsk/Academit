@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TemperatureConverterMain.MvcView
+namespace TemperatureConverterMain.MvpView
 {
     public interface IView
     {

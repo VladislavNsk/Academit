@@ -46,7 +46,7 @@ namespace TemperatureConverterMain
             sourceDegreesLabel.AutoSize = true;
             sourceDegreesLabel.Text = "Введите значение градусов:";
             sourceDegreesLabel.Anchor = AnchorStyles.Bottom;
-            sourceDegreesLabel.Margin = new Padding(0, 20, 0,0);
+            sourceDegreesLabel.Margin = new Padding(0, 20, 0, 0);
 
             resultDegreesLabel.AutoSize = true;
             resultDegreesLabel.Text = "Результат:";

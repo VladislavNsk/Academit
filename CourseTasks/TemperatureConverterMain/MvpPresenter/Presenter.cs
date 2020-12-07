@@ -1,8 +1,8 @@
 ﻿using System;
-using TemperatureConverterMain.MvcView;
-using TemperatureConverterMain.MvcModel;
+using TemperatureConverterMain.MvpView;
+using TemperatureConverterMain.MvpModel;
 
-namespace TemperatureConverterMain.MvcPresenter
+namespace TemperatureConverterMain.MvpPresenter
 {
     public class Presenter
     {

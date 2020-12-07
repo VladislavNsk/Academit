@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TemperatureConverterMain.MvcModel.Scales
+namespace TemperatureConverterMain.MvpModel.Scales
 {
     public class ScalesList
     {
