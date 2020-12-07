@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using TemperatureConverterMain.Controller;
+using TemperatureConverterMain.MvcPresenter;
 
 namespace TemperatureConverterMain
 {
@@ -12,7 +12,7 @@ namespace TemperatureConverterMain
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             ViewForm view = new ViewForm();
-            ControllerMvc controller = new ControllerMvc(view);
+            new Presenter(view);
             Application.Run(view);
         }
     }

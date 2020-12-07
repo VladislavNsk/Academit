@@ -46,15 +46,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controller\ControllerMvc.cs" />
-    <Compile Include="Model\ModelMvc.cs" />
+    <Compile Include="MvcModel\Scales\ScalesList.cs" />
+    <Compile Include="MvcPresenter\Presenter.cs" />
+    <Compile Include="MvcModel\Scales\Celsius.cs" />
+    <Compile Include="MvcModel\Scales\Fahrenheit.cs" />
+    <Compile Include="MvcModel\Scales\IScale.cs" />
+    <Compile Include="MvcModel\Scales\Kelvin.cs" />
+    <Compile Include="MvcModel\Model.cs" />
     <Compile Include="TemperatureConverterMain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="View\IView.cs" />
-    <Compile Include="View\ViewForm.cs">
+    <Compile Include="MvcView\IView.cs" />
+    <Compile Include="MvcView\ViewForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\ViewForm.Designer.cs">
+    <Compile Include="MvcView\ViewForm.Designer.cs">
       <DependentUpon>ViewForm.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -66,7 +71,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="View\ViewForm.resx">
+    <EmbeddedResource Include="MvcView\ViewForm.resx">
       <DependentUpon>ViewForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
