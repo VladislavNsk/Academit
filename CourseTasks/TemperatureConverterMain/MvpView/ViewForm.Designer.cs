@@ -37,10 +37,14 @@ namespace TemperatureConverterMain
             tableLayoutPanel = new TableLayoutPanel();
             eventLog1 = new EventLog();
             convertButton = new Button();
+            panel = new Panel();
 
             ((System.ComponentModel.ISupportInitialize)(eventLog1)).BeginInit();
             SuspendLayout();
 
+            panel.Size = new Size(650, 450);
+            panel.Controls.Add(tableLayoutPanel);
+            panel.Dock = DockStyle.Fill;
             eventLog1.SynchronizingObject = this;
 
             sourceDegreesLabel.AutoSize = true;
@@ -87,14 +91,14 @@ namespace TemperatureConverterMain
 
             AutoScaleDimensions = new SizeF(6F, 13F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(670, 490);
 
-            Controls.Add(tableLayoutPanel);
-            tableLayoutPanel.Dock = DockStyle.Fill;
-            tableLayoutPanel.AutoSize = true;
+            Controls.Add(panel);
+            tableLayoutPanel.Size = new Size(650,450);
+            tableLayoutPanel.Anchor = AnchorStyles.None;
             Load += ViewForm_Load;
             Text = "Конвертер температуры";
-            MinimumSize = new Size(650, 450);
+            MinimumSize = new Size(670, 490);
 
             nameProjectLabel.Text = "Конвертер температуры";
             nameProjectLabel.Anchor = AnchorStyles.None;
@@ -119,6 +123,7 @@ namespace TemperatureConverterMain
         private Label sourceScaleLabel;
         private Label resultScaleLabel;
         private TableLayoutPanel tableLayoutPanel;
+        private Panel panel;
     }
 }
 
