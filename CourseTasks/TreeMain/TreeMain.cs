@@ -18,9 +18,9 @@ namespace TreeMain
             tree.RecursionDepthVisit((t) => Console.Write(t + " "));
             Console.WriteLine();
 
-            foreach(var treeItem in  tree.VisitInWidth())
+            foreach (var treeItem in tree.VisitInWidth())
             {
-                if(treeItem != null)
+                if (treeItem != null)
                 {
                     Console.Write(treeItem.ToUpper() + " ");
                 }

@@ -115,7 +115,7 @@ namespace TreeMain
         {
             var parentNode = GetParentNode(data);
 
-            if(parentNode == root)
+            if (parentNode == root)
             {
                 return root;
             }
@@ -159,7 +159,7 @@ namespace TreeMain
                     continue;
                 }
 
-                if(result < 0)
+                if (result < 0)
                 {
                     if (currentNode.RightChild == null)
                     {
@@ -455,7 +455,7 @@ namespace TreeMain
 
             foreach (var item in VisitInWidth())
             {
-                if(item == null)
+                if (item == null)
                 {
                     tree.Append("null");
                 }
