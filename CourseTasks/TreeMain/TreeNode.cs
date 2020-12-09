@@ -13,13 +13,6 @@
             Data = data;
         }
 
-        public TreeNode(TreeNode<T> treeNode)
-        {
-            Data = treeNode.Data;
-            LeftChild = treeNode.LeftChild;
-            RightChild = treeNode.RightChild;
-        }
-
         public TreeNode<T>[] GetChildren()
         {
             return new TreeNode<T>[] { LeftChild, RightChild };
