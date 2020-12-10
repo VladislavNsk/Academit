@@ -1,4 +1,4 @@
-﻿namespace TemperatureConverterMain.MvpModel.Scales
+﻿namespace TemperatureConverterMain.model.Scales
 {
     class Celsius : IScale
     {

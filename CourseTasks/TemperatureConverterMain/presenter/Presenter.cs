@@ -1,8 +1,8 @@
 ﻿using System;
-using TemperatureConverterMain.MvpView;
-using TemperatureConverterMain.MvpModel;
+using TemperatureConverterMain.view;
+using TemperatureConverterMain.model;
 
-namespace TemperatureConverterMain.MvpPresenter
+namespace TemperatureConverterMain.presenter
 {
     public class Presenter
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using TemperatureConverterMain.MvpPresenter;
+using TemperatureConverterMain.presenter;
 
 namespace TemperatureConverterMain
 {

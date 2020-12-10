@@ -1,7 +1,7 @@
 ﻿using System;
-using TemperatureConverterMain.MvpModel.Scales;
+using TemperatureConverterMain.model.Scales;
 
-namespace TemperatureConverterMain.MvpModel
+namespace TemperatureConverterMain.model
 {
     public class Model
     {
