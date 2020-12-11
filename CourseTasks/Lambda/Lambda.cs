@@ -34,11 +34,11 @@ namespace Lambda
             double averageAge = personsUnder18.Average(p => p.Age);
             Console.WriteLine("Средний возраст людей до 18 лет = " + averageAge);
 
-            var personsByName = persons
+            var averageAgesByName = persons
                 .GroupBy(p => p.Name)
                 .ToDictionary(group => group.Key, group => group.Average(person => person.Age));
 
-            foreach (var pair in personsByName)
+            foreach (var pair in averageAgesByName)
             {
                 Console.WriteLine("Имя = " + pair.Key + ", Средний возраст = " + pair.Value);
             }
