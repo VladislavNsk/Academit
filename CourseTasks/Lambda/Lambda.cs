@@ -50,6 +50,53 @@ namespace Lambda
                 .ToList();
 
             Console.WriteLine(string.Join(", ", personsNamesFrom20To45));
+
+            Console.WriteLine("Введите скольким элементам вычислить корень");
+            int count = Convert.ToInt32(Console.ReadLine());
+
+            foreach (var number in GetSquareRoots(count))
+            {
+                Console.WriteLine(number);
+            }
+
+            foreach (var fibonacciNumber in GetFibonacciNumbers())
+            {
+                Console.WriteLine("Число Фибоначчи: " + fibonacciNumber);
+            }
+        }
+
+        public static IEnumerable<double> GetSquareRoots(int count)
+        {
+            int i = 0;
+            double number = 1;
+
+            while (i < count)
+            {
+                yield return Math.Sqrt(number);
+
+                number++;
+                i++;
+            }
+        }
+
+        public static IEnumerable<decimal> GetFibonacciNumbers()
+        {
+            yield return 0;
+            yield return 1;
+
+            decimal fibonacciNumber;
+            decimal prePreviousFibonacciNumber = 0;
+            decimal previousFibonacciNumber = 1;
+
+            while (true)
+            {
+                fibonacciNumber = previousFibonacciNumber + prePreviousFibonacciNumber;
+
+                prePreviousFibonacciNumber = previousFibonacciNumber;
+                previousFibonacciNumber = fibonacciNumber;
+
+                yield return fibonacciNumber;
+            }
         }
     }
 }
