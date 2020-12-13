@@ -1,10 +1,10 @@
-﻿using Minesweeper.Presenter;
+﻿using Minesweeper.presenter;
 using System;
 using System.Windows.Forms;
 
 namespace Minesweeper
 {
-    static class Minesweeper
+    public static class Minesweeper
     {
         [STAThread]
         static void Main()
@@ -12,7 +12,7 @@ namespace Minesweeper
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(true);
             ViewForm view = new ViewForm();
-            new PresenterMvp(view);
+            new Presenter(view);
             Application.Run(view);
         }
     }

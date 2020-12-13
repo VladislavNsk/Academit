@@ -5,14 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace Minesweeper.Presenter
+namespace Minesweeper.presenter
 {
-    public class PresenterMvp
+    public class Presenter
     {
         private readonly PlayingField field = new PlayingField();
         private readonly IView view;
 
-        public PresenterMvp(IView view)
+        public Presenter(IView view)
         {
             this.view = view;
 

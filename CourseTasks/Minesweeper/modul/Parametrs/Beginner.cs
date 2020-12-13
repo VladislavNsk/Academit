@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace Minesweeper.Modul.Parametrs
+﻿namespace Minesweeper.Modul.Parametrs
 {
-    class Beginner : IParametr
+    public class Beginner : IParametr
     {
         public int RowsCount => 9;
 

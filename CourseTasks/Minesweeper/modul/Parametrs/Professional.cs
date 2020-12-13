@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace Minesweeper.Modul.Parametrs
+﻿namespace Minesweeper.Modul.Parametrs
 {
-    class Professional : IParametr
+    public class Professional : IParametr
     {
         public int RowsCount => 16;
 

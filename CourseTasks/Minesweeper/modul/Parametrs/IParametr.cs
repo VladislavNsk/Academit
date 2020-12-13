@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace Minesweeper.Modul.Parametrs
+﻿namespace Minesweeper.Modul.Parametrs
 {
-    interface IParametr
+  public   interface IParametr
     {
         int RowsCount { get; }
 
