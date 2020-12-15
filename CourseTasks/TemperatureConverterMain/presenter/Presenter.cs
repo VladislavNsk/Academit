@@ -1,19 +1,19 @@
 ﻿using System;
-using TemperatureConverterMain.view;
-using TemperatureConverterMain.model;
+using TemperatureConverterMain.View;
 
-namespace TemperatureConverterMain.presenter
+namespace TemperatureConverterMain.Presenter
 {
     public class Presenter
     {
         private readonly IView view;
-        private readonly Model model = new Model();
+        private readonly Model.Model model;
 
-        public Presenter(IView view)
+        public Presenter(IView view, Model.Model model)
         {
             this.view = view;
+            this.model = model;
 
-            view.ConvertTemperature += new EventHandler(OnConvertButton_Click);
+            view.ConvertTemperature += OnConvertButton_Click;
             view.LoadForm += View_LoadForm;
 
             model.Changes += Model_res;

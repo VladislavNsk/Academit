@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using TemperatureConverterMain.view;
+using TemperatureConverterMain.View;
 
 namespace TemperatureConverterMain
 {
@@ -84,7 +84,8 @@ namespace TemperatureConverterMain
         {
             if (!double.TryParse(SourceDegrees, out double degrees))
             {
-                MessageBox.Show($"Значение исходных градусов  ({SourceDegrees}) должно быть число.");
+                MessageBox.Show($"Значение исходных градусов ({SourceDegrees}) должно быть числом.", "Ошибка заполнения",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

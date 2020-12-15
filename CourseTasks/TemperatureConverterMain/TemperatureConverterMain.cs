@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using TemperatureConverterMain.presenter;
 
 namespace TemperatureConverterMain
 {
@@ -11,8 +10,8 @@ namespace TemperatureConverterMain
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            ViewForm view = new ViewForm();
-            new Presenter(view);
+            var view = new ViewForm();
+            new Presenter.Presenter(view, new Model.Model());
             Application.Run(view);
         }
     }

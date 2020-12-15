@@ -1,15 +1,15 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
-namespace TemperatureConverterMain.model.Scales
+namespace TemperatureConverterMain.Model.Scales
 {
     public class ScalesList
     {
         public event Action<string> AddScale;
         public event Action<string> RemoveScale;
 
-        public int Count { get; private set; }
-
+        public int Count => scales.Count;
         private readonly List<IScale> scales;
 
         public ScalesList()
@@ -20,32 +20,23 @@ namespace TemperatureConverterMain.model.Scales
         public void Add(IScale scale)
         {
             scales.Add(scale);
-            Count++;
             AddScale?.Invoke(scale.Name);
         }
 
         public void Remove(IScale scale)
         {
             scales.Remove(scale);
-            Count--;
             RemoveScale?.Invoke(scale.Name);
         }
 
         public string[] GetScalesRange()
         {
-            string[] scalesName = new string[Count];
-
-            for (int i = 0; i < Count; i++)
-            {
-                scalesName[i] = scales[i].Name;
-            }
-
-            return scalesName;
+            return scales.Select(scale => scale.Name).ToArray();
         }
 
-        public IScale Get(string ScaleName)
+        public IScale Get(string scaleName)
         {
-            return scales.Find(s => s.Name == ScaleName);
+            return scales.Find(s => s.Name == scaleName);
         }
     }
 }

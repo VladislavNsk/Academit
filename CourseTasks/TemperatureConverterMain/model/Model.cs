@@ -1,7 +1,7 @@
 ﻿using System;
-using TemperatureConverterMain.model.Scales;
+using TemperatureConverterMain.Model.Scales;
 
-namespace TemperatureConverterMain.model
+namespace TemperatureConverterMain.Model
 {
     public class Model
     {
@@ -16,9 +16,9 @@ namespace TemperatureConverterMain.model
             scalesList.AddScale += Scales_AddScale;
             scalesList.RemoveScale += Scales_RemoveScale;
 
-            scalesList.Add(new Celsius());
-            scalesList.Add(new Kelvin());
-            scalesList.Add(new Fahrenheit());
+            scalesList.Add(new CelsiusScale());
+            scalesList.Add(new KelvinScale());
+            scalesList.Add(new FahrenheitScale());
         }
 
         private void Scales_RemoveScale(string scaleName)
@@ -38,8 +38,8 @@ namespace TemperatureConverterMain.model
 
         public void Convert(string sourceScale, string resultScale, int degrees)
         {
-            IScale scaleFrom = scalesList.Get(sourceScale);
-            IScale scaleTo = scalesList.Get(resultScale);
+            var scaleFrom = scalesList.Get(sourceScale);
+            var scaleTo = scalesList.Get(resultScale);
 
             scaleFrom.Degrees = degrees;
             scaleTo.Degrees = scaleTo.GetValueAboutOtherScale(scaleFrom);

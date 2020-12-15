@@ -1,12 +1,12 @@
-﻿namespace TemperatureConverterMain.model.Scales
+﻿namespace TemperatureConverterMain.Model.Scales
 {
-   public  interface IScale
+    public interface IScale
     {
         string Name { get; }
 
         double Degrees { get; set; }
 
-        double GetDefoultValue();
+        double GetDefaultValue();
 
         double GetValueAboutOtherScale(IScale otherScale);
     }

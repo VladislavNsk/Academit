@@ -67,7 +67,7 @@ namespace TemperatureConverterMain
             convertButton.AutoSize = true;
             convertButton.Text = "Конвертировать";
             convertButton.UseVisualStyleBackColor = true;
-            convertButton.Click += new System.EventHandler(ConvertButton_Click);
+            convertButton.Click += ConvertButton_Click;
             convertButton.Anchor = AnchorStyles.None;
 
             sourceScaleDegreesCb.DropDownStyle = ComboBoxStyle.DropDownList;
