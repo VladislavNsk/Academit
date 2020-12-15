@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Minesweeper.modul.DateBase;
+using System;
 using System.Collections.Generic;
 
 namespace Minesweeper.Modul
@@ -6,10 +7,15 @@ namespace Minesweeper.Modul
     public class HighScoreTable
     {
         public event Action Win;
-        private readonly Dictionary<string, int> scoreTable;
-        private string currentPlayer;
+        private readonly DataBase dataBase;
+        private string playerName;
         private int currentScore;
         private int totalScore;
+
+        public HighScoreTable(DataBase dataBase)
+        {
+            this.dataBase = dataBase;
+        }
 
         public int Score
         {
@@ -35,11 +41,6 @@ namespace Minesweeper.Modul
             }
         }
 
-        public HighScoreTable()
-        {
-            scoreTable = new Dictionary<string, int>();
-        }
-
         public void Save(bool isWin)
         {
             if (isWin)
@@ -47,34 +48,29 @@ namespace Minesweeper.Modul
                 Score += totalScore;
             }
 
-            scoreTable[currentPlayer] += Score;
+            dataBase.Save(Score, playerName);
         }
 
         public void Add(string name)
         {
-            string playerName = name;
+            playerName = name;
 
             if (playerName.Length == 0)
             {
-                playerName = "unknown";
+                playerName = "Безымянный";
             }
 
-            if (!scoreTable.ContainsKey(playerName))
-            {
-                scoreTable.Add(playerName, 0);
-                currentPlayer = playerName;
-            }
+            dataBase.Add(playerName);
         }
 
         public Dictionary<string, int> GetScoreTable()
         {
-            return scoreTable;
+            return dataBase.GetScoreTable();
         }
 
         public void SetMaxScore(int totalScore)
         {
             this.totalScore = totalScore;
-            currentScore = 0;
         }
     }
 }

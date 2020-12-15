@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Minesweeper.modul.DateBase;
+using System;
 using System.Collections.Generic;
 
 namespace Minesweeper.Modul
@@ -13,12 +14,15 @@ namespace Minesweeper.Modul
 
         private readonly HighScoreTable scoreTable;
         private readonly FieldParametrs fieldParametrs;
+        private readonly DataBase dataBase;
+
         private int[,] playingField;
 
         public PlayingField()
         {
-            scoreTable = new HighScoreTable();
+            dataBase = new DataBase();
             fieldParametrs = new FieldParametrs();
+            scoreTable = new HighScoreTable(dataBase);
 
             scoreTable.SetMaxScore(fieldParametrs.RowsCount * fieldParametrs.ColumnsCount);
             FillPlatingField();
