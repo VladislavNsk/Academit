@@ -7,8 +7,8 @@ namespace TemperatureConverterMain
 {
     public partial class ViewForm : Form, IView
     {
-        public event EventHandler ConvertTemperature;
-        public event EventHandler LoadForm;
+        public event Action ConvertTemperature;
+        public event Action LoadForm;
 
         public string SourceDegrees => sourceDegreesTb.Text;
 
@@ -77,7 +77,7 @@ namespace TemperatureConverterMain
 
         private void ViewForm_Load(object sender, EventArgs e)
         {
-            LoadForm?.Invoke(sender, e);
+            LoadForm?.Invoke();
         }
 
         private void ConvertButton_Click(object sender, EventArgs e)
@@ -89,7 +89,7 @@ namespace TemperatureConverterMain
                 return;
             }
 
-            ConvertTemperature?.Invoke(sender, e);
+            ConvertTemperature?.Invoke();
         }
     }
 }

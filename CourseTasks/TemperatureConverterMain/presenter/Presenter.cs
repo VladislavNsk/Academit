@@ -1,5 +1,4 @@
-﻿using System;
-using TemperatureConverterMain.View;
+﻿using TemperatureConverterMain.View;
 
 namespace TemperatureConverterMain.Presenter
 {
@@ -21,12 +20,12 @@ namespace TemperatureConverterMain.Presenter
             model.RemoveScale += Model_RemoveScaleName;
         }
 
-        private void OnConvertButton_Click(object sender, EventArgs e)
+        private void OnConvertButton_Click()
         {
             model.Convert(view.SourceScale, view.ResultScale, int.Parse(view.SourceDegrees));
         }
 
-        private void View_LoadForm(object sender, EventArgs e)
+        private void View_LoadForm()
         {
             view.AddScaleRange(model.GetScalesRange());
         }
