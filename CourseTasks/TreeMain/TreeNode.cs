@@ -1,6 +1,6 @@
 ﻿namespace TreeMain
 {
-    class TreeNode<T>
+   public class TreeNode<T>
     {
         public TreeNode<T> LeftChild { get; set; }
 
@@ -20,7 +20,7 @@
 
         public int GetChildrenCount()
         {
-            int childrenCount = 0;
+            var childrenCount = 0;
 
             if (LeftChild != null)
             {

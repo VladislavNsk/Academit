@@ -2,11 +2,11 @@
 
 namespace TreeMain
 {
-    class TreeMain
+    public class TreeMain
     {
-        static void Main()
+        public static void Main()
         {
-            Tree<string> tree = new Tree<string>("Main") { "Color", "Game", null, "Food", null, "Mouse" };
+            var tree = new Tree<string>("Main") { "Color", "Game", null, "Food", null, "Mouse" };
 
             tree.Remove("Main");
 

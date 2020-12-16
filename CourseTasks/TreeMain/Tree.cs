@@ -2,11 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using System.Linq;
 
 namespace TreeMain
 {
-    class Tree<T> : IEnumerable<T>
+   public class Tree<T> : IEnumerable<T>
     {
         private TreeNode<T> root;
         private readonly IComparer<T> comparer;
@@ -16,6 +15,7 @@ namespace TreeMain
 
         public Tree()
         {
+
         }
 
         public Tree(T data)
@@ -56,7 +56,7 @@ namespace TreeMain
                 return;
             }
 
-            TreeNode<T> currentNode = root;
+            var currentNode = root;
 
             while (currentNode != null)
             {
@@ -93,9 +93,19 @@ namespace TreeMain
                 return comparer.Compare(data1, data2);
             }
 
-            if (data1 == null)
+            if (data1 == null && data2 == null)
+            {
+                return 0;
+            }
+
+            if(data1 == null)
             {
                 return -1;
+            }
+
+            if(data2 == null)
+            {
+                return 1;
             }
 
             if (data1 is IComparable<T> comparable)
@@ -122,7 +132,7 @@ namespace TreeMain
 
             if (parentNode != null)
             {
-                int result = CompareData(parentNode.LeftChild.Data, data);
+                var result = CompareData(parentNode.LeftChild.Data, data);
 
                 if (result == 0)
                 {
@@ -137,7 +147,7 @@ namespace TreeMain
 
         private TreeNode<T> GetParentNode(T data)
         {
-            TreeNode<T> currentNode = root;
+            var currentNode = root;
 
             while (currentNode != null)
             {
@@ -183,7 +193,7 @@ namespace TreeMain
 
         public bool Remove(T data)
         {
-            TreeNode<T> treeNode = GetTreeNode(data);
+            var treeNode = GetTreeNode(data);
 
             if (treeNode == null)
             {
@@ -198,7 +208,7 @@ namespace TreeMain
                 return true;
             }
 
-            int childrenCount = treeNode.GetChildrenCount();
+            var childrenCount = treeNode.GetChildrenCount();
 
             if (childrenCount == 0)
             {
@@ -220,7 +230,7 @@ namespace TreeMain
 
         private void RemoveLeaf(TreeNode<T> treeNode)
         {
-            TreeNode<T> parentNode = GetParentNode(treeNode.Data);
+            var parentNode = GetParentNode(treeNode.Data);
 
             if (parentNode.LeftChild == treeNode)
             {
@@ -234,8 +244,8 @@ namespace TreeMain
 
         private void RemoveNodeWithOneChild(TreeNode<T> treeNode)
         {
-            TreeNode<T>[] child = treeNode.GetChildren();
-            TreeNode<T> parentNode = GetParentNode(treeNode.Data);
+            var child = treeNode.GetChildren();
+            var parentNode = GetParentNode(treeNode.Data);
 
             if (parentNode.LeftChild == treeNode)
             {
@@ -249,9 +259,9 @@ namespace TreeMain
 
         private void RemoveNodeWithTwoChildren(TreeNode<T> treeNode)
         {
-            TreeNode<T> minLeftNode = GetMinLeftNode(treeNode.RightChild);
-            TreeNode<T> minLeftParentNode = GetParentNode(minLeftNode.Data);
-            TreeNode<T> parentNode = GetParentNode(treeNode.Data);
+            var minLeftNode = GetMinLeftNode(treeNode.RightChild);
+            var minLeftParentNode = GetParentNode(minLeftNode.Data);
+            var parentNode = GetParentNode(treeNode.Data);
 
             if (minLeftParentNode == treeNode)
             {
@@ -285,7 +295,7 @@ namespace TreeMain
 
         private void RemoveRoot()
         {
-            int rootChildrenCount = root.GetChildrenCount();
+            var rootChildrenCount = root.GetChildrenCount();
 
             if (rootChildrenCount == 0)
             {
@@ -295,13 +305,13 @@ namespace TreeMain
 
             if (rootChildrenCount == 1)
             {
-                TreeNode<T>[] child = root.GetChildren();
+                var child = root.GetChildren();
                 root = child[0] ?? child[1];
                 return;
             }
 
-            TreeNode<T> minLeftNode = GetMinLeftNode(root.RightChild);
-            TreeNode<T> minLeftParentNode = GetParentNode(minLeftNode.Data);
+            var minLeftNode = GetMinLeftNode(root.RightChild);
+            var minLeftParentNode = GetParentNode(minLeftNode.Data);
 
             if (minLeftParentNode == root)
             {
@@ -318,7 +328,7 @@ namespace TreeMain
 
         private static TreeNode<T> GetMinLeftNode(TreeNode<T> minLeftNode)
         {
-            TreeNode<T> currentNode = minLeftNode;
+            var currentNode = minLeftNode;
 
             while (currentNode.LeftChild != null)
             {
@@ -356,21 +366,21 @@ namespace TreeMain
                 yield break;
             }
 
-            Stack<TreeNode<T>> stack = new Stack<TreeNode<T>>();
+            var stack = new Stack<TreeNode<T>>();
             stack.Push(root);
 
             while (stack.Count != 0)
             {
-                TreeNode<T> node = stack.Pop();
-
-                if (node.LeftChild != null)
-                {
-                    stack.Push(node.LeftChild);
-                }
+                var node = stack.Pop();
 
                 if (node.RightChild != null)
                 {
                     stack.Push(node.RightChild);
+                }
+
+                if (node.LeftChild != null)
+                {
+                    stack.Push(node.LeftChild);
                 }
 
                 yield return node.Data;
@@ -384,12 +394,12 @@ namespace TreeMain
                 yield break;
             }
 
-            Queue<TreeNode<T>> queue = new Queue<TreeNode<T>>();
+            var queue = new Queue<TreeNode<T>>();
             queue.Enqueue(root);
 
             while (queue.Count != 0)
             {
-                TreeNode<T> node = queue.Dequeue();
+                var node = queue.Dequeue();
 
                 if (node.LeftChild != null)
                 {
@@ -412,13 +422,13 @@ namespace TreeMain
                 yield break;
             }
 
-            int fixedModCount = modCount;
-            Queue<TreeNode<T>> queue = new Queue<TreeNode<T>>();
+            var fixedModCount = modCount;
+            var queue = new Queue<TreeNode<T>>();
             queue.Enqueue(root);
 
             while (queue.Count != 0)
             {
-                TreeNode<T> node = queue.Dequeue();
+                var node = queue.Dequeue();
 
                 if (fixedModCount != modCount)
                 {
@@ -451,26 +461,26 @@ namespace TreeMain
                 return "{}";
             }
 
-            StringBuilder tree = new StringBuilder("{");
+            var stringBuilder = new StringBuilder("{");
 
             foreach (var item in VisitInWidth())
             {
                 if (item == null)
                 {
-                    tree.Append("null");
+                    stringBuilder.Append("null");
                 }
                 else
                 {
-                    tree.Append(item);
+                    stringBuilder.Append(item);
                 }
 
-                tree.Append(", ");
+                stringBuilder.Append(", ");
             }
 
-            tree.Remove(tree.Length - 2, 2);
-            tree.Append("}");
+            stringBuilder.Remove(stringBuilder.Length - 2, 2);
+            stringBuilder.Append("}");
 
-            return tree.ToString();
+            return stringBuilder.ToString();
         }
     }
 }
