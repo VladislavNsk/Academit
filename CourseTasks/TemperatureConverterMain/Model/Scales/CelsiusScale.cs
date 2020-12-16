@@ -1,6 +1,6 @@
 ﻿namespace TemperatureConverterMain.Model.Scales
 {
-    class CelsiusScale : IScale
+    public class CelsiusScale : IScale
     {
         public double Degrees { get; set; }
 
