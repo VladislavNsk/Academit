@@ -10,7 +10,6 @@ namespace Minesweeper.modul.DateBase
     {
         private static readonly SQLiteConnection connection = new SQLiteConnection("Data Source=MyDb.sqlite; Version = 3");
         private readonly DataContext context = new DataContext(connection);
-        //private TableDb table;
 
         public DataBase()
         {
@@ -23,14 +22,14 @@ namespace Minesweeper.modul.DateBase
         private void CreateTable()
         {
             context.ExecuteCommand("CREATE TABLE IF NOT EXISTS 'scoreTables'(" +
-                                   "Name TEXT NOT NULL PRIMARY KEY ," +
+                                   "Name TEXT NOT NULL PRIMARY KEY," +
                                    "Score INTEGER NOT NULL" +
                                    ")");
         }
 
         public void Add(string playerName)
         {
-            var table = new TableDb { Name = playerName};
+            var table = new TableDb { Name = playerName };
             var tableFromDb = context.GetTable<TableDb>();
 
             if (!tableFromDb.Where(x => x.Name == playerName).Any())
@@ -59,8 +58,8 @@ namespace Minesweeper.modul.DateBase
         {
             Table<TableDb> tableFromDb = context.GetTable<TableDb>();
             var scoreTable = new Dictionary<string, int>();
-            var sampleResult = from table in tableFromDb
-                               select table;
+            var sampleResult = (from table in tableFromDb
+                                select table).OrderByDescending(x => x.Score);
 
             foreach (var score in sampleResult)
             {

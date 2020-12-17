@@ -1,7 +1,6 @@
 ﻿using Minesweeper.Modul;
 using Minesweeper.View;
 
-using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -9,35 +8,36 @@ namespace Minesweeper.presenter
 {
     public class Presenter
     {
-        private readonly PlayingField field = new PlayingField();
+        private readonly PlayingField field;
         private readonly IView view;
 
-        public Presenter(IView view)
+        public Presenter(IView view, PlayingField field)
         {
             this.view = view;
+            this.field = field;
 
             view.SetParametrs += View_SetParametrs;
             view.LeftButtonClick += View_LeftButtonClick;
-            view.LoadFormEvent += View_LoadFormEvent;
-            view.ShowScoreTableEvent += View_ShowScoreTableEvent;
+            view.LoadFormEvent += View_LoadForm;
+            view.ShowScoreTableEvent += View_ShowScoreTable;
             view.SetSpecialParametrs += View_SetSpecialParametrs;
-            view.SetFlagEvent += View_SetFlagEvent;
-            view.RemoveFlagEvent += View_RemoveFlagEvent;
+            view.SetFlagEvent += View_SetFlag;
+            view.RemoveFlagEvent += View_RemoveFlag;
 
             field.ChangeParameters += Model_StartGame;
             field.GameOver += GameOver;
             field.Win += Model_Win;
-            field.OpenCellsRangeEvent += Model_OpenCellsRangeEvent;
+            field.OpenCellsRangeEvent += Model_OpenCellsRange;
             field.ChangeFlagsCountAction += Model_ChangeFlagsCount;
         }
 
-        private void View_RemoveFlagEvent(Control control)
+        private void View_RemoveFlag(Control control)
         {
             view.RemoveFlag(control);
             field.RemoveFlag();
         }
 
-        private void View_SetFlagEvent(Control control)
+        private void View_SetFlag(Control control)
         {
             view.SetFlag(control, field.IsCanGetFlag());
             field.SetFlag();
@@ -60,9 +60,9 @@ namespace Minesweeper.presenter
 
         #endregion
 
-        private void Model_OpenCellsRangeEvent(List<int[]> cellsCoordinates, List<int> values)
+        private void Model_OpenCellsRange(List<int[]> cellsCoordinates, List<int> cellsValues)
         {
-            view.OpenCellsRange(cellsCoordinates, values);
+            view.OpenCellsRange(cellsCoordinates, cellsValues);
         }
 
         private void View_LeftButtonClick(Control control, int rowIndex, int columnIndex)
@@ -84,9 +84,9 @@ namespace Minesweeper.presenter
             view.WinGame(minesCoordinates);
         }
 
-        private void GameOver(int[,] minesCoordinatesx)
+        private void GameOver(int[,] minesCoordinates)
         {
-            view.GameOver(minesCoordinatesx);
+            view.GameOver(minesCoordinates);
         }
 
         private void Model_StartGame()
@@ -94,12 +94,12 @@ namespace Minesweeper.presenter
             view.PrintPlayingField(field.GetRowsCount(), field.GetColumnsCount(), field.GetMinesCount());
         }
 
-        private void View_ShowScoreTableEvent(object sender, EventArgs e)
+        private void View_ShowScoreTable()
         {
             view.ShowScoreTable(field.GetScoreTable());
         }
 
-        private void View_LoadFormEvent(object sender, EventArgs e)
+        private void View_LoadForm()
         {
             view.SetParametrsNames(field.GetNamesParametrs());
             view.PrintPlayingField(field.GetRowsCount(), field.GetColumnsCount(), field.GetMinesCount());

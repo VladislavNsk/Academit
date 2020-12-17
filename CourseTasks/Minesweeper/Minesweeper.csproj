@@ -71,34 +71,52 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="modul\DateBase\DataBase.cs" />
-    <Compile Include="modul\FieldParametrs.cs" />
-    <Compile Include="modul\HighScoreTable.cs" />
-    <Compile Include="modul\PlayingField.cs" />
-    <Compile Include="modul\Parametrs\Beginner.cs" />
-    <Compile Include="modul\Parametrs\Fun.cs" />
-    <Compile Include="modul\Parametrs\IParametr.cs" />
-    <Compile Include="modul\Parametrs\Professional.cs" />
+    <Compile Include="View\HighScoreTableForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\HighScoreTableForm.Designer.cs">
+      <DependentUpon>HighScoreTableForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\ParametrsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\ParametrsForm.Designer.cs">
+      <DependentUpon>ParametrsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Modul\DateBase\DataBase.cs" />
+    <Compile Include="Modul\FieldParametrs.cs" />
+    <Compile Include="Modul\HighScoreTable.cs" />
+    <Compile Include="Modul\PlayingField.cs" />
+    <Compile Include="Modul\Parametrs\Beginner.cs" />
+    <Compile Include="Modul\Parametrs\Fun.cs" />
+    <Compile Include="Modul\Parametrs\IParametr.cs" />
+    <Compile Include="Modul\Parametrs\Professional.cs" />
     <Compile Include="Resource1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource1.resx</DependentUpon>
     </Compile>
-    <Compile Include="view\MainForm.cs">
+    <Compile Include="View\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="view\MainForm.Designer.cs">
+    <Compile Include="View\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="presenter\Presenter.cs" />
     <Compile Include="Minesweeper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="view\IView.cs" />
+    <Compile Include="View\IView.cs" />
+    <EmbeddedResource Include="View\HighScoreTableForm.resx">
+      <DependentUpon>HighScoreTableForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\ParametrsForm.resx">
+      <DependentUpon>ParametrsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resource1.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="view\MainForm.resx">
+    <EmbeddedResource Include="View\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -125,8 +143,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="resources\flag.png" />
-    <None Include="resources\mine.png" />
+    <None Include="Resources\flag.png" />
+    <None Include="Resources\mine.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

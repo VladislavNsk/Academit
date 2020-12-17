@@ -1,74 +1,70 @@
-﻿using Minesweeper.View;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Minesweeper
+namespace Minesweeper.View
 {
-    public partial class ViewForm : Form, IView
+    public partial class MainForm : Form, IView
     {
-        public event EventHandler LoadFormEvent;
-        public event EventHandler ShowScoreTableEvent;
-
         public event Action SetParametrs;
+        public event Action LoadFormEvent;
         public event Action SetSpecialParametrs;
-        public event Action<Control, int, int> LeftButtonClick;
+        public event Action ShowScoreTableEvent;
         public event Action<Control> SetFlagEvent;
         public event Action<Control> RemoveFlagEvent;
+        public event Action<Control, int, int> LeftButtonClick;
 
-        private readonly Font cellsFont = new Font("Nimes New Roman", 13);
-        private readonly string parametrSpecialName = "Свой";
+        private readonly ParametrsForm parametrsForm;
+        private readonly HighScoreTableForm highScoreTableForm;
 
-        public ViewForm()
+        public MainForm(ParametrsForm parametrsForm, HighScoreTableForm highScoreTableForm)
         {
+            this.parametrsForm = parametrsForm;
+            this.highScoreTableForm = highScoreTableForm;
+
             InitializeComponent();
         }
 
         #region Events
 
-        private void ExitMenuItem_Click(object sender, EventArgs e)
+        private void OnSetSpecialParametrs()
+        {
+            SetSpecialParametrs?.Invoke();
+        }
+
+        private void OnSetParametrs()
+        {
+            SetParametrs?.Invoke();
+        }
+
+        private void OnExitMenuItem(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void ApplyButton_Click(object sender, EventArgs e)
+        private void OnViewForm(object sender, EventArgs e)
         {
-            if (parametrsNamesComboBox.Text == parametrSpecialName)
-            {
-                SetSpecialParametrs?.Invoke();
-            }
-            else
-            {
-                SetParametrs?.Invoke();
-            }
-
-            parametrsPanel.Visible = false;
+            LoadFormEvent?.Invoke();
         }
 
-        private void ViewForm_Load(object sender, EventArgs e)
+        private void OnNewGameMenuItem(object sender, EventArgs e)
         {
-            LoadFormEvent?.Invoke(sender, e);
-        }
-
-        private void NewGameMenuItem_Click(object sender, EventArgs e)
-        {
-            parametrsPanel.Visible = true;
-            parametrsPanel.Select();
+            parametrsForm.ShowDialog();
         }
 
         private void Control_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
-                LeftButton_Click(sender as Control);
+                OnLeftButton(sender as Control);
                 return;
             }
 
-            RightButton_Click(sender as Control);
+            OnRightButton(sender as Control);
         }
 
-        private void LeftButton_Click(Control currentControl)
+        private void OnLeftButton(Control currentControl)
         {
             if (currentControl.BackgroundImage != null)
             {
@@ -81,7 +77,7 @@ namespace Minesweeper
             playerFieldPanel.Select();
         }
 
-        private void RightButton_Click(Control currentControl)
+        private void OnRightButton(Control currentControl)
         {
             if (currentControl.BackgroundImage == flagImage)
             {
@@ -98,36 +94,18 @@ namespace Minesweeper
             minesLeftCountLabel.Text = flagsCount.ToString();
         }
 
-        private void SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            var parametrName = sender as ComboBox;
-
-            if (parametrName.Text == parametrSpecialName)
-            {
-                rowsCountBox.Enabled = true;
-                columnsCountBox.Enabled = true;
-                minesCountBox.Enabled = true;
-            }
-            else
-            {
-                rowsCountBox.Enabled = false;
-                columnsCountBox.Enabled = false;
-                minesCountBox.Enabled = false;
-            }
-        }
-
         #endregion
 
         #region Parametrs
 
         public (int rowsCount, int columnsCount, int minesCount) GetSpecialParametrs()
         {
-            return ((int)rowsCountBox.Value, (int)columnsCountBox.Value, (int)minesCountBox.Value);
+            return parametrsForm.GetSpecialParametrs();
         }
 
         public string GetParametrName()
         {
-            return parametrsNamesComboBox.Text;
+            return parametrsForm.GetParametrName();
         }
 
         #endregion
@@ -190,6 +168,7 @@ namespace Minesweeper
             playerFieldPanel.RowCount = rowsCount;
             playerFieldPanel.ColumnCount = columnsCount;
 
+
             for (int i = 0; i < rowsCount; i++)
             {
                 playerFieldPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, cellSize.Height));
@@ -201,17 +180,16 @@ namespace Minesweeper
                     {
                         Dock = DockStyle.Fill,
                         BackColor = Color.FromArgb(72, 110, 240),
-                        Margin = new Padding(),
+                        Margin = new Padding(0),
                         FlatStyle = FlatStyle.Flat,
                     });
                 };
             };
 
-            playerFieldPanel.Anchor = AnchorStyles.None;
-            panel.Dock = DockStyle.Fill;
-
             SubscribeControlsToEvent();
             SetAdditionallyItemsParametrs(minesCount);
+
+            Size = new Size(playerFieldPanel.Size.Width + 20, playerFieldPanel.Size.Height + 10);
         }
 
         private void SetAdditionallyItemsParametrs(int minesCount)
@@ -219,7 +197,6 @@ namespace Minesweeper
             minesLeftCountLabel.Text = minesCount.ToString();
             minesLeftCountLabel.Location = new Point(playerFieldPanel.Right - 70, playerFieldPanel.Bottom + 20);
             minePicture.Location = new Point(minesLeftCountLabel.Location.X - 50, minesLeftCountLabel.Location.Y + 7);
-            parametrsPanel.Location = new Point(playerFieldPanel.Location.X, playerFieldPanel.Location.Y);
         }
 
         public void RefreshField()
@@ -267,7 +244,6 @@ namespace Minesweeper
 
         private void SubscribeControlsToEvent()
         {
-            parametrsPanel.Visible = false;
             playerFieldPanel.Enabled = true;
 
             foreach (Control c in playerFieldPanel.Controls)
@@ -276,65 +252,15 @@ namespace Minesweeper
             }
         }
 
-        private void HigeScoreTable_Click(object sender, EventArgs e)
+        private void OnHigeScoreTable(object sender, EventArgs e)
         {
-            ShowScoreTableEvent?.Invoke(sender, e);
+            ShowScoreTableEvent?.Invoke();
+            highScoreTableForm.ShowDialog();
         }
 
         public void ShowScoreTable(Dictionary<string, int> scoreTable)
         {
-            if (scoreTablePanel.Visible == true)
-            {
-                return;
-            }
-
-            scoreTablePanel.Location = new Point(playerFieldPanel.Location.X, playerFieldPanel.Location.Y);
-            int defoultRowsCount = 4;
-            int maxRowsCount = Math.Max(defoultRowsCount, scoreTable.Count) + 1;
-
-            scoreTablePanel.Controls.Clear();
-            scoreTablePanel.RowCount = maxRowsCount;
-            scoreTablePanel.ColumnCount = 3;
-
-            for (int i = 0; i < maxRowsCount; i++)
-            {
-                scoreTablePanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 41));
-
-                for (int j = 0; j < 2; j++)
-                {
-                    scoreTablePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
-                }
-            }
-
-            int k = 0;
-
-            foreach (var pair in scoreTable)
-            {
-                scoreTablePanel.Controls.Add(new Label
-                {
-                    Dock = DockStyle.Fill,
-                    Margin = new Padding(),
-                    Anchor = AnchorStyles.None,
-                    AutoSize = true,
-                    Text = pair.Key,
-                    TextAlign = ContentAlignment.MiddleCenter
-                }, 0, k);
-
-                scoreTablePanel.Controls.Add(new Label
-                {
-                    Dock = DockStyle.Fill,
-                    Margin = new Padding(),
-                    Anchor = AnchorStyles.None,
-                    Text = pair.Value.ToString(),
-                    TextAlign = ContentAlignment.MiddleCenter
-                }, 2, k);
-
-                k++;
-            }
-
-            scoreTablePanel.Controls.Add(applyScoreButton, 1, maxRowsCount - 1);
-            scoreTablePanel.BringToFront();
-            scoreTablePanel.Visible = true;
+            highScoreTableForm.SetValues(scoreTable);
         }
 
         public void RemoveFlag(Control control)
@@ -355,14 +281,12 @@ namespace Minesweeper
 
         public void SetParametrsNames(string[] parametrsNames)
         {
-            parametrsNamesComboBox.Items.AddRange(parametrsNames);
-            parametrsNamesComboBox.Items.Add(parametrSpecialName);
-            parametrsNamesComboBox.SelectedIndex = 0;
+            parametrsForm.SetParametrsNames(parametrsNames);
         }
 
         public string GetPlayerName()
         {
-            return nameBox.Text;
+            return parametrsForm.GetPlayerName();
         }
     }
 }

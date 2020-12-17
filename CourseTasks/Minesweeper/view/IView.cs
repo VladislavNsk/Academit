@@ -7,13 +7,12 @@ namespace Minesweeper.View
     public interface IView
     {
         event Action SetParametrs;
+        event Action LoadFormEvent;
         event Action SetSpecialParametrs;
+        event Action ShowScoreTableEvent;
         event Action<Control> SetFlagEvent;
         event Action<Control> RemoveFlagEvent;
         event Action<Control, int, int> LeftButtonClick;
-
-        event EventHandler LoadFormEvent;
-        event EventHandler ShowScoreTableEvent;
 
         string GetParametrName();
 
