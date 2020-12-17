@@ -22,7 +22,7 @@ namespace Minesweeper.View
 
                 if (maxMinesCount < minesNumeric.Value)
                 {
-                    MessageBox.Show($"Количество мин должно быть от 9 до {maxMinesCount}");
+                    MessageBox.Show($"Количество мин должно быть от 9 до {maxMinesCount}", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
