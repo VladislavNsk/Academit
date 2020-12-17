@@ -76,7 +76,7 @@ namespace Minesweeper.View
 
             playerFieldPanel.AutoSize = true;
             playerFieldPanel.Anchor = AnchorStyles.Left | AnchorStyles.Top;
-            playerFieldPanel.Location = new Point(0, 25);
+            playerFieldPanel.Location = new Point(0, 40);
 
             parametrsForm.SetParametrs += OnSetParametrs;
             parametrsForm.SetSpecialParametrs += OnSetSpecialParametrs;
@@ -91,6 +91,8 @@ namespace Minesweeper.View
             Text = "Сапер";
             AutoSize = true;
             Icon = new Icon(@"..\..\Resources\mine.ico");
+            MaximizeBox = false;
+            FormBorderStyle = FormBorderStyle.FixedDialog;
 
             ResumeLayout(false);
         }
