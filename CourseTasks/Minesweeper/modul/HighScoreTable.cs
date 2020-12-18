@@ -71,6 +71,7 @@ namespace Minesweeper.Modul
         public void SetMaxScore(int totalScore)
         {
             this.totalScore = totalScore;
+            currentScore = 0;
         }
     }
 }

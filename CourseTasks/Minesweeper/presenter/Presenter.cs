@@ -16,28 +16,28 @@ namespace Minesweeper.presenter
             this.view = view;
             this.field = field;
 
-            view.SetParametrs += View_SetParametrs;
-            view.LeftButtonClick += View_LeftButtonClick;
-            view.LoadFormEvent += View_LoadForm;
-            view.ShowScoreTableEvent += View_ShowScoreTable;
-            view.SetSpecialParametrs += View_SetSpecialParametrs;
-            view.SetFlagEvent += View_SetFlag;
-            view.RemoveFlagEvent += View_RemoveFlag;
+            view.SetSpecialParametrs += OnSetSpecialParametrs;
+            view.ShowScoreTableEvent += OnShowScoreTable;
+            view.LeftButtonClick += OnLeftButtonClick;
+            view.RemoveFlagEvent += OnRemoveFlag;
+            view.SetParametrs += OnSetParametrs;
+            view.LoadFormEvent += OnLoadForm;
+            view.SetFlagEvent += OnSetFlag;
 
-            field.ChangeParameters += Model_StartGame;
-            field.GameOver += GameOver;
-            field.Win += Model_Win;
-            field.OpenCellsRangeEvent += Model_OpenCellsRange;
-            field.ChangeFlagsCountAction += Model_ChangeFlagsCount;
+            field.ChangeFlagsCountAction += OnChangeFlagsCount;
+            field.OpenCellsRangeEvent += OnOpenCellsRange;
+            field.ChangeParameters += OnStartGame;
+            field.GameOver += OnGameOver;
+            field.Win += OnWin;
         }
 
-        private void View_RemoveFlag(Control control)
+        private void OnRemoveFlag(Control control)
         {
             view.RemoveFlag(control);
             field.RemoveFlag();
         }
 
-        private void View_SetFlag(Control control)
+        private void OnSetFlag(Control control)
         {
             view.SetFlag(control, field.IsCanGetFlag());
             field.SetFlag();
@@ -45,14 +45,14 @@ namespace Minesweeper.presenter
 
         #region Parametrs
 
-        private void View_SetSpecialParametrs()
+        private void OnSetSpecialParametrs()
         {
             var (rowsCount, columnsCount, minesCount) = view.GetSpecialParametrs();
             field.SetParametrs(rowsCount, columnsCount, minesCount);
             field.AddPlayerName(view.GetPlayerName());
         }
 
-        private void View_SetParametrs()
+        private void OnSetParametrs()
         {
             field.SetParametrs(view.GetParametrName());
             field.AddPlayerName(view.GetPlayerName());
@@ -60,46 +60,46 @@ namespace Minesweeper.presenter
 
         #endregion
 
-        private void Model_OpenCellsRange(List<int[]> cellsCoordinates, List<int> cellsValues)
+        private void OnOpenCellsRange(List<int[]> cellsCoordinates, List<int> cellsValues)
         {
             view.OpenCellsRange(cellsCoordinates, cellsValues);
         }
 
-        private void View_LeftButtonClick(Control control, int rowIndex, int columnIndex)
+        private void OnLeftButtonClick(Control control, int rowIndex, int columnIndex)
         {
             view.OpenCell(control, field.GetCellValue(rowIndex, columnIndex));
         }
 
         #region Flag
 
-        private void Model_ChangeFlagsCount(int flagsCount)
+        private void OnChangeFlagsCount(int flagsCount)
         {
             view.ChangeFlagsCount(flagsCount);
         }
 
         #endregion
 
-        private void Model_Win(int[,] minesCoordinates)
+        private void OnWin(int[,] minesCoordinates)
         {
             view.WinGame(minesCoordinates);
         }
 
-        private void GameOver(int[,] minesCoordinates)
+        private void OnGameOver(int[,] minesCoordinates)
         {
             view.GameOver(minesCoordinates);
         }
 
-        private void Model_StartGame()
+        private void OnStartGame()
         {
             view.PrintPlayingField(field.GetRowsCount(), field.GetColumnsCount(), field.GetMinesCount());
         }
 
-        private void View_ShowScoreTable()
+        private void OnShowScoreTable()
         {
             view.ShowScoreTable(field.GetScoreTable());
         }
 
-        private void View_LoadForm()
+        private void OnLoadForm()
         {
             view.SetParametrsNames(field.GetNamesParametrs());
             view.PrintPlayingField(field.GetRowsCount(), field.GetColumnsCount(), field.GetMinesCount());

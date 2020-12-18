@@ -14,7 +14,7 @@ namespace Minesweeper.View
             InitializeComponent();
         }
 
-        private void ApplyButton_Click(object sender, EventArgs e)
+        private void OnApplyButton(object sender, EventArgs e)
         {
             if (parametrsBox.Text == parametrSpecialName)
             {

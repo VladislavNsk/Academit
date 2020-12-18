@@ -53,7 +53,7 @@ namespace Minesweeper.View
             parametrsForm.ShowDialog();
         }
 
-        private void Control_MouseUp(object sender, MouseEventArgs e)
+        private void OnMouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
@@ -248,7 +248,7 @@ namespace Minesweeper.View
 
             foreach (Control c in playerFieldPanel.Controls)
             {
-                c.MouseUp += Control_MouseUp;
+                c.MouseUp += OnMouseUp;
             }
         }
 

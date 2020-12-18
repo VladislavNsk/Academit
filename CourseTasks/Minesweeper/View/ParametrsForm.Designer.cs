@@ -75,7 +75,7 @@ namespace Minesweeper.View
             applyButton.Size = new System.Drawing.Size(75, 23);
             applyButton.Text = "Принять";
             applyButton.UseVisualStyleBackColor = true;
-            applyButton.Click += ApplyButton_Click;
+            applyButton.Click += OnApplyButton;
 
             parametrsSetPanel.ColumnCount = 1;
             parametrsSetPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
