@@ -29,8 +29,8 @@ namespace Minesweeper.modul.DateBase
 
         public void Add(string playerName)
         {
-            var table = new TableDb { Name = playerName };
-            var tableFromDb = context.GetTable<TableDb>();
+            var table = new GameResult { Name = playerName };
+            var tableFromDb = context.GetTable<GameResult>();
 
             if (!tableFromDb.Where(x => x.Name == playerName).Any())
             {
@@ -41,7 +41,7 @@ namespace Minesweeper.modul.DateBase
 
         public void Save(int score, string playerName)
         {
-            var tableFromDb = context.GetTable<TableDb>();
+            var tableFromDb = context.GetTable<GameResult>();
             var sampleResult = from table in tableFromDb
                                where table.Name == playerName
                                select table;
@@ -56,14 +56,14 @@ namespace Minesweeper.modul.DateBase
 
         public Dictionary<string, int> GetScoreTable()
         {
-            var tableFromDb = context.GetTable<TableDb>();
+            var tableFromDb = context.GetTable<GameResult>();
             var scoreTable = new Dictionary<string, int>();
             var sampleResult = (from table in tableFromDb
                                 select table).OrderByDescending(x => x.Score);
 
-            foreach (var score in sampleResult)
+            foreach (var row in sampleResult)
             {
-                scoreTable.Add(score.Name, score.Score);
+                scoreTable.Add(row.Name, row.Score);
             }
 
             return scoreTable;
@@ -71,7 +71,7 @@ namespace Minesweeper.modul.DateBase
     }
 
     [Table(Name = "scoreTables")]
-    public class TableDb
+    public class GameResult
     {
         [Column(IsPrimaryKey = true)]
         public string Name { get; set; }
