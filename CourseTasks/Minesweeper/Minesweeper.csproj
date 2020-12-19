@@ -85,10 +85,10 @@
     <Compile Include="Modul\FieldParametrs.cs" />
     <Compile Include="Modul\HighScoreTable.cs" />
     <Compile Include="Modul\PlayingField.cs" />
-    <Compile Include="Modul\Parametrs\Beginner.cs" />
-    <Compile Include="Modul\Parametrs\Fun.cs" />
+    <Compile Include="Modul\Parametrs\BeginnerParametr.cs" />
+    <Compile Include="Modul\Parametrs\FunParametr.cs" />
     <Compile Include="Modul\Parametrs\IParametr.cs" />
-    <Compile Include="Modul\Parametrs\Professional.cs" />
+    <Compile Include="Modul\Parametrs\ProfessionalParametr.cs" />
     <Compile Include="Resource1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

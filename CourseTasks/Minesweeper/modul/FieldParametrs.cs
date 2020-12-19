@@ -13,9 +13,9 @@ namespace Minesweeper.Modul
         private int flagsCount;
         private List<IParametr> parametrs = new List<IParametr>
         {
-            new Beginner(),
-            new Fun(),
-            new Professional()
+            new BeginnerParametr(),
+            new FunParametr(),
+            new ProfessionalParametr()
         };
 
         public int MinesCount { get; private set; }
