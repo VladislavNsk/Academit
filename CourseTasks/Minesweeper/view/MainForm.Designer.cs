@@ -1,11 +1,12 @@
 ﻿using System.Windows.Forms;
 using System.Drawing;
+using System.ComponentModel;
 
 namespace Minesweeper.View
 {
     partial class MainForm
     {
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         protected override void Dispose(bool disposing)
         {
@@ -13,6 +14,7 @@ namespace Minesweeper.View
             {
                 components.Dispose();
             }
+
             base.Dispose(disposing);
         }
 

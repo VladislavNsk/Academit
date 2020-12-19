@@ -130,7 +130,7 @@ namespace Minesweeper.View
 
         public void OpenCellsRange(List<int[]> cellsCoordinates, List<int> values)
         {
-            int i = 0;
+            var i = 0;
 
             foreach (var cellCoordinates in cellsCoordinates)
             {
@@ -214,9 +214,9 @@ namespace Minesweeper.View
 
         private void ShowMines(int[,] minesCoordinates)
         {
-            for (int i = 0; i < minesCoordinates.GetLength(0); i++)
+            for (var i = 0; i < minesCoordinates.GetLength(0); i++)
             {
-                for (int j = 0; j < minesCoordinates.GetLength(1); j++)
+                for (var j = 0; j < minesCoordinates.GetLength(1); j++)
                 {
                     if (minesCoordinates[i, j] == -1)
                     {
@@ -255,12 +255,12 @@ namespace Minesweeper.View
         private void OnHigeScoreTable(object sender, EventArgs e)
         {
             ShowScoreTableEvent?.Invoke();
-            highScoreTableForm.ShowDialog();
         }
 
         public void ShowScoreTable(Dictionary<string, int> scoreTable)
         {
             highScoreTableForm.SetValues(scoreTable);
+            highScoreTableForm.ShowDialog();
         }
 
         public void RemoveFlag(Control control)

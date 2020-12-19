@@ -19,7 +19,7 @@ namespace Minesweeper.View
 
         public void SetValues(Dictionary<string, int> scoreTable)
         {
-            int k = 0;
+            var k = 0;
 
             foreach (var pair in scoreTable)
             {
@@ -33,7 +33,7 @@ namespace Minesweeper.View
         {
             highScoreTableDataGrid.Rows.Add(10);
 
-            for (int i = 0; i < 10; i++)
+            for (var i = 0; i < 10; i++)
             {
                 highScoreTableDataGrid.Rows[i].Height = 25;
             }

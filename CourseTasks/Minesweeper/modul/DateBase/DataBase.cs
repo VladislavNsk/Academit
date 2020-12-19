@@ -41,7 +41,7 @@ namespace Minesweeper.modul.DateBase
 
         public void Save(int score, string playerName)
         {
-            Table<TableDb> tableFromDb = context.GetTable<TableDb>();
+            var tableFromDb = context.GetTable<TableDb>();
             var sampleResult = from table in tableFromDb
                                where table.Name == playerName
                                select table;
@@ -56,7 +56,7 @@ namespace Minesweeper.modul.DateBase
 
         public Dictionary<string, int> GetScoreTable()
         {
-            Table<TableDb> tableFromDb = context.GetTable<TableDb>();
+            var tableFromDb = context.GetTable<TableDb>();
             var scoreTable = new Dictionary<string, int>();
             var sampleResult = (from table in tableFromDb
                                 select table).OrderByDescending(x => x.Score);

@@ -20,8 +20,8 @@ namespace Minesweeper.View
 
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            var dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            var dataGridViewCellStyle2 = new DataGridViewCellStyle();
 
             highScoreTableDataGrid = new DataGridView();
             nickName = new DataGridViewTextBoxColumn();

@@ -18,7 +18,7 @@ namespace Minesweeper.View
         {
             if (parametrsBox.Text == parametrSpecialName)
             {
-                int maxMinesCount = (int)(rowsNumeric.Value * columnsNumeric.Value) - 1;
+                var maxMinesCount = (int)(rowsNumeric.Value * columnsNumeric.Value) - 1;
 
                 if (maxMinesCount < minesNumeric.Value)
                 {

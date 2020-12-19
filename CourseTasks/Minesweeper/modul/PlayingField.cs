@@ -40,13 +40,13 @@ namespace Minesweeper.Modul
         private void FillPlatingField()
         {
             playingField = new int[fieldParametrs.RowsCount, fieldParametrs.ColumnsCount];
-            int minesCount = 0;
-            Random random = new Random();
+            var minesCount = 0;
+            var random = new Random();
 
             while (minesCount < fieldParametrs.MinesCount)
             {
-                int rowIndex = random.Next(0, fieldParametrs.RowsCount);
-                int columnIndex = random.Next(0, fieldParametrs.ColumnsCount);
+                var rowIndex = random.Next(0, fieldParametrs.RowsCount);
+                var columnIndex = random.Next(0, fieldParametrs.ColumnsCount);
 
                 if (playingField[rowIndex, columnIndex] != -1)
                 {
@@ -60,14 +60,14 @@ namespace Minesweeper.Modul
 
         private void GetNearestMinesCount(int rowIndex, int columnIndex)
         {
-            for (int i = rowIndex - 1; i <= rowIndex + 1; i++)
+            for (var i = rowIndex - 1; i <= rowIndex + 1; i++)
             {
                 if (i < 0 || i >= fieldParametrs.RowsCount)
                 {
                     continue;
                 }
 
-                for (int j = columnIndex - 1; j <= columnIndex + 1; j++)
+                for (var j = columnIndex - 1; j <= columnIndex + 1; j++)
                 {
                     if (j < 0 || j >= fieldParametrs.ColumnsCount || playingField[i, j] == -1 || (i == rowIndex && j == columnIndex))
                     {
@@ -102,9 +102,9 @@ namespace Minesweeper.Modul
 
         private void OpenCellsRange(int[] firstEmptyCellCoordinates)
         {
-            Queue<int[]> queue = new Queue<int[]>();
-            List<int[]> cellsCoordinates = new List<int[]> { firstEmptyCellCoordinates };
-            List<int> cellsValues = new List<int> { playingField[firstEmptyCellCoordinates[0], firstEmptyCellCoordinates[1]] };
+            var queue = new Queue<int[]>();
+            var cellsCoordinates = new List<int[]> { firstEmptyCellCoordinates };
+            var cellsValues = new List<int> { playingField[firstEmptyCellCoordinates[0], firstEmptyCellCoordinates[1]] };
             fieldParametrs.Visited[firstEmptyCellCoordinates[0], firstEmptyCellCoordinates[1]] = true;
             int[] cellCoordinates;
             queue.Enqueue(firstEmptyCellCoordinates);
@@ -118,14 +118,14 @@ namespace Minesweeper.Modul
                     continue;
                 }
 
-                for (int i = cellCoordinates[0] - 1; i <= cellCoordinates[0] + 1; i++)
+                for (var i = cellCoordinates[0] - 1; i <= cellCoordinates[0] + 1; i++)
                 {
                     if (i < 0 || i >= fieldParametrs.RowsCount)
                     {
                         continue;
                     }
 
-                    for (int j = cellCoordinates[1] - 1; j <= cellCoordinates[1] + 1; j++)
+                    for (var j = cellCoordinates[1] - 1; j <= cellCoordinates[1] + 1; j++)
                     {
                         if (j < 0 || j >= fieldParametrs.ColumnsCount || (i == cellCoordinates[0] && j == cellCoordinates[1]))
                         {
