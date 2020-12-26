@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TreeMain
 {
-   public class Tree<T> : IEnumerable<T>
+    public class Tree<T> : IEnumerable<T>
     {
         private TreeNode<T> root;
         private readonly IComparer<T> comparer;
@@ -26,23 +26,13 @@ namespace TreeMain
 
         public Tree(IComparer<T> comparer)
         {
-            if (comparer == null)
-            {
-                throw new ArgumentNullException(nameof(comparer), "Сomparer имеет значение null.");
-            }
-
-            this.comparer = comparer;
+            this.comparer = comparer ?? throw new ArgumentNullException(nameof(comparer), "Сomparer имеет значение null.");
         }
 
         public Tree(T data, IComparer<T> comparer)
         {
-            if (comparer == null)
-            {
-                throw new ArgumentNullException(nameof(comparer), "Сomparer имеет значение null.");
-            }
-
+            this.comparer = comparer ?? throw new ArgumentNullException(nameof(comparer), "Сomparer имеет значение null.");
             root = new TreeNode<T>(data);
-            this.comparer = comparer;
             Count++;
         }
 
@@ -98,12 +88,12 @@ namespace TreeMain
                 return 0;
             }
 
-            if(data1 == null)
+            if (data1 == null)
             {
                 return -1;
             }
 
-            if(data2 == null)
+            if (data2 == null)
             {
                 return 1;
             }
@@ -148,6 +138,7 @@ namespace TreeMain
         private TreeNode<T> GetParentNode(T data)
         {
             var currentNode = root;
+            TreeNode<T> parentNode = null;
 
             while (currentNode != null)
             {
@@ -160,11 +151,7 @@ namespace TreeMain
                         return null;
                     }
 
-                    if (CompareData(currentNode.LeftChild.Data, data) == 0)
-                    {
-                        return currentNode;
-                    }
-
+                    parentNode = currentNode;
                     currentNode = currentNode.LeftChild;
                     continue;
                 }
@@ -176,16 +163,12 @@ namespace TreeMain
                         return null;
                     }
 
-                    if (CompareData(currentNode.RightChild.Data, data) == 0)
-                    {
-                        return currentNode;
-                    }
-
+                    parentNode = currentNode;
                     currentNode = currentNode.RightChild;
                     continue;
                 }
 
-                return currentNode;
+                return parentNode;
             }
 
             return null;
@@ -193,34 +176,41 @@ namespace TreeMain
 
         public bool Remove(T data)
         {
-            var treeNode = GetTreeNode(data);
+            var parentNode = GetParentNode(data);
 
-            if (treeNode == null)
+            if (parentNode == null && root != null)
             {
-                return false;
-            }
+                if (CompareData(root.Data, data) != 0)
+                {
+                    return false;
+                }
 
-            if (treeNode == root)
-            {
                 RemoveRoot();
                 modCount++;
                 Count--;
                 return true;
             }
 
+            var treeNode = parentNode.LeftChild;
+
+            if (parentNode.RightChild != null && CompareData(parentNode.RightChild.Data, data) == 0)
+            {
+                treeNode = parentNode.RightChild;
+            }
+
             var childrenCount = treeNode.GetChildrenCount();
 
             if (childrenCount == 0)
             {
-                RemoveLeaf(treeNode);
+                RemoveLeaf(treeNode, parentNode);
             }
             else if (childrenCount == 1)
             {
-                RemoveNodeWithOneChild(treeNode);
+                RemoveNodeWithOneChild(treeNode, parentNode);
             }
             else
             {
-                RemoveNodeWithTwoChildren(treeNode);
+                RemoveNodeWithTwoChildren(treeNode, parentNode);
             }
 
             modCount++;
@@ -228,10 +218,8 @@ namespace TreeMain
             return true;
         }
 
-        private void RemoveLeaf(TreeNode<T> treeNode)
+        private void RemoveLeaf(TreeNode<T> treeNode, TreeNode<T> parentNode)
         {
-            var parentNode = GetParentNode(treeNode.Data);
-
             if (parentNode.LeftChild == treeNode)
             {
                 parentNode.LeftChild = null;
@@ -242,55 +230,53 @@ namespace TreeMain
             }
         }
 
-        private void RemoveNodeWithOneChild(TreeNode<T> treeNode)
+        private void RemoveNodeWithOneChild(TreeNode<T> treeNode, TreeNode<T> parentNode)
         {
-            var child = treeNode.GetChildren();
-            var parentNode = GetParentNode(treeNode.Data);
+            var children = treeNode.GetChildren();
 
             if (parentNode.LeftChild == treeNode)
             {
-                parentNode.LeftChild = child[0] ?? child[1];
+                parentNode.LeftChild = children[0] ?? children[1];
             }
             else
             {
-                parentNode.RightChild = child[0] ?? child[1];
+                parentNode.RightChild = children[0] ?? children[1];
             }
         }
 
-        private void RemoveNodeWithTwoChildren(TreeNode<T> treeNode)
+        private void RemoveNodeWithTwoChildren(TreeNode<T> treeNode, TreeNode<T> parentNode)
         {
-            var minLeftNode = GetMinLeftNode(treeNode.RightChild);
-            var minLeftParentNode = GetParentNode(minLeftNode.Data);
-            var parentNode = GetParentNode(treeNode.Data);
+            var leftParentNode = GetLeftParentNode(treeNode.RightChild);
+            var leftNode = leftParentNode.LeftChild;
 
-            if (minLeftParentNode == treeNode)
+            if (leftNode == null)
             {
                 if (parentNode.LeftChild == treeNode)
                 {
-                    parentNode.LeftChild = minLeftNode;
+                    parentNode.LeftChild = leftParentNode;
                 }
                 else
                 {
-                    parentNode.RightChild = minLeftNode;
+                    parentNode.RightChild = leftParentNode;
                 }
 
-                minLeftNode.LeftChild = treeNode.LeftChild;
+                leftParentNode.LeftChild = treeNode.LeftChild;
                 return;
             }
 
-            minLeftParentNode.LeftChild = minLeftNode.RightChild;
+            leftParentNode.LeftChild = leftNode.RightChild;
 
             if (parentNode.LeftChild == treeNode)
             {
-                parentNode.LeftChild = minLeftNode;
+                parentNode.LeftChild = leftNode;
             }
             else
             {
-                parentNode.RightChild = minLeftNode;
+                parentNode.RightChild = leftNode;
             }
 
-            minLeftNode.LeftChild = treeNode.LeftChild;
-            minLeftNode.RightChild = treeNode.RightChild;
+            leftNode.LeftChild = treeNode.LeftChild;
+            leftNode.RightChild = treeNode.RightChild;
         }
 
         private void RemoveRoot()
@@ -305,37 +291,45 @@ namespace TreeMain
 
             if (rootChildrenCount == 1)
             {
-                var child = root.GetChildren();
-                root = child[0] ?? child[1];
+                var children = root.GetChildren();
+                root = children[0] ?? children[1];
                 return;
             }
 
-            var minLeftNode = GetMinLeftNode(root.RightChild);
-            var minLeftParentNode = GetParentNode(minLeftNode.Data);
+            var leftParentNode = GetLeftParentNode(root.RightChild);
 
-            if (minLeftParentNode == root)
+            if (leftParentNode == root.RightChild)
             {
-                minLeftNode.LeftChild = root.LeftChild;
-                root = minLeftNode;
+                leftParentNode.LeftChild = root.LeftChild;
+                root = leftParentNode;
                 return;
             }
 
-            minLeftParentNode.LeftChild = minLeftNode.RightChild;
-            minLeftNode.LeftChild = root.LeftChild;
-            minLeftNode.RightChild = root.RightChild;
-            root = minLeftNode;
+            var leftNode = leftParentNode.LeftChild;
+            leftParentNode.LeftChild = leftNode.RightChild;
+            leftNode.LeftChild = root.LeftChild;
+            leftNode.RightChild = root.RightChild;
+            root = leftNode;
         }
 
-        private static TreeNode<T> GetMinLeftNode(TreeNode<T> minLeftNode)
+        private static TreeNode<T> GetLeftParentNode(TreeNode<T> treeNode)
         {
-            var currentNode = minLeftNode;
+            var parentNode = treeNode;
 
-            while (currentNode.LeftChild != null)
+            if (parentNode.LeftChild == null)
             {
-                currentNode = currentNode.LeftChild;
+                return parentNode;
             }
 
-            return currentNode;
+            var leftNode = parentNode.LeftChild;
+
+            while (leftNode.LeftChild != null)
+            {
+                parentNode = leftNode;
+                leftNode = leftNode.LeftChild;
+            }
+
+            return parentNode;
         }
 
         public void RecursionDepthVisit(Action<T> action)
@@ -367,10 +361,16 @@ namespace TreeMain
             }
 
             var stack = new Stack<TreeNode<T>>();
+            var fixedModCount = modCount;
             stack.Push(root);
 
             while (stack.Count != 0)
             {
+                if (fixedModCount != modCount)
+                {
+                    throw new InvalidOperationException("Коллекция была изменена");
+                }
+
                 var node = stack.Pop();
 
                 if (node.RightChild != null)
@@ -395,10 +395,16 @@ namespace TreeMain
             }
 
             var queue = new Queue<TreeNode<T>>();
+            var fixedModCount = modCount;
             queue.Enqueue(root);
 
             while (queue.Count != 0)
             {
+                if (fixedModCount != modCount)
+                {
+                    throw new InvalidOperationException("Коллекция была изменена");
+                }
+
                 var node = queue.Dequeue();
 
                 if (node.LeftChild != null)
@@ -417,35 +423,9 @@ namespace TreeMain
 
         public IEnumerator<T> GetEnumerator()
         {
-            if (root == null)
+            foreach (var treeNodeData in VisitInWidth())
             {
-                yield break;
-            }
-
-            var fixedModCount = modCount;
-            var queue = new Queue<TreeNode<T>>();
-            queue.Enqueue(root);
-
-            while (queue.Count != 0)
-            {
-                var node = queue.Dequeue();
-
-                if (fixedModCount != modCount)
-                {
-                    throw new InvalidOperationException("Коллекция была изменена");
-                }
-
-                if (node.LeftChild != null)
-                {
-                    queue.Enqueue(node.LeftChild);
-                }
-
-                if (node.RightChild != null)
-                {
-                    queue.Enqueue(node.RightChild);
-                }
-
-                yield return node.Data;
+                yield return treeNodeData;
             }
         }
 

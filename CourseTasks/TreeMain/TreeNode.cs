@@ -1,6 +1,6 @@
 ﻿namespace TreeMain
 {
-   public class TreeNode<T>
+    public class TreeNode<T>
     {
         public TreeNode<T> LeftChild { get; set; }
 
