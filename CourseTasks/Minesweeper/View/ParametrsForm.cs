@@ -56,7 +56,7 @@ namespace Minesweeper.View
             ChangeParameter?.Invoke();
         }
 
-        public void SetParametersBoxs(int rowsCount, int columnCount,int  minesCount)
+        public void SetParametersBoxs(int rowsCount, int columnCount, int minesCount)
         {
             rowsNumeric.Value = rowsCount;
             columnsNumeric.Value = columnCount;
