@@ -1,21 +1,21 @@
-﻿using Minesweeper.Modul.Parametrs;
+﻿using Minesweeper.Model.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Minesweeper.Modul
+namespace Minesweeper.Model
 {
-    public class FieldParametrs
+    public class FieldParameters
     {
         public event Action SetFlagEvent;
         public event Action RemoveFlagEvent;
 
         private int flagsCount;
-        private List<IParametr> parametrs = new List<IParametr>
+        private List<IParameter> parameters = new List<IParameter>
         {
-            new BeginnerParametr(),
-            new FunParametr(),
-            new ProfessionalParametr()
+            new BeginnerParameter(),
+            new FunParameter(),
+            new ProfessionalParameter()
         };
 
         public int MinesCount { get; private set; }
@@ -51,24 +51,24 @@ namespace Minesweeper.Modul
 
         public bool[,] Visited { get; set; }
 
-        public FieldParametrs()
+        public FieldParameters()
         {
-            SetParametrs(parametrs[0].Name);
+            SetParameters(parameters[0].Name);
         }
 
-        public void SetParametrs(string parametrName)
+        public void SetParameters(string parameterName)
         {
-            var parametr = parametrs.FirstOrDefault(x => x.Name == parametrName);
+            var parameter = parameters.FirstOrDefault(x => x.Name == parameterName);
 
-            if (parametr == null)
+            if (parameter == null)
             {
-                throw new ArgumentException($"Имя параметра {parametrName} нет. Доступны: {string.Join(", ", parametrs.Select(x => x.Name).ToList())}", parametrName);
+                throw new ArgumentException($"Имя параметра {parameterName} нет. Доступны: {string.Join(", ", parameters.Select(x => x.Name).ToList())}", parameterName);
             }
 
-            SetParametrs(parametr.RowsCount, parametr.ColumnsCount, parametr.MinesCount);
+            SetParameters(parameter.RowsCount, parameter.ColumnsCount, parameter.MinesCount);
         }
 
-        public void SetParametrs(int rowsCount, int columnsCount, int minesCount)
+        public void SetParameters(int rowsCount, int columnsCount, int minesCount)
         {
             RowsCount = rowsCount;
             ColumnsCount = columnsCount;
@@ -77,9 +77,15 @@ namespace Minesweeper.Modul
             Visited = new bool[rowsCount, columnsCount];
         }
 
-        public string[] GetNamesParametrs()
+        public (int rowsCount, int columnsCount, int minesCount) GetParameters(string parameterName)
         {
-            return parametrs.Select(x => x.Name).ToArray();
+            SetParameters(parameterName);
+            return (RowsCount, ColumnsCount, MinesCount);
+        }
+
+        public string[] GetNamesParameters()
+        {
+            return parameters.Select(x => x.Name).ToArray();
         }
     }
 }

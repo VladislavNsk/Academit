@@ -1,6 +1,6 @@
-﻿namespace Minesweeper.Modul.Parametrs
+﻿namespace Minesweeper.Model.Parameters
 {
-    public class BeginnerParametr : IParametr
+    public class BeginnerParameter : IParameter
     {
         public int RowsCount => 9;
 

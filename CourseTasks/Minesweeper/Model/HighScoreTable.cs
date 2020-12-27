@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Minesweeper.Modul
+namespace Minesweeper.Model
 {
     public class HighScoreTable
     {
@@ -10,7 +10,6 @@ namespace Minesweeper.Modul
         private readonly DataBase dataBase;
         private string playerName;
         private int currentScore;
-        private int totalScore;
 
         public HighScoreTable(DataBase dataBase)
         {
@@ -33,7 +32,7 @@ namespace Minesweeper.Modul
 
                 currentScore = value;
 
-                if (value == totalScore)
+                if (value == TotalScore)
                 {
                     Save(true);
                     Win?.Invoke();
@@ -41,11 +40,13 @@ namespace Minesweeper.Modul
             }
         }
 
+        public int TotalScore { get; private set; }
+
         public void Save(bool isWin)
         {
             if (isWin)
             {
-                Score += totalScore;
+                Score += TotalScore;
             }
 
             dataBase.Save(Score, playerName);
@@ -70,7 +71,7 @@ namespace Minesweeper.Modul
 
         public void SetMaxScore(int totalScore)
         {
-            this.totalScore = totalScore;
+            TotalScore = totalScore;
             currentScore = 0;
         }
     }

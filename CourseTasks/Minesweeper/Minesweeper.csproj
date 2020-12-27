@@ -42,6 +42,7 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.3.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -69,6 +70,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\DateBase\GameResult.cs" />
     <Compile Include="View\HighScoreTableForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -81,14 +83,14 @@
     <Compile Include="View\ParametrsForm.Designer.cs">
       <DependentUpon>ParametrsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Modul\DateBase\DataBase.cs" />
-    <Compile Include="Modul\FieldParametrs.cs" />
-    <Compile Include="Modul\HighScoreTable.cs" />
-    <Compile Include="Modul\PlayingField.cs" />
-    <Compile Include="Modul\Parametrs\BeginnerParametr.cs" />
-    <Compile Include="Modul\Parametrs\FunParametr.cs" />
-    <Compile Include="Modul\Parametrs\IParametr.cs" />
-    <Compile Include="Modul\Parametrs\ProfessionalParametr.cs" />
+    <Compile Include="Model\DateBase\DataBase.cs" />
+    <Compile Include="Model\FieldParameters.cs" />
+    <Compile Include="Model\HighScoreTable.cs" />
+    <Compile Include="Model\PlayingField.cs" />
+    <Compile Include="Model\Parameters\BeginnerParametr.cs" />
+    <Compile Include="Model\Parameters\FunParametr.cs" />
+    <Compile Include="Model\Parameters\IParametr.cs" />
+    <Compile Include="Model\Parameters\ProfessionalParametr.cs" />
     <Compile Include="Resource1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -100,7 +102,7 @@
     <Compile Include="View\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="presenter\Presenter.cs" />
+    <Compile Include="Presenter\Presenter.cs" />
     <Compile Include="Minesweeper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View\IView.cs" />

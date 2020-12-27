@@ -1,10 +1,10 @@
-﻿using Minesweeper.Modul;
+﻿using Minesweeper.Model;
 using Minesweeper.View;
 
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace Minesweeper.presenter
+namespace Minesweeper.Presenter
 {
     public class Presenter
     {
@@ -16,19 +16,25 @@ namespace Minesweeper.presenter
             this.view = view;
             this.field = field;
 
-            view.SetSpecialParametrs += OnSetSpecialParametrs;
+            view.SetSpecialParametersEvent += OnSetSpecialParameters;
             view.ShowScoreTableEvent += OnShowScoreTable;
-            view.LeftButtonClick += OnLeftButtonClick;
+            view.LeftButtonClickEvent += OnLeftButtonClick;
             view.RemoveFlagEvent += OnRemoveFlag;
-            view.SetParametrs += OnSetParametrs;
+            view.SetParametersEvent += OnSetParameters;
             view.LoadFormEvent += OnLoadForm;
             view.SetFlagEvent += OnSetFlag;
+            view.ChangeParameterEvent += OnChangeParameterEvent;
 
             field.ChangeFlagsCountAction += OnChangeFlagsCount;
             field.OpenCellsRangeEvent += OnOpenCellsRange;
             field.ChangeParameters += OnStartGame;
             field.GameOver += OnGameOver;
             field.Win += OnWin;
+        }
+
+        private void OnChangeParameterEvent()
+        {
+            view.SetParametersBoxs(field.GetParameters(view.GetParametrName()));
         }
 
         private void OnRemoveFlag(Control control)
@@ -43,18 +49,18 @@ namespace Minesweeper.presenter
             field.SetFlag();
         }
 
-        #region Parametrs
+        #region Parameters
 
-        private void OnSetSpecialParametrs()
+        private void OnSetSpecialParameters()
         {
-            var (rowsCount, columnsCount, minesCount) = view.GetSpecialParametrs();
-            field.SetParametrs(rowsCount, columnsCount, minesCount);
+            var (rowsCount, columnsCount, minesCount) = view.GetSpecialParameters();
+            field.SetParameters(rowsCount, columnsCount, minesCount);
             field.AddPlayerName(view.GetPlayerName());
         }
 
-        private void OnSetParametrs()
+        private void OnSetParameters()
         {
-            field.SetParametrs(view.GetParametrName());
+            field.SetParameters(view.GetParametrName());
             field.AddPlayerName(view.GetPlayerName());
         }
 
@@ -101,7 +107,7 @@ namespace Minesweeper.presenter
 
         private void OnLoadForm()
         {
-            view.SetParametrsNames(field.GetNamesParametrs());
+            view.SetParametersNames(field.GetNamesParameters());
             view.PrintPlayingField(field.GetRowsCount(), field.GetColumnsCount(), field.GetMinesCount());
             field.AddPlayerName(view.GetPlayerName());
         }

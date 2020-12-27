@@ -1,8 +1,9 @@
-﻿using System.Data.Linq;
+﻿using System.Linq;
+using System.Data.Linq;
 using System.Data.SQLite;
-using System.Linq;
-using System.Data.Linq.Mapping;
 using System.Collections.Generic;
+
+using Minesweeper.Model.DateBase;
 
 namespace Minesweeper.modul.DateBase
 {
@@ -29,10 +30,14 @@ namespace Minesweeper.modul.DateBase
 
         public void Add(string playerName)
         {
-            var table = new GameResult { Name = playerName };
+            var table = new GameResult
+            {
+                Name = playerName
+            };
+
             var tableFromDb = context.GetTable<GameResult>();
 
-            if (!tableFromDb.Where(x => x.Name == playerName).Any())
+            if (!tableFromDb.Any(x => x.Name == playerName))
             {
                 tableFromDb.InsertOnSubmit(table);
                 context.SubmitChanges();
@@ -42,13 +47,11 @@ namespace Minesweeper.modul.DateBase
         public void Save(int score, string playerName)
         {
             var tableFromDb = context.GetTable<GameResult>();
-            var sampleResult = from table in tableFromDb
-                               where table.Name == playerName
-                               select table;
+            var sampleResult = tableFromDb.Where(table => table.Name == playerName);
 
-            foreach (var row in sampleResult)
+            foreach (var s in sampleResult)
             {
-                row.Score = score;
+                s.Score += score;
             }
 
             context.SubmitChanges();
@@ -58,8 +61,7 @@ namespace Minesweeper.modul.DateBase
         {
             var tableFromDb = context.GetTable<GameResult>();
             var scoreTable = new Dictionary<string, int>();
-            var sampleResult = (from table in tableFromDb
-                                select table).OrderByDescending(x => x.Score);
+            var sampleResult = tableFromDb.OrderByDescending(x => x.Score);
 
             foreach (var row in sampleResult)
             {
@@ -68,15 +70,5 @@ namespace Minesweeper.modul.DateBase
 
             return scoreTable;
         }
-    }
-
-    [Table(Name = "scoreTables")]
-    public class GameResult
-    {
-        [Column(IsPrimaryKey = true)]
-        public string Name { get; set; }
-
-        [Column]
-        public int Score { get; set; }
     }
 }

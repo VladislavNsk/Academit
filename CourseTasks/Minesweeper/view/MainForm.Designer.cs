@@ -54,12 +54,12 @@ namespace Minesweeper.View
             newGameMenuItem.Click += OnNewGameMenuItem;
 
             higeScoreTable.Text = "Рекорды";
-            higeScoreTable.Click += OnHigeScoreTable;
+            higeScoreTable.Click += OnHighScoreTable;
 
             about.Text = "О программе";
             about.Click += ((control, e) =>
             {
-                MessageBox.Show(aboutText);
+                MessageBox.Show(aboutText, about.Text);
             });
 
             menu.Items.Add(gameMenuItem);
@@ -80,8 +80,9 @@ namespace Minesweeper.View
             playerFieldPanel.Anchor = AnchorStyles.Left | AnchorStyles.Top;
             playerFieldPanel.Location = new Point(0, 40);
 
-            parametrsForm.SetParametrs += OnSetParametrs;
-            parametrsForm.SetSpecialParametrs += OnSetSpecialParametrs;
+            parametersForm.SetParameters += OnSetParameters;
+            parametersForm.ChangeParameter += OnChangeParameter; ;
+            parametersForm.SetSpecialParameters += OnSetSpecialParameters;
 
             DoubleBuffered = true;
             Load += OnViewForm;
@@ -92,7 +93,7 @@ namespace Minesweeper.View
             BackColor = SystemColors.ActiveCaption;
             Text = "Сапер";
             AutoSize = true;
-            Icon = new Icon(@"..\..\Resources\mine.ico");
+            Icon = new Icon(@"..\..\Resources\mine.ico", 15, 15);
             MaximizeBox = false;
             FormBorderStyle = FormBorderStyle.FixedDialog;
 

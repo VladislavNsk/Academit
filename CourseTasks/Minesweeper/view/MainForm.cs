@@ -1,26 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Minesweeper.View
 {
     public partial class MainForm : Form, IView
     {
-        public event Action SetParametrs;
+        public event Action SetParametersEvent;
         public event Action LoadFormEvent;
-        public event Action SetSpecialParametrs;
+        public event Action SetSpecialParametersEvent;
         public event Action ShowScoreTableEvent;
         public event Action<Control> SetFlagEvent;
         public event Action<Control> RemoveFlagEvent;
-        public event Action<Control, int, int> LeftButtonClick;
+        public event Action ChangeParameterEvent;
+        public event Action<Control, int, int> LeftButtonClickEvent;
 
-        private readonly ParametrsForm parametrsForm;
+        private readonly ParametersForm parametersForm;
         private readonly HighScoreTableForm highScoreTableForm;
 
-        public MainForm(ParametrsForm parametrsForm, HighScoreTableForm highScoreTableForm)
+        private readonly Color cellColor = Color.FromArgb(72, 110, 240);
+        private readonly Dictionary<int, Color> colors = new Dictionary<int, Color>
         {
-            this.parametrsForm = parametrsForm;
+            [-1] = Color.White,
+            [1] = Color.Blue,
+            [2] = Color.Green,
+            [3] = Color.Red,
+            [4] = Color.MediumPurple,
+            [5] = Color.Purple,
+            [6] = Color.Gray,
+            [7] = Color.Brown,
+            [8] = Color.Black
+        };
+
+        private enum Colors
+        {
+            Blue = 0,
+            Green = 1,
+            Red = 2,
+            MediumPurple = 3,
+            Purple = 4,
+
+            Black = 7
+        }
+
+
+        public MainForm(ParametersForm parametersForm, HighScoreTableForm highScoreTableForm)
+        {
+            this.parametersForm = parametersForm;
             this.highScoreTableForm = highScoreTableForm;
 
             InitializeComponent();
@@ -28,14 +56,19 @@ namespace Minesweeper.View
 
         #region Events
 
-        private void OnSetSpecialParametrs()
+        private void OnSetSpecialParameters()
         {
-            SetSpecialParametrs?.Invoke();
+            SetSpecialParametersEvent?.Invoke();
         }
 
-        private void OnSetParametrs()
+        private void OnChangeParameter()
         {
-            SetParametrs?.Invoke();
+            ChangeParameterEvent?.Invoke();
+        }
+
+        private void OnSetParameters()
+        {
+            SetParametersEvent?.Invoke();
         }
 
         private void OnExitMenuItem(object sender, EventArgs e)
@@ -50,29 +83,92 @@ namespace Minesweeper.View
 
         private void OnNewGameMenuItem(object sender, EventArgs e)
         {
-            parametrsForm.ShowDialog();
+            parametersForm.ShowDialog();
         }
 
         private void OnMouseUp(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            var control = sender as Control;
+            playerFieldPanel.Select();
+
+            if (control == null)
             {
-                OnLeftButton(sender as Control);
                 return;
             }
 
-            OnRightButton(sender as Control);
+            if (e.Button == MouseButtons.Left)
+            {
+                OnLeftButton(control);
+                return;
+            }
+
+            if (e.Button == MouseButtons.Right)
+            {
+                if (control.Text != "")
+                {
+                    return;
+                }
+
+                OnRightButton(control);
+                return;
+            }
+
+            var controlPosition = playerFieldPanel.GetPositionFromControl(control);
+            int flagsCount = GetFlagsCount(controlPosition.Row, controlPosition.Column);
+            int.TryParse(control.Text, out int cellValue);
+
+            if (flagsCount != cellValue || flagsCount == 0)
+            {
+                ResetCells(sender, e);
+                return;
+            }
+
+            OpenCellsRange(controlPosition.Row, controlPosition.Column);
+        }
+
+        private void OpenCellsRange(int rowIndex, int columnIndex)
+        {
+            var currentControl = playerFieldPanel.GetControlFromPosition(columnIndex, rowIndex);
+
+            foreach (var nearestControl in GetNearestControls(rowIndex, columnIndex))
+            {
+                if (currentControl == nearestControl)
+                {
+                    continue;
+                }
+
+                if (nearestControl.BackgroundImage != flagImage && nearestControl.Enabled == true && nearestControl.Text == "")
+                {
+                    var controlPosition = playerFieldPanel.GetPositionFromControl(nearestControl);
+                    LeftButtonClickEvent?.Invoke(nearestControl, controlPosition.Row, controlPosition.Column);
+                }
+            }
+        }
+
+        private int GetFlagsCount(int rowIndex, int columnIndex)
+        {
+            int flagsCount = 0;
+
+            foreach (var nearestControl in GetNearestControls(rowIndex, columnIndex))
+            {
+                if (nearestControl.BackgroundImage == flagImage)
+                {
+                    flagsCount++;
+                }
+            }
+
+            return flagsCount;
         }
 
         private void OnLeftButton(Control currentControl)
         {
-            if (currentControl.BackgroundImage != null)
+            if (currentControl.BackgroundImage != null || currentControl.Text != "")
             {
                 return;
             }
 
             var controlPosition = playerFieldPanel.GetPositionFromControl(currentControl);
-            LeftButtonClick?.Invoke(currentControl, controlPosition.Row, controlPosition.Column);
+            LeftButtonClickEvent?.Invoke(currentControl, controlPosition.Row, controlPosition.Column);
 
             playerFieldPanel.Select();
         }
@@ -96,16 +192,16 @@ namespace Minesweeper.View
 
         #endregion
 
-        #region Parametrs
+        #region Parameters
 
-        public (int rowsCount, int columnsCount, int minesCount) GetSpecialParametrs()
+        public (int rowsCount, int columnsCount, int minesCount) GetSpecialParameters()
         {
-            return parametrsForm.GetSpecialParametrs();
+            return parametersForm.GetSpecialParameters();
         }
 
         public string GetParametrName()
         {
-            return parametrsForm.GetParametrName();
+            return parametersForm.GetParametrName();
         }
 
         #endregion
@@ -121,35 +217,40 @@ namespace Minesweeper.View
             else
             {
                 control.Text = value.ToString();
+                control.ForeColor = colors[value];
+                //SetTextColor(value);
             }
 
             control.BackColor = Color.White;
             control.Font = cellsFont;
-            control.Enabled = false;
         }
 
         public void OpenCellsRange(List<int[]> cellsCoordinates, List<int> values)
         {
-            var i = 0;
-
-            foreach (var cellCoordinates in cellsCoordinates)
+            for (int i = 0; i < values.Count; i++)
             {
-                var control = playerFieldPanel.GetControlFromPosition(cellCoordinates[1], cellCoordinates[0]);
+                var control = playerFieldPanel.GetControlFromPosition(cellsCoordinates[i][1], cellsCoordinates[i][0]);
 
                 if (control.BackgroundImage == null)
                 {
+                    control.Enabled = false;
+
                     if (values[i] != 0)
                     {
                         control.Text = values[i].ToString();
+                        control.ForeColor = colors[values[i]];
+                        control.Enabled = true;
                     }
 
                     control.BackColor = Color.White;
-                    control.Enabled = false;
                     control.Font = cellsFont;
                 }
-
-                i++;
             }
+        }
+
+        private void SetTextColor(Control control, int value)
+        {
+
         }
 
         #endregion
@@ -168,7 +269,6 @@ namespace Minesweeper.View
             playerFieldPanel.RowCount = rowsCount;
             playerFieldPanel.ColumnCount = columnsCount;
 
-
             for (int i = 0; i < rowsCount; i++)
             {
                 playerFieldPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, cellSize.Height));
@@ -179,7 +279,7 @@ namespace Minesweeper.View
                     playerFieldPanel.Controls.Add(new Button()
                     {
                         Dock = DockStyle.Fill,
-                        BackColor = Color.FromArgb(72, 110, 240),
+                        BackColor = cellColor,
                         Margin = new Padding(0),
                         FlatStyle = FlatStyle.Flat,
                     });
@@ -187,16 +287,16 @@ namespace Minesweeper.View
             };
 
             SubscribeControlsToEvent();
-            SetAdditionallyItemsParametrs(minesCount);
+            SetAdditionallyItemsParameters(minesCount);
 
             Size = new Size(playerFieldPanel.Size.Width + 20, playerFieldPanel.Size.Height + 10);
         }
 
-        private void SetAdditionallyItemsParametrs(int minesCount)
+        private void SetAdditionallyItemsParameters(int minesCount)
         {
             minesLeftCountLabel.Text = minesCount.ToString();
             minesLeftCountLabel.Location = new Point(playerFieldPanel.Right - 70, playerFieldPanel.Bottom + 20);
-            minePicture.Location = new Point(minesLeftCountLabel.Location.X - 50, minesLeftCountLabel.Location.Y + 7);
+            minePicture.Location = new Point(minesLeftCountLabel.Location.X - 50, minesLeftCountLabel.Location.Y);
         }
 
         public void RefreshField()
@@ -206,9 +306,10 @@ namespace Minesweeper.View
             foreach (Control control in playerFieldPanel.Controls)
             {
                 control.Enabled = true;
-                control.BackColor = Color.FromArgb(72, 110, 240);
+                control.BackColor = cellColor;
                 control.BackgroundImage = null;
                 control.Text = null;
+                control.ForeColor = default;
             }
         }
 
@@ -230,15 +331,14 @@ namespace Minesweeper.View
 
         public void WinGame(int[,] minesCoordinates)
         {
-            ShowMines(minesCoordinates);
-            MessageBox.Show("Победа");
+            MessageBox.Show("Вы победили", "Победа", MessageBoxButtons.OK);
             playerFieldPanel.Enabled = false;
         }
 
         public void GameOver(int[,] minesCoordinates)
         {
-            MessageBox.Show("Провал");
             ShowMines(minesCoordinates);
+            MessageBox.Show("Вы проиграли", "Поражение", MessageBoxButtons.OK);
             playerFieldPanel.Enabled = false;
         }
 
@@ -249,10 +349,85 @@ namespace Minesweeper.View
             foreach (Control c in playerFieldPanel.Controls)
             {
                 c.MouseUp += OnMouseUp;
+                c.MouseDown += OnMouseDown;
             }
         }
 
-        private void OnHigeScoreTable(object sender, EventArgs e)
+        private void ResetCells(object sender, EventArgs e)
+        {
+            var control = sender as Control;
+
+            if (control == null)
+            {
+                return;
+            }
+
+            var controlPosition = playerFieldPanel.GetPositionFromControl(control);
+            int rowIndex = controlPosition.Row;
+            int columnIndex = controlPosition.Column;
+
+            foreach (var nearestControl in GetNearestControls(rowIndex, columnIndex))
+            {
+                if (nearestControl.Enabled == true && nearestControl.Text == "")
+                {
+                    nearestControl.BackColor = cellColor;
+                }
+            }
+        }
+
+        private void OnMouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Middle)
+            {
+                SelectCellsRange(sender as Control);
+            }
+        }
+
+        private void SelectCellsRange(Control control)
+        {
+            if (control == null)
+            {
+                return;
+            }
+
+            var controlPosition = playerFieldPanel.GetPositionFromControl(control);
+            int rowIndex = controlPosition.Row;
+            int columnIndex = controlPosition.Column;
+
+            foreach (var nearestControl in GetNearestControls(rowIndex, columnIndex))
+            {
+                if (nearestControl.BackgroundImage != flagImage)
+                {
+                    nearestControl.BackColor = Color.White;
+                }
+            }
+        }
+
+        private IEnumerable<Control> GetNearestControls(int rowIndex, int columnIndex)
+        {
+            int rowsCount = playerFieldPanel.RowCount;
+            int columnsCount = playerFieldPanel.ColumnCount;
+
+            for (int i = rowIndex - 1; i <= rowIndex + 1; i++)
+            {
+                if (i < 0 || rowsCount <= i)
+                {
+                    continue;
+                }
+
+                for (int j = columnIndex - 1; j <= columnIndex + 1; j++)
+                {
+                    if (j < 0 || columnsCount <= j)
+                    {
+                        continue;
+                    }
+
+                    yield return playerFieldPanel.GetControlFromPosition(j, i);
+                }
+            }
+        }
+
+        private void OnHighScoreTable(object sender, EventArgs e)
         {
             ShowScoreTableEvent?.Invoke();
         }
@@ -279,14 +454,19 @@ namespace Minesweeper.View
             playerFieldPanel.Select();
         }
 
-        public void SetParametrsNames(string[] parametrsNames)
+        public void SetParametersNames(string[] parametersNames)
         {
-            parametrsForm.SetParametrsNames(parametrsNames);
+            parametersForm.SetParametersNames(parametersNames);
         }
 
         public string GetPlayerName()
         {
-            return parametrsForm.GetPlayerName();
+            return parametersForm.GetPlayerName();
+        }
+
+        public void SetParametersBoxs((int rowsCount, int columnsCount, int minesCount) parameters)
+        {
+            parametersForm.SetParametersBoxs(parameters.rowsCount, parameters.columnsCount, parameters.minesCount);
         }
     }
 }

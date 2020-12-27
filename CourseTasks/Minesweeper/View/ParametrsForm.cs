@@ -3,20 +3,21 @@ using System.Windows.Forms;
 
 namespace Minesweeper.View
 {
-    public partial class ParametrsForm : Form
+    public partial class ParametersForm : Form
     {
-        private readonly string parametrSpecialName = "Свой";
-        public event Action SetSpecialParametrs;
-        public event Action SetParametrs;
+        private readonly string parameterSpecialName = "Свой";
+        public event Action SetSpecialParameters;
+        public event Action ChangeParameter;
+        public event Action SetParameters;
 
-        public ParametrsForm()
+        public ParametersForm()
         {
             InitializeComponent();
         }
 
         private void OnApplyButton(object sender, EventArgs e)
         {
-            if (parametrsBox.Text == parametrSpecialName)
+            if (parametersBox.Text == parameterSpecialName)
             {
                 var maxMinesCount = (int)(rowsNumeric.Value * columnsNumeric.Value) - 1;
 
@@ -26,11 +27,11 @@ namespace Minesweeper.View
                     return;
                 }
 
-                SetSpecialParametrs?.Invoke();
+                SetSpecialParameters?.Invoke();
             }
             else
             {
-                SetParametrs?.Invoke();
+                SetParameters?.Invoke();
             }
 
             Close();
@@ -40,33 +41,41 @@ namespace Minesweeper.View
         {
             var parametrName = sender as ComboBox;
 
-            if (parametrName.Text == parametrSpecialName)
+            if (parametrName.Text == parameterSpecialName)
             {
                 rowsNumeric.Enabled = true;
                 columnsNumeric.Enabled = true;
                 minesNumeric.Enabled = true;
+                return;
             }
-            else
-            {
-                rowsNumeric.Enabled = false;
-                columnsNumeric.Enabled = false;
-                minesNumeric.Enabled = false;
-            }
+
+            rowsNumeric.Enabled = false;
+            columnsNumeric.Enabled = false;
+            minesNumeric.Enabled = false;
+
+            ChangeParameter?.Invoke();
         }
 
-        public void SetParametrsNames(string[] parametrsNames)
+        public void SetParametersBoxs(int rowsCount, int columnCount,int  minesCount)
         {
-            parametrsBox.Items.AddRange(parametrsNames);
-            parametrsBox.Items.Add(parametrSpecialName);
-            parametrsBox.SelectedIndex = 0;
+            rowsNumeric.Value = rowsCount;
+            columnsNumeric.Value = columnCount;
+            minesNumeric.Value = minesCount;
+        }
+
+        public void SetParametersNames(string[] parametersNames)
+        {
+            parametersBox.Items.AddRange(parametersNames);
+            parametersBox.Items.Add(parameterSpecialName);
+            parametersBox.SelectedIndex = 0;
         }
 
         public string GetParametrName()
         {
-            return parametrsBox.Text;
+            return parametersBox.Text;
         }
 
-        public (int rowsCount, int columnsCount, int minesCount) GetSpecialParametrs()
+        public (int rowsCount, int columnsCount, int minesCount) GetSpecialParameters()
         {
             return ((int)rowsNumeric.Value, (int)columnsNumeric.Value, (int)minesNumeric.Value);
         }

@@ -1,6 +1,6 @@
-﻿namespace Minesweeper.Modul.Parametrs
+﻿namespace Minesweeper.Model.Parameters
 {
-  public   interface IParametr
+    public interface IParameter
     {
         int RowsCount { get; }
 

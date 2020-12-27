@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-using Minesweeper.Modul;
-using Minesweeper.presenter;
+using Minesweeper.Model;
 using Minesweeper.View;
 
 namespace Minesweeper
@@ -14,8 +13,8 @@ namespace Minesweeper
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(true);
-            MainForm view = new MainForm(new ParametrsForm(), new HighScoreTableForm());
-            new Presenter(view, new PlayingField());
+            MainForm view = new MainForm(new ParametersForm(), new HighScoreTableForm());
+            new Presenter.Presenter(view, new PlayingField());
             Application.Run(view);
         }
     }

@@ -6,17 +6,18 @@ namespace Minesweeper.View
 {
     public interface IView
     {
-        event Action SetParametrs;
+        event Action SetParametersEvent;
         event Action LoadFormEvent;
-        event Action SetSpecialParametrs;
+        event Action SetSpecialParametersEvent;
         event Action ShowScoreTableEvent;
+        event Action ChangeParameterEvent;
         event Action<Control> SetFlagEvent;
         event Action<Control> RemoveFlagEvent;
-        event Action<Control, int, int> LeftButtonClick;
+        event Action<Control, int, int> LeftButtonClickEvent;
 
         string GetParametrName();
 
-        (int rowsCount, int columnsCount, int minesCount) GetSpecialParametrs();
+        (int rowsCount, int columnsCount, int minesCount) GetSpecialParameters();
 
         void GameOver(int[,] minesCoordinates);
 
@@ -28,6 +29,8 @@ namespace Minesweeper.View
 
         void PrintPlayingField(int rowsCount, int columnsCount, int minesCount);
 
+        void SetParametersBoxs((int rowsCount, int columnsCount, int minesCount) parameters);
+
         void WinGame(int[,] minesCoordinates);
 
         void OpenCellsRange(List<int[]> cellsCoordinates, List<int> values);
@@ -36,7 +39,7 @@ namespace Minesweeper.View
 
         void ShowScoreTable(Dictionary<string, int> scoreTable);
 
-        void SetParametrsNames(string[] parametrsNames);
+        void SetParametersNames(string[] parametersNames);
 
         string GetPlayerName();
     }
