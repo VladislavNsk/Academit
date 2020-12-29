@@ -26,6 +26,8 @@ namespace Minesweeper.View
             highScoreTableDataGrid = new DataGridView();
             nickName = new DataGridViewTextBoxColumn();
             Score = new DataGridViewTextBoxColumn();
+            panel = new TableLayoutPanel();
+            okButton = new Button();
 
             ((System.ComponentModel.ISupportInitialize)(highScoreTableDataGrid)).BeginInit();
             SuspendLayout();
@@ -53,15 +55,22 @@ namespace Minesweeper.View
             Score.DefaultCellStyle = dataGridViewCellStyle2;
             Score.HeaderText = "Очки";
 
+            okButton.Text = "OK";
+            okButton.Anchor = AnchorStyles.None;
+
+            panel.Controls.Add(okButton,0,1);
+            panel.Controls.Add(highScoreTableDataGrid,0,0);
+            panel.Dock = DockStyle.Fill;
+
             Shown += HighScoreTableForm_ShowForm;
 
             AutoScaleDimensions = new SizeF(6F, 13F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(440, 281);
-            Controls.Add(highScoreTableDataGrid);
+            Controls.Add(panel);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
-            MinimumSize = new Size(456, 315);
+            MinimumSize = new Size(462, 370);
             Size = new Size(456, 315);
             Text = "Таблица рекордов";
             ((System.ComponentModel.ISupportInitialize)(highScoreTableDataGrid)).EndInit();
@@ -72,5 +81,7 @@ namespace Minesweeper.View
         private DataGridView highScoreTableDataGrid;
         private DataGridViewTextBoxColumn nickName;
         private DataGridViewTextBoxColumn Score;
+        private TableLayoutPanel panel;
+        private Button okButton;
     }
 }

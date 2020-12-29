@@ -1,8 +1,8 @@
 ﻿using Minesweeper.Model;
 using Minesweeper.View;
 
-using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace Minesweeper.Presenter
 {
@@ -17,13 +17,13 @@ namespace Minesweeper.Presenter
             this.field = field;
 
             view.SetSpecialParametersEvent += OnSetSpecialParameters;
-            view.ShowScoreTableEvent += OnShowScoreTable;
+            view.ChangeParameterEvent += OnChangeParameterEvent;
             view.LeftButtonClickEvent += OnLeftButtonClick;
-            view.RemoveFlagEvent += OnRemoveFlag;
+            view.ShowScoreTableEvent += OnShowScoreTable;
             view.SetParametersEvent += OnSetParameters;
+            view.RemoveFlagEvent += OnRemoveFlag;
             view.LoadFormEvent += OnLoadForm;
             view.SetFlagEvent += OnSetFlag;
-            view.ChangeParameterEvent += OnChangeParameterEvent;
 
             field.ChangeFlagsCountAction += OnChangeFlagsCount;
             field.OpenCellsRangeEvent += OnOpenCellsRange;

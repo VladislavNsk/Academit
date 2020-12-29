@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace Minesweeper.View
 {
@@ -33,18 +32,6 @@ namespace Minesweeper.View
             [7] = Color.Brown,
             [8] = Color.Black
         };
-
-        private enum Colors
-        {
-            Blue = 0,
-            Green = 1,
-            Red = 2,
-            MediumPurple = 3,
-            Purple = 4,
-
-            Black = 7
-        }
-
 
         public MainForm(ParametersForm parametersForm, HighScoreTableForm highScoreTableForm)
         {
@@ -218,7 +205,6 @@ namespace Minesweeper.View
             {
                 control.Text = value.ToString();
                 control.ForeColor = colors[value];
-                //SetTextColor(value);
             }
 
             control.BackColor = Color.White;
@@ -246,11 +232,6 @@ namespace Minesweeper.View
                     control.Font = cellsFont;
                 }
             }
-        }
-
-        private void SetTextColor(Control control, int value)
-        {
-
         }
 
         #endregion
