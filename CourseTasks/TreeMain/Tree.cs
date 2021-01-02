@@ -178,17 +178,22 @@ namespace TreeMain
         {
             var parentNode = GetParentNode(data);
 
-            if (parentNode == null && root != null)
+            if (parentNode == null)
             {
-                if (CompareData(root.Data, data) != 0)
+                if (root != null)
                 {
-                    return false;
+                    if (CompareData(root.Data, data) != 0)
+                    {
+                        return false;
+                    }
+
+                    RemoveRoot();
+                    modCount++;
+                    Count--;
+                    return true;
                 }
 
-                RemoveRoot();
-                modCount++;
-                Count--;
-                return true;
+                return false;
             }
 
             var treeNode = parentNode.LeftChild;
@@ -297,15 +302,15 @@ namespace TreeMain
             }
 
             var leftParentNode = GetLeftParentNode(root.RightChild);
+            var leftNode = leftParentNode.LeftChild;
 
-            if (leftParentNode == root.RightChild)
+            if (leftNode == null)
             {
                 leftParentNode.LeftChild = root.LeftChild;
                 root = leftParentNode;
                 return;
             }
 
-            var leftNode = leftParentNode.LeftChild;
             leftParentNode.LeftChild = leftNode.RightChild;
             leftNode.LeftChild = root.LeftChild;
             leftNode.RightChild = root.RightChild;
@@ -423,10 +428,7 @@ namespace TreeMain
 
         public IEnumerator<T> GetEnumerator()
         {
-            foreach (var treeNodeData in VisitInWidth())
-            {
-                yield return treeNodeData;
-            }
+            return (IEnumerator<T>)VisitInWidth();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

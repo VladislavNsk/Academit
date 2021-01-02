@@ -6,7 +6,7 @@ namespace TreeMain
     {
         public static void Main()
         {
-            var tree = new Tree<string>("Main") { "Color", "Game", null, "Food", null, "Mouse" };
+            var tree = new Tree<string>() { "Color", "Game", null, "Food", null, "Mouse" };
 
             tree.Remove("Main");
 
