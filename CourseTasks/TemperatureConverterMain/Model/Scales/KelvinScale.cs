@@ -8,7 +8,7 @@
 
         public double GetDefaultValue()
         {
-            return Degrees - 273.15;
+            return Degrees  - 273.15;
         }
 
         public double GetValueAboutOtherScale(IScale otherScale)

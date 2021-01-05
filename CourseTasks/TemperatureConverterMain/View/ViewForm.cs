@@ -44,8 +44,8 @@ namespace TemperatureConverterMain
             tableLayoutPanel.Controls.Add(resultScaleLabel, 2, 1);
             tableLayoutPanel.Controls.Add(sourceScaleLabel, 0, 1);
             tableLayoutPanel.Controls.Add(sourceDegreesTb, 0, 4);
-            tableLayoutPanel.Controls.Add(sourceScaleDegreesCb, 2, 2);
-            tableLayoutPanel.Controls.Add(resultScaleDegreesCb, 0, 2);
+            tableLayoutPanel.Controls.Add(resultScaleDegreesCb, 2, 2);
+            tableLayoutPanel.Controls.Add(sourceScaleDegreesCb, 0, 2);
             tableLayoutPanel.Controls.Add(resultDegreesTb, 2, 4);
             tableLayoutPanel.Controls.Add(convertButton, 1, 5);
             tableLayoutPanel.Controls.Add(resultDegreesLabel, 2, 3);
@@ -56,23 +56,23 @@ namespace TemperatureConverterMain
 
         public void AddScale(string scaleName)
         {
-            sourceScaleDegreesCb.Items.Add(scaleName);
             resultScaleDegreesCb.Items.Add(scaleName);
+            sourceScaleDegreesCb.Items.Add(scaleName);
         }
 
         public void RemoveScale(string scaleName)
         {
-            sourceScaleDegreesCb.Items.Remove(scaleName);
             resultScaleDegreesCb.Items.Remove(scaleName);
+            sourceScaleDegreesCb.Items.Remove(scaleName);
         }
 
         public void AddScaleRange(string[] scalesNames)
         {
-            sourceScaleDegreesCb.Items.AddRange(scalesNames);
             resultScaleDegreesCb.Items.AddRange(scalesNames);
+            sourceScaleDegreesCb.Items.AddRange(scalesNames);
 
-            sourceScaleDegreesCb.SelectedIndex = 0;
             resultScaleDegreesCb.SelectedIndex = 0;
+            sourceScaleDegreesCb.SelectedIndex = 0;
         }
 
         private void ViewForm_Load(object sender, EventArgs e)

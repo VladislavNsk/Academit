@@ -31,8 +31,8 @@ namespace TemperatureConverterMain
             resultDegreesTb = new TextBox();
             sourceDegreesTb = new TextBox();
 
-            resultScaleDegreesCb = new ComboBox();
             sourceScaleDegreesCb = new ComboBox();
+            resultScaleDegreesCb = new ComboBox();
 
             tableLayoutPanel = new TableLayoutPanel();
             eventLog1 = new EventLog();
@@ -70,14 +70,14 @@ namespace TemperatureConverterMain
             convertButton.Click += ConvertButton_Click;
             convertButton.Anchor = AnchorStyles.None;
 
-            sourceScaleDegreesCb.DropDownStyle = ComboBoxStyle.DropDownList;
-            sourceScaleDegreesCb.Size = new Size(109, 21);
-            sourceScaleDegreesCb.Anchor = AnchorStyles.Top;
-
             resultScaleDegreesCb.DropDownStyle = ComboBoxStyle.DropDownList;
-            resultScaleDegreesCb.FormattingEnabled = true;
             resultScaleDegreesCb.Size = new Size(110, 21);
             resultScaleDegreesCb.Anchor = AnchorStyles.Top;
+
+            sourceScaleDegreesCb.DropDownStyle = ComboBoxStyle.DropDownList;
+            sourceScaleDegreesCb.FormattingEnabled = true;
+            sourceScaleDegreesCb.Size = new Size(110, 21);
+            sourceScaleDegreesCb.Anchor = AnchorStyles.Top;
 
             sourceScaleLabel.AutoSize = true;
             sourceScaleLabel.Text = "Из какой шкалы конвертировать:";
@@ -118,8 +118,8 @@ namespace TemperatureConverterMain
         private TextBox resultDegreesTb;
         private Label resultDegreesLabel;
         private Button convertButton;
-        private ComboBox resultScaleDegreesCb;
         private ComboBox sourceScaleDegreesCb;
+        private ComboBox resultScaleDegreesCb;
         private Label sourceScaleLabel;
         private Label resultScaleLabel;
         private TableLayoutPanel tableLayoutPanel;
