@@ -82,8 +82,16 @@ namespace TemperatureConverterMain
 
         private void ConvertButton_Click(object sender, EventArgs e)
         {
+            if (SourceDegrees.Length == 0)
+            {
+                MessageBox.Show($"Введите значение исходных градусов.", "Ошибка заполнения",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             if (!double.TryParse(SourceDegrees, out double degrees))
             {
+
                 MessageBox.Show($"Значение исходных градусов ({SourceDegrees}) должно быть числом.", "Ошибка заполнения",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
