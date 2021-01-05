@@ -100,10 +100,10 @@
     <Compile Include="Model\FieldParameters.cs" />
     <Compile Include="Model\HighScoreTable.cs" />
     <Compile Include="Model\PlayingField.cs" />
-    <Compile Include="Model\Parameters\BeginnerParametr.cs" />
+    <Compile Include="Model\Parameters\BeginnerParameter.cs" />
     <Compile Include="Model\Parameters\StandardParameter.cs" />
     <Compile Include="Model\Parameters\IGameDifficultyParameter.cs" />
-    <Compile Include="Model\Parameters\ProfessionalParametr.cs" />
+    <Compile Include="Model\Parameters\ProfessionalParameter.cs" />
     <Compile Include="View\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

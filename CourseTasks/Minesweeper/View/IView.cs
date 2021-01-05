@@ -7,15 +7,17 @@ namespace Minesweeper.View
     public interface IView
     {
         event Action SetParametersEvent;
+
         event Action LoadFormEvent;
-        event Action SetSpecialParametersEvent;
-        event Action ShowScoreTableEvent;
         event Action ChangeParameterEvent;
+        event Action SetSpecialParametersEvent;
+        event Action<string> AddNewRecord;
+        event Action<string> SetHighScoreTableEvent;
         event Action<Control> SetFlagEvent;
         event Action<Control> RemoveFlagEvent;
         event Action<Control, int, int> LeftButtonClickEvent;
 
-        string GetParametrName();
+        string GetParameterName();
 
         (int rowsCount, int columnsCount, int minesCount) GetSpecialParameters();
 
@@ -37,10 +39,12 @@ namespace Minesweeper.View
 
         void ChangeFlagsCount(int flagsCount);
 
-        void ShowScoreTable(Dictionary<string, int> scoreTable);
+        void SetHighScoreTable(Dictionary<string, int> scoreTable);
 
         void SetParametersNames(string[] parametersNames);
 
-        string GetPlayerName();
+        void ShowAddNewRecordDialog();
+
+        void SetGameTime(int secondsCount);
     }
 }

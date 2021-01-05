@@ -10,14 +10,16 @@ namespace Minesweeper.View
         public event Action SetParametersEvent;
         public event Action LoadFormEvent;
         public event Action SetSpecialParametersEvent;
-        public event Action ShowScoreTableEvent;
         public event Action<Control> SetFlagEvent;
         public event Action<Control> RemoveFlagEvent;
         public event Action ChangeParameterEvent;
         public event Action<Control, int, int> LeftButtonClickEvent;
+        public event Action<string> AddNewRecord;
+        public event Action<string> SetHighScoreTableEvent;
 
         private readonly ParametersForm parametersForm;
         private readonly HighScoreTableForm highScoreTableForm;
+        private readonly NewRecordForm newRecordForm;
 
         private readonly Color cellColor = Color.FromArgb(72, 110, 240);
         private readonly Dictionary<int, Color> colors = new Dictionary<int, Color>
@@ -33,10 +35,11 @@ namespace Minesweeper.View
             [8] = Color.Black
         };
 
-        public MainForm(ParametersForm parametersForm, HighScoreTableForm highScoreTableForm)
+        public MainForm(ParametersForm parametersForm, HighScoreTableForm highScoreTableForm, NewRecordForm newRecordForm)
         {
             this.parametersForm = parametersForm;
             this.highScoreTableForm = highScoreTableForm;
+            this.newRecordForm = newRecordForm;
 
             InitializeComponent();
         }
@@ -46,6 +49,11 @@ namespace Minesweeper.View
         private void OnSetSpecialParameters()
         {
             SetSpecialParametersEvent?.Invoke();
+        }
+
+        private void OnAddNewRecord(string playerName)
+        {
+            AddNewRecord?.Invoke(playerName);
         }
 
         private void OnChangeParameter()
@@ -186,9 +194,9 @@ namespace Minesweeper.View
             return parametersForm.GetSpecialParameters();
         }
 
-        public string GetParametrName()
+        public string GetParameterName()
         {
-            return parametersForm.GetParametrName();
+            return parametersForm.GetParameterName();
         }
 
         #endregion
@@ -197,7 +205,7 @@ namespace Minesweeper.View
 
         public void OpenCell(Control control, int value)
         {
-            if (value == 0)
+            if (value == 0 || value == -1)
             {
                 control.Text = null;
             }
@@ -262,13 +270,14 @@ namespace Minesweeper.View
                         Dock = DockStyle.Fill,
                         BackColor = cellColor,
                         Margin = new Padding(0),
-                        FlatStyle = FlatStyle.Flat,
+                        FlatStyle = FlatStyle.Flat
                     });
                 };
             };
 
             SubscribeControlsToEvent();
             SetAdditionallyItemsParameters(minesCount);
+            playerFieldPanel.Select();
 
             Size = new Size(playerFieldPanel.Size.Width + 20, playerFieldPanel.Size.Height + 10);
         }
@@ -277,7 +286,12 @@ namespace Minesweeper.View
         {
             minesLeftCountLabel.Text = minesCount.ToString();
             minesLeftCountLabel.Location = new Point(playerFieldPanel.Right - 70, playerFieldPanel.Bottom + 20);
+
             minePicture.Location = new Point(minesLeftCountLabel.Location.X - 50, minesLeftCountLabel.Location.Y);
+            timePicture.Location = new Point(playerFieldPanel.Left, playerFieldPanel.Bottom + 20);
+
+            gameTime.Location = new Point(timePicture.Location.X + 60, playerFieldPanel.Bottom + 20);
+            gameTime.Text = "0";
         }
 
         public void RefreshField()
@@ -292,6 +306,8 @@ namespace Minesweeper.View
                 control.Text = null;
                 control.ForeColor = default;
             }
+
+            playerFieldPanel.Select();
         }
 
         private void ShowMines(int[,] minesCoordinates)
@@ -312,6 +328,7 @@ namespace Minesweeper.View
 
         public void WinGame(int[,] minesCoordinates)
         {
+            ShowMines(minesCoordinates);
             MessageBox.Show("Вы победили", "Победа", MessageBoxButtons.OK);
             playerFieldPanel.Enabled = false;
         }
@@ -410,12 +427,6 @@ namespace Minesweeper.View
 
         private void OnHighScoreTable(object sender, EventArgs e)
         {
-            ShowScoreTableEvent?.Invoke();
-        }
-
-        public void ShowScoreTable(Dictionary<string, int> scoreTable)
-        {
-            highScoreTableForm.SetValues(scoreTable);
             highScoreTableForm.ShowDialog();
         }
 
@@ -438,16 +449,32 @@ namespace Minesweeper.View
         public void SetParametersNames(string[] parametersNames)
         {
             parametersForm.SetParametersNames(parametersNames);
+            highScoreTableForm.SetParametersNames(parametersNames);
         }
 
-        public string GetPlayerName()
+        public void ShowAddNewRecordDialog()
         {
-            return parametersForm.GetPlayerName();
+            newRecordForm.ShowDialog();
         }
 
         public void SetParametersBoxs((int rowsCount, int columnsCount, int minesCount) parameters)
         {
             parametersForm.SetParametersBoxs(parameters.rowsCount, parameters.columnsCount, parameters.minesCount);
+        }
+
+        public void SetGameTime(int secondsCount)
+        {
+            gameTime.Text = secondsCount.ToString();
+        }
+
+        private void OnFillHighScoreTable(string parameterName)
+        {
+            SetHighScoreTableEvent?.Invoke(parameterName);
+        }
+
+        public void SetHighScoreTable(Dictionary<string, int> scoreTable)
+        {
+            highScoreTableForm.SetValues(scoreTable);
         }
     }
 }
