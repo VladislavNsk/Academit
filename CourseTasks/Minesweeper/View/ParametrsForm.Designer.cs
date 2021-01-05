@@ -22,7 +22,6 @@ namespace Minesweeper.View
 
         private void InitializeComponent()
         {
-            authorizationPanel = new TableLayoutPanel();
             parametersNamePanel = new TableLayoutPanel();
             parametersSetPanel = new TableLayoutPanel();
             parametersPanel = new TableLayoutPanel();
@@ -35,18 +34,15 @@ namespace Minesweeper.View
             minesCountLabel = new Label();
             parametersLabel = new Label();
             rowsCountLabel = new Label();
-            nickNameLabel = new Label();
 
             parametersBox = new ComboBox();
             applyButton = new Button();
-            nameBox = new TextBox();
 
             parametersPanel.SuspendLayout();
             parametersSetPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(rowsNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(columnsNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(minesNumeric)).BeginInit();
-            authorizationPanel.SuspendLayout();
             parametersNamePanel.SuspendLayout();
             SuspendLayout();
 
@@ -58,12 +54,11 @@ namespace Minesweeper.View
             parametersPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33334F));
             parametersPanel.Controls.Add(applyButton, 1, 3);
             parametersPanel.Controls.Add(parametersSetPanel, 1, 1);
-            parametersPanel.Controls.Add(authorizationPanel, 1, 2);
             parametersPanel.Controls.Add(parametersNamePanel, 1, 0);
             parametersPanel.Dock = DockStyle.Fill;
             parametersPanel.Location = new Point(0, 0);
             parametersPanel.Margin = new Padding(0);
-            parametersPanel.RowCount = 4;
+            parametersPanel.RowCount = 3;
             parametersPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 22.37141F));
             parametersPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 40));
             parametersPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 22.37142F));
@@ -129,28 +124,6 @@ namespace Minesweeper.View
             parametersBox.Size = new Size(121, 21);
             parametersBox.SelectionChangeCommitted += OnSelectionChangeCommitted;
 
-            authorizationPanel.ColumnCount = 1;
-            authorizationPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            authorizationPanel.Controls.Add(nickNameLabel, 0, 0);
-            authorizationPanel.Controls.Add(nameBox, 0, 1);
-            authorizationPanel.Location = new Point(138, 211);
-            authorizationPanel.RowCount = 2;
-            authorizationPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            authorizationPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            authorizationPanel.Size = new Size(126, 74);
-            authorizationPanel.Dock = DockStyle.Fill;
-
-            nickNameLabel.Anchor = AnchorStyles.None;
-            nickNameLabel.AutoSize = true;
-            nickNameLabel.Location = new Point(15, 12);
-            nickNameLabel.Size = new Size(96, 13);
-            nickNameLabel.Text = "Введите никнейм";
-
-            nameBox.Location = new Point(13, 40);
-            nameBox.MaxLength = 20;
-            nameBox.Size = new Size(100, 20);
-            nameBox.Anchor = AnchorStyles.None;
-
             parametersLabel.Anchor = AnchorStyles.Bottom;
             parametersLabel.AutoSize = true;
             parametersLabel.Location = new Point(14, 41);
@@ -207,8 +180,6 @@ namespace Minesweeper.View
             ((ISupportInitialize)(rowsNumeric)).EndInit();
             ((ISupportInitialize)(columnsNumeric)).EndInit();
             ((ISupportInitialize)(minesNumeric)).EndInit();
-            authorizationPanel.ResumeLayout(false);
-            authorizationPanel.PerformLayout();
             parametersNamePanel.ResumeLayout(false);
             parametersNamePanel.PerformLayout();
             ResumeLayout(false);
@@ -216,7 +187,6 @@ namespace Minesweeper.View
 
         #endregion
 
-        private TableLayoutPanel authorizationPanel;
         private TableLayoutPanel parametersNamePanel;
         private TableLayoutPanel parametersSetPanel;
         private TableLayoutPanel parametersPanel;
@@ -229,10 +199,8 @@ namespace Minesweeper.View
         private Label minesCountLabel;
         private Label parametersLabel;
         private Label rowsCountLabel;
-        private Label nickNameLabel;
 
         private ComboBox parametersBox;
         private Button applyButton;
-        private TextBox nameBox;
     }
 }

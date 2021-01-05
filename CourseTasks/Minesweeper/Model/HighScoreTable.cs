@@ -1,79 +1,74 @@
-﻿using Minesweeper.modul.DateBase;
-
-using System;
+﻿using System;
+using System.Linq;
+using System.Timers;
 using System.Collections.Generic;
+
+using Minesweeper.Model.DateBase;
 
 namespace Minesweeper.Model
 {
     public class HighScoreTable
     {
-        public event Action Win;
+        public event Action<int> ChangeTimerValue;
+        public event Action AddNewRecord;
+
         private readonly DataBase dataBase;
-        private string playerName;
-        private int currentScore;
+        private readonly Timer timer;
+
+        private int secondsCount;
+        private string currentParameterName;
 
         public HighScoreTable(DataBase dataBase)
         {
             this.dataBase = dataBase;
+            timer = new Timer();
+            timer.Elapsed += OnElapsed;
         }
 
-        public int Score
+        public Dictionary<string, int> GetScoreTable(string parameterName)
         {
-            get
+            return dataBase.GetScoreTable(parameterName);
+        }
+
+        public void StartTimer()
+        {
+            secondsCount = 0;
+            timer.Interval = 1000;
+            timer.Start();
+        }
+
+        private void OnElapsed(object sender, ElapsedEventArgs e)
+        {
+            if (secondsCount >= 999)
             {
-                return currentScore;
+                timer.Stop();
+                return;
             }
 
-            set
+            secondsCount++;
+            ChangeTimerValue?.Invoke(secondsCount);
+        }
+
+        public void Save(string parameterName)
+        {
+            currentParameterName = parameterName;
+            var scoreTable = dataBase.GetScoreTable(currentParameterName);
+
+            if (scoreTable.Count == 0 || scoreTable.Any(x => x.Value > secondsCount))
             {
-                if (value < 0)
-                {
-                    throw new ArgumentException($"Значение value ({value}) должно быть больше 0.", nameof(value));
-                }
-
-                currentScore = value;
-
-                if (value == TotalScore)
-                {
-                    Save(true);
-                    Win?.Invoke();
-                }
+                AddNewRecord?.Invoke();
             }
         }
 
-        public int TotalScore { get; private set; }
-
-        public void Save(bool isWin)
+        public void Add(string playerName)
         {
-            if (isWin)
-            {
-                Score += TotalScore;
-            }
-
-            dataBase.Save(Score, playerName);
+            dataBase.Add(secondsCount, currentParameterName, playerName);
         }
 
-        public void Add(string name)
+        public void StopTimer()
         {
-            playerName = name;
-
-            if (playerName.Length == 0)
-            {
-                playerName = "Безымянный";
-            }
-
-            dataBase.Add(playerName);
-        }
-
-        public Dictionary<string, int> GetScoreTable()
-        {
-            return dataBase.GetScoreTable();
-        }
-
-        public void SetMaxScore(int totalScore)
-        {
-            TotalScore = totalScore;
-            currentScore = 0;
+            timer.Stop();
+            ChangeTimerValue?.Invoke(0);
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using System.Windows.Forms;
-using System.Drawing;
+﻿using System.Drawing;
+using System.Windows.Forms;
 using System.ComponentModel;
 
 namespace Minesweeper.View
@@ -30,12 +30,15 @@ namespace Minesweeper.View
             about = new ToolStripMenuItem();
 
             playerFieldPanel = new TableLayoutPanel();
-            cellSize = new Size(25, 25);
+            button = new Button();
+            cellSize = new Size(35, 35);
             flagImage = new Bitmap(Resource1.flag, cellSize);
             mineImage = new Bitmap(Resource1.mine, cellSize);
             cellsFont = new Font("Nimes New Roman", 13);
             minesLeftCountLabel = new Label();
+            gameTime = new Label();
             minePicture = new PictureBox();
+            timePicture = new PictureBox();
 
             SuspendLayout();
 
@@ -62,6 +65,8 @@ namespace Minesweeper.View
                 MessageBox.Show(aboutText, about.Text);
             });
 
+            newRecordForm.AddNewRecord += OnAddNewRecord;
+
             menu.Items.Add(gameMenuItem);
             menu.Items.Add(higeScoreTable);
             menu.Items.Add(about);
@@ -74,7 +79,18 @@ namespace Minesweeper.View
             minesLeftCountLabel.Font = new Font(Font.FontFamily.Name, 30, FontStyle.Regular);
             minesLeftCountLabel.Enabled = false;
 
-            minePicture.Image = new Bitmap(Resource1.mine, new Size(40, 40));
+            gameTime.Size = new Size(85, 40);
+            gameTime.BackColor = Color.White;
+            gameTime.BorderStyle = BorderStyle.FixedSingle;
+            gameTime.TextAlign = ContentAlignment.MiddleCenter;
+            gameTime.Font = new Font(Font.FontFamily.Name, 30, FontStyle.Regular);
+            gameTime.Enabled = false;
+
+            minePicture.Image = new Bitmap(Resource1.mine, new Size(40, 45));
+            minePicture.Size = new Size(40, 45);
+
+            timePicture.Image = new Bitmap(Resource1.time, new Size(40, 40));
+            timePicture.Size = new Size(40, 40);
 
             playerFieldPanel.AutoSize = true;
             playerFieldPanel.Anchor = AnchorStyles.Left | AnchorStyles.Top;
@@ -84,16 +100,25 @@ namespace Minesweeper.View
             parametersForm.ChangeParameter += OnChangeParameter; ;
             parametersForm.SetSpecialParameters += OnSetSpecialParameters;
 
+            highScoreTableForm.FillHighScoreTable += OnFillHighScoreTable;
+
+            button.Dock = DockStyle.Fill;
+            button.BackColor = cellColor;
+            button.Margin = new Padding(0);
+            button.FlatStyle = FlatStyle.Flat;
+
             DoubleBuffered = true;
             Load += OnViewForm;
             Controls.Add(menu);
             Controls.Add(playerFieldPanel);
             Controls.Add(minesLeftCountLabel);
             Controls.Add(minePicture);
+            Controls.Add(timePicture);
+            Controls.Add(gameTime);
             BackColor = SystemColors.ActiveCaption;
             Text = "Сапер";
             AutoSize = true;
-            Icon = new Icon(@"..\..\Resources\mine.ico", 15, 15);
+            Icon = Resource1.mineIcon;
             MaximizeBox = false;
             FormBorderStyle = FormBorderStyle.FixedDialog;
 
@@ -112,7 +137,10 @@ namespace Minesweeper.View
         private ToolStripMenuItem about;
 
         private Label minesLeftCountLabel;
+        private Label gameTime;
+        private Button button;
         private PictureBox minePicture;
+        private PictureBox timePicture;
         private Bitmap mineImage;
         private Bitmap flagImage;
         private Size cellSize;

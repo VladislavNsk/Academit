@@ -13,7 +13,7 @@ namespace Minesweeper
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(true);
-            MainForm view = new MainForm(new ParametersForm(), new HighScoreTableForm());
+            MainForm view = new MainForm(new ParametersForm(), new HighScoreTableForm(), new NewRecordForm());
             new Presenter.Presenter(view, new PlayingField());
             Application.Run(view);
         }

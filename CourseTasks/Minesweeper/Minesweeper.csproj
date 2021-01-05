@@ -70,7 +70,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\DateBase\GameResult.cs" />
+    <Compile Include="Model\DateBase\GameDifficultyParameter.cs" />
+    <Compile Include="Model\DateBase\GameTime.cs" />
+    <Compile Include="Model\DateBase\Player.cs" />
+    <Compile Include="Resource1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource1.resx</DependentUpon>
+    </Compile>
+    <Compile Include="View\NewRecordForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\NewRecordForm.Designer.cs">
+      <DependentUpon>NewRecordForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\HighScoreTableForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -88,14 +101,9 @@
     <Compile Include="Model\HighScoreTable.cs" />
     <Compile Include="Model\PlayingField.cs" />
     <Compile Include="Model\Parameters\BeginnerParametr.cs" />
-    <Compile Include="Model\Parameters\FunParametr.cs" />
-    <Compile Include="Model\Parameters\IParametr.cs" />
+    <Compile Include="Model\Parameters\StandardParameter.cs" />
+    <Compile Include="Model\Parameters\IGameDifficultyParameter.cs" />
     <Compile Include="Model\Parameters\ProfessionalParametr.cs" />
-    <Compile Include="Resource1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resource1.resx</DependentUpon>
-    </Compile>
     <Compile Include="View\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -109,11 +117,15 @@
     <EmbeddedResource Include="View\HighScoreTableForm.resx">
       <DependentUpon>HighScoreTableForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\NewRecordForm.resx">
+      <DependentUpon>NewRecordForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\ParametrsForm.resx">
       <DependentUpon>ParametrsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resource1.resx">
       <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
       <LastGenOutput>Resource1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="View\MainForm.resx">
@@ -127,6 +139,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -145,6 +158,12 @@
   <ItemGroup>
     <None Include="Resources\flag.png" />
     <None Include="Resources\mine.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\time.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mineIcon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

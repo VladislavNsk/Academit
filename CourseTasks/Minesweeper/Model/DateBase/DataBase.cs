@@ -3,72 +3,133 @@ using System.Data.Linq;
 using System.Data.SQLite;
 using System.Collections.Generic;
 
-using Minesweeper.Model.DateBase;
-
-namespace Minesweeper.modul.DateBase
+namespace Minesweeper.Model.DateBase
 {
     public class DataBase
     {
         private static readonly SQLiteConnection connection = new SQLiteConnection("Data Source=MyDb.sqlite; Version = 3");
         private readonly DataContext context = new DataContext(connection);
 
-        public DataBase()
+        public DataBase(FieldParameters fieldParameters)
         {
             if (!context.DatabaseExists())
             {
-                CreateTable();
+                CreateTables();
+                FillParametersTable(fieldParameters);
             }
         }
 
-        private void CreateTable()
+        private void CreateTables()
         {
-            context.ExecuteCommand("CREATE TABLE IF NOT EXISTS 'scoreTables'(" +
-                                   "Name TEXT NOT NULL PRIMARY KEY," +
-                                   "Score INTEGER NOT NULL" +
+            context.ExecuteCommand("CREATE TABLE IF NOT EXISTS 'players'(" +
+                                   "Id INTEGER NOT NULL PRIMARY KEY," +
+                                   "Name TEXT NOT NULL" +
+                                   ")");
+
+            context.ExecuteCommand("CREATE TABLE IF NOT EXISTS 'gamesTime'(" +
+                                   "Id INTEGER NOT NULL PRIMARY KEY," +
+                                   "SecondsCount INTEGER NOT NULL," +
+                                   "PlayerNameId INTEGER NOT NULL," +
+                                   "ParameterNameId INTEGER NOT NULL," +
+                                   "FOREIGN KEY(PlayerNameId) REFERENCES players(Id)," +
+                                   "FOREIGN KEY(ParameterNameId) REFERENCES gameDifficultyParameter(Id)" +
+                                   ")");
+
+            context.ExecuteCommand("CREATE TABLE IF NOT EXISTS 'gameDifficultyParameters'(" +
+                                   "Id INTEGER NOT NULL PRIMARY KEY," +
+                                   "ParameterName TEXT NOT NULL" +
                                    ")");
         }
 
-        public void Add(string playerName)
+        private void FillParametersTable(FieldParameters fieldParameters)
         {
-            var table = new GameResult
-            {
-                Name = playerName
-            };
+            var gameDifficultyParameter = context.GetTable<GameDifficultyParameter>();
 
-            var tableFromDb = context.GetTable<GameResult>();
-
-            if (!tableFromDb.Any(x => x.Name == playerName))
+            if (gameDifficultyParameter.Count() != 0)
             {
-                tableFromDb.InsertOnSubmit(table);
-                context.SubmitChanges();
+                return;
             }
-        }
 
-        public void Save(int score, string playerName)
-        {
-            var tableFromDb = context.GetTable<GameResult>();
-            var sampleResult = tableFromDb.Where(table => table.Name == playerName);
+            var parametersNames = fieldParameters.GetParametersNames();
+            int i = 1;
 
-            foreach (var s in sampleResult)
+            foreach (var parameterName in parametersNames)
             {
-                s.Score += score;
+                gameDifficultyParameter.InsertOnSubmit(new GameDifficultyParameter
+                {
+                    Id = i,
+                    ParameterName = parameterName
+                });
+
+                i++;
             }
 
             context.SubmitChanges();
         }
 
-        public Dictionary<string, int> GetScoreTable()
+        private void AddNewResult(int playerId, int secondsCount, string parameterName)
         {
-            var tableFromDb = context.GetTable<GameResult>();
-            var scoreTable = new Dictionary<string, int>();
-            var sampleResult = tableFromDb.OrderByDescending(x => x.Score);
+            var playerResultFromDb = context.GetTable<GameTime>();
+            var parametersFromDb = context.GetTable<GameDifficultyParameter>();
 
-            foreach (var row in sampleResult)
+            var parameterId = parametersFromDb.AsEnumerable().First(x => x.ParameterName == parameterName).Id;
+            var playerResult = playerResultFromDb.AsEnumerable().FirstOrDefault(x => x.ParameterNameId == parameterId && x.PlayerNameId == playerId);
+
+            if (playerResult == null)
             {
-                scoreTable.Add(row.Name, row.Score);
+                playerResultFromDb.InsertOnSubmit(new GameTime
+                {
+                    Id = playerResultFromDb.Count() + 1,
+                    ParameterNameId = parameterId,
+                    PlayerNameId = playerId,
+                    SecondsCount = secondsCount
+                });
+
+                context.SubmitChanges();
+                return;
             }
 
-            return scoreTable;
+            if (playerResult.SecondsCount > secondsCount)
+            {
+                playerResult.SecondsCount = secondsCount;
+            }
+
+            context.SubmitChanges();
+        }
+
+        public void Add(int secondsCount, string parameterName, string playerName)
+        {
+            var playerFromDb = context.GetTable<Player>();
+            var player = playerFromDb.AsEnumerable().FirstOrDefault(x => x.Name == playerName);
+
+            if (player != null)
+            {
+                AddNewResult(player.Id, secondsCount, parameterName);
+                return;
+            }
+
+            int id = playerFromDb.Count() + 1;
+
+            playerFromDb.InsertOnSubmit(new Player
+            {
+                Name = playerName,
+                Id = id
+            });
+
+            context.SubmitChanges();
+            AddNewResult(id, secondsCount, parameterName);
+        }
+
+        public Dictionary<string, int> GetScoreTable(string parameterName)
+        {
+            var playerFromDb = context.GetTable<Player>();
+            var playerResultFromDb = context.GetTable<GameTime>();
+            var parametersFromDb = context.GetTable<GameDifficultyParameter>();
+
+            var parameterId = parametersFromDb.AsEnumerable().First(x => x.ParameterName == parameterName).Id;
+            var playersNames = playerFromDb.ToDictionary(x => x.Id, x => x.Name);
+
+            return playerResultFromDb.Where(x => x.ParameterNameId == parameterId).ToDictionary(x => playersNames[x.PlayerNameId], x => x.SecondsCount);
         }
     }
 }

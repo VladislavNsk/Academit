@@ -2,13 +2,13 @@
 
 namespace Minesweeper.Model.DateBase
 {
-    [Table(Name = "scoreTables")]
-    class GameResult
+    [Table(Name = "players")]
+    public class Player
     {
         [Column(IsPrimaryKey = true)]
-        public string Name { get; set; }
+        public int Id { get; set; }
 
         [Column]
-        public int Score { get; set; }
+        public string Name { get; set; }
     }
 }

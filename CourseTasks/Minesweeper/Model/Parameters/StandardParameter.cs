@@ -1,6 +1,6 @@
 ﻿namespace Minesweeper.Model.Parameters
 {
-    public class FunParameter : IParameter
+    public class StandardParameter : IGameDifficultyParameter
     {
         public int RowsCount => 16;
 

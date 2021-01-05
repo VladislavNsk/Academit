@@ -19,22 +19,46 @@ namespace Minesweeper.Presenter
             view.SetSpecialParametersEvent += OnSetSpecialParameters;
             view.ChangeParameterEvent += OnChangeParameterEvent;
             view.LeftButtonClickEvent += OnLeftButtonClick;
-            view.ShowScoreTableEvent += OnShowScoreTable;
+            view.SetHighScoreTableEvent += OnShowScoreTable;
             view.SetParametersEvent += OnSetParameters;
             view.RemoveFlagEvent += OnRemoveFlag;
             view.LoadFormEvent += OnLoadForm;
             view.SetFlagEvent += OnSetFlag;
+            view.AddNewRecord += OnAddNewRecord;
 
-            field.ChangeFlagsCountAction += OnChangeFlagsCount;
+            field.ChangeFlagsCountEvent += OnChangeFlagsCount;
+            field.ChangeTimerValueEvent += OnChangeTimerValue;
             field.OpenCellsRangeEvent += OnOpenCellsRange;
-            field.ChangeParameters += OnStartGame;
-            field.GameOver += OnGameOver;
-            field.Win += OnWin;
+            field.ChangeParametersEvent += OnStartGame;
+            field.GameOverEvent += OnGameOver;
+            field.WinEvent += OnWin;
+            field.GetParameterName += OnGetParameterName;
+            field.AddNewRecordEvent += OnAddNewRecordEvent;
+        }
+
+        private void OnAddNewRecord(string playerName)
+        {
+            field.AddNewRecord(playerName);
+        }
+
+        private void OnAddNewRecordEvent()
+        {
+            view.ShowAddNewRecordDialog();
+        }
+
+        private string OnGetParameterName()
+        {
+            return view.GetParameterName();
+        }
+
+        private void OnChangeTimerValue(int secondsCount)
+        {
+            view.SetGameTime(secondsCount);
         }
 
         private void OnChangeParameterEvent()
         {
-            view.SetParametersBoxs(field.GetParameters(view.GetParametrName()));
+            view.SetParametersBoxs(field.GetParameters(view.GetParameterName()));
         }
 
         private void OnRemoveFlag(Control control)
@@ -55,13 +79,11 @@ namespace Minesweeper.Presenter
         {
             var (rowsCount, columnsCount, minesCount) = view.GetSpecialParameters();
             field.SetParameters(rowsCount, columnsCount, minesCount);
-            field.AddPlayerName(view.GetPlayerName());
         }
 
         private void OnSetParameters()
         {
-            field.SetParameters(view.GetParametrName());
-            field.AddPlayerName(view.GetPlayerName());
+            field.SetParameters(view.GetParameterName());
         }
 
         #endregion
@@ -100,16 +122,15 @@ namespace Minesweeper.Presenter
             view.PrintPlayingField(field.GetRowsCount(), field.GetColumnsCount(), field.GetMinesCount());
         }
 
-        private void OnShowScoreTable()
+        private void OnShowScoreTable(string parameterName)
         {
-            view.ShowScoreTable(field.GetScoreTable());
+            view.SetHighScoreTable(field.GetScoreTable(parameterName));
         }
 
         private void OnLoadForm()
         {
             view.SetParametersNames(field.GetNamesParameters());
             view.PrintPlayingField(field.GetRowsCount(), field.GetColumnsCount(), field.GetMinesCount());
-            field.AddPlayerName(view.GetPlayerName());
         }
     }
 }

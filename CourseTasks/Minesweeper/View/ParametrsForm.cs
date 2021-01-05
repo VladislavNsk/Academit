@@ -39,9 +39,9 @@ namespace Minesweeper.View
 
         private void OnSelectionChangeCommitted(object sender, EventArgs e)
         {
-            var parametrName = sender as ComboBox;
+            var parameterName = sender as ComboBox;
 
-            if (parametrName.Text == parameterSpecialName)
+            if (parameterName.Text == parameterSpecialName)
             {
                 rowsNumeric.Enabled = true;
                 columnsNumeric.Enabled = true;
@@ -70,7 +70,7 @@ namespace Minesweeper.View
             parametersBox.SelectedIndex = 0;
         }
 
-        public string GetParametrName()
+        public string GetParameterName()
         {
             return parametersBox.Text;
         }
@@ -78,11 +78,6 @@ namespace Minesweeper.View
         public (int rowsCount, int columnsCount, int minesCount) GetSpecialParameters()
         {
             return ((int)rowsNumeric.Value, (int)columnsNumeric.Value, (int)minesNumeric.Value);
-        }
-
-        public string GetPlayerName()
-        {
-            return nameBox.Text;
         }
     }
 }

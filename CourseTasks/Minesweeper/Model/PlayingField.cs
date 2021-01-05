@@ -1,17 +1,20 @@
-﻿using Minesweeper.modul.DateBase;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Minesweeper.Model.DateBase;
 
 namespace Minesweeper.Model
 {
     public class PlayingField
     {
-        public event Action ChangeParameters;
-        public event Action<int[,]> Win;
-        public event Action<int[,]> GameOver;
-        public event Action<int> ChangeFlagsCountAction;
+        public event Action ChangeParametersEvent;
+        public event Action<int> ChangeTimerValueEvent;
+        public event Action<int> ChangeFlagsCountEvent;
+        public event Action<int[,]> WinEvent;
+        public event Action<int[,]> GameOverEvent;
         public event Action<List<int[]>, List<int>> OpenCellsRangeEvent;
+        public event Func<string> GetParameterName;
+        public event Action AddNewRecordEvent;
 
         private readonly HighScoreTable scoreTable;
         private readonly FieldParameters fieldParameters;
@@ -21,20 +24,30 @@ namespace Minesweeper.Model
 
         public PlayingField()
         {
-            dataBase = new DataBase();
             fieldParameters = new FieldParameters();
+            dataBase = new DataBase(fieldParameters);
             scoreTable = new HighScoreTable(dataBase);
 
-            scoreTable.SetMaxScore(fieldParameters.RowsCount * fieldParameters.ColumnsCount);
-
-            scoreTable.Win += ScoreTable_Win;
-            fieldParameters.SetFlagEvent += ChangeFlagsCount;
-            fieldParameters.RemoveFlagEvent += ChangeFlagsCount;
+            fieldParameters.WinEvent += OnWinEvent;
+            scoreTable.ChangeTimerValue += OnChangeTimerValue;
+            fieldParameters.SetFlagEvent += OnChangeFlagsCount;
+            fieldParameters.RemoveFlagEvent += OnChangeFlagsCount;
+            scoreTable.AddNewRecord += OnAddNewRecord;
         }
 
-        private void ChangeFlagsCount()
+        private void OnAddNewRecord()
         {
-            ChangeFlagsCountAction?.Invoke(fieldParameters.FlagsCount);
+            AddNewRecordEvent?.Invoke();
+        }
+
+        private void OnChangeTimerValue(int secondsCount)
+        {
+            ChangeTimerValueEvent?.Invoke(secondsCount);
+        }
+
+        private void OnChangeFlagsCount()
+        {
+            ChangeFlagsCountEvent?.Invoke(fieldParameters.FlagsCount);
         }
 
         private void FillPlayingField(int selectedRowIndex, int selectedColumnIndex)
@@ -81,8 +94,9 @@ namespace Minesweeper.Model
 
         public int GetCellValue(int rowIndex, int columnIndex)
         {
-            if (scoreTable.Score == fieldParameters.MinesCount - fieldParameters.FlagsCount)
+            if (fieldParameters.OpenedCells == 0)
             {
+                scoreTable.StartTimer();
                 FillPlayingField(rowIndex, columnIndex);
             }
 
@@ -90,15 +104,14 @@ namespace Minesweeper.Model
 
             if (playingField[rowIndex, columnIndex] == -1)
             {
-                GameOver?.Invoke(playingField);
-                scoreTable.Save(false);
+                scoreTable.StopTimer();
+                GameOverEvent?.Invoke(playingField);
                 return -1;
             }
 
             if (playingField[rowIndex, columnIndex] != 0)
             {
-                scoreTable.Score++;
-                CheckForWin();
+                fieldParameters.OpenedCells++;
                 return playingField[rowIndex, columnIndex];
             }
 
@@ -137,16 +150,7 @@ namespace Minesweeper.Model
             }
 
             OpenCellsRangeEvent?.Invoke(cellsCoordinates, cellsValues);
-            scoreTable.Score += cellsValues.Count;
-            CheckForWin();
-        }
-
-        private void CheckForWin()
-        {
-            if (scoreTable.TotalScore - scoreTable.Score == fieldParameters.FlagsCount)
-            {
-                Win?.Invoke(playingField);
-            }
+            fieldParameters.OpenedCells += cellsValues.Count;
         }
 
         public void SetFlag()
@@ -154,7 +158,6 @@ namespace Minesweeper.Model
             if (fieldParameters.FlagsCount != 0)
             {
                 fieldParameters.FlagsCount--;
-                scoreTable.Score++;
             }
         }
 
@@ -162,7 +165,6 @@ namespace Minesweeper.Model
         {
             if (fieldParameters.FlagsCount != fieldParameters.MinesCount)
             {
-                scoreTable.Score--;
                 fieldParameters.FlagsCount++;
             }
         }
@@ -170,27 +172,37 @@ namespace Minesweeper.Model
         public void SetParameters(int rowsCount, int columnsCount, int minesCount)
         {
             fieldParameters.SetParameters(rowsCount, columnsCount, minesCount);
-            scoreTable.SetMaxScore(rowsCount * columnsCount);
-
-            ChangeParameters?.Invoke();
+            ChangeParametersEvent?.Invoke();
+            scoreTable.StopTimer();
         }
 
-        public void SetParameters(string parametrName)
+        public void SetParameters(string parameterName)
         {
-            fieldParameters.SetParameters(parametrName);
-            scoreTable.SetMaxScore(fieldParameters.RowsCount * fieldParameters.ColumnsCount);
-
-            ChangeParameters?.Invoke();
+            fieldParameters.SetParameters(parameterName);
+            ChangeParametersEvent?.Invoke();
+            scoreTable.StopTimer();
         }
 
         public string[] GetNamesParameters()
         {
-            return fieldParameters.GetNamesParameters();
+            return fieldParameters.GetParametersNames();
         }
 
-        private void ScoreTable_Win()
+        private void OnWinEvent()
         {
-            Win?.Invoke(playingField);
+            scoreTable.StopTimer();
+            WinEvent?.Invoke(playingField);
+            var parameterName = GetParameterName?.Invoke();
+
+            if (fieldParameters.GetParametersNames().Contains(parameterName))
+            {
+                scoreTable.Save(parameterName);
+            }
+        }
+
+        public void AddNewRecord(string playerName)
+        {
+            scoreTable.Add(playerName);
         }
 
         public int GetRowsCount()
@@ -208,19 +220,14 @@ namespace Minesweeper.Model
             return fieldParameters.MinesCount;
         }
 
-        public Dictionary<string, int> GetScoreTable()
+        public Dictionary<string, int> GetScoreTable(string parameterName)
         {
-            return scoreTable.GetScoreTable();
+            return scoreTable.GetScoreTable(parameterName);
         }
 
         public bool IsCanGetFlag()
         {
             return fieldParameters.FlagsCount != 0;
-        }
-
-        public void AddPlayerName(string playerName)
-        {
-            scoreTable.Add(playerName);
         }
 
         public (int rowsCount, int columnsCount, int minesCount) GetParameters(string parameterName)

@@ -1,6 +1,6 @@
 ﻿namespace Minesweeper.Model.Parameters
 {
-    public interface IParameter
+    public interface IGameDifficultyParameter
     {
         int RowsCount { get; }
 
