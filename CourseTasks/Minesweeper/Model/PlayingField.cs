@@ -1,12 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
+
 using Minesweeper.Model.DateBase;
 
 namespace Minesweeper.Model
 {
     public class PlayingField
     {
+        public event Action AddNewRecordEvent;
         public event Action ChangeParametersEvent;
         public event Action<int> ChangeTimerValueEvent;
         public event Action<int> ChangeFlagsCountEvent;
@@ -14,7 +16,6 @@ namespace Minesweeper.Model
         public event Action<int[,]> GameOverEvent;
         public event Action<List<int[]>, List<int>> OpenCellsRangeEvent;
         public event Func<string> GetParameterName;
-        public event Action AddNewRecordEvent;
 
         private readonly HighScoreTable scoreTable;
         private readonly FieldParameters fieldParameters;

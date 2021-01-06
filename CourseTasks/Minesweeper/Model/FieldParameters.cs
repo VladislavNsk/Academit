@@ -111,7 +111,9 @@ namespace Minesweeper.Model
 
         public string[] GetParametersNames()
         {
-            return parameters.Select(x => x.Name).ToArray();
+            return parameters
+                .Select(x => x.Name)
+                .ToArray();
         }
     }
 }

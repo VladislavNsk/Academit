@@ -72,8 +72,13 @@ namespace Minesweeper.Model.DateBase
             var playerResultFromDb = context.GetTable<GameTime>();
             var parametersFromDb = context.GetTable<GameDifficultyParameter>();
 
-            var parameterId = parametersFromDb.AsEnumerable().First(x => x.ParameterName == parameterName).Id;
-            var playerResult = playerResultFromDb.AsEnumerable().FirstOrDefault(x => x.ParameterNameId == parameterId && x.PlayerNameId == playerId);
+            var parameterId = parametersFromDb
+                .AsEnumerable()
+                .First(x => x.ParameterName == parameterName).Id;
+
+            var playerResult = playerResultFromDb
+                .AsEnumerable()
+                .FirstOrDefault(x => x.ParameterNameId == parameterId && x.PlayerNameId == playerId);
 
             if (playerResult == null)
             {
@@ -100,7 +105,9 @@ namespace Minesweeper.Model.DateBase
         public void Add(int secondsCount, string parameterName, string playerName)
         {
             var playerFromDb = context.GetTable<Player>();
-            var player = playerFromDb.AsEnumerable().FirstOrDefault(x => x.Name == playerName);
+            var player = playerFromDb
+                .AsEnumerable()
+                .FirstOrDefault(x => x.Name == playerName);
 
             if (player != null)
             {
@@ -126,10 +133,15 @@ namespace Minesweeper.Model.DateBase
             var playerResultFromDb = context.GetTable<GameTime>();
             var parametersFromDb = context.GetTable<GameDifficultyParameter>();
 
-            var parameterId = parametersFromDb.AsEnumerable().First(x => x.ParameterName == parameterName).Id;
+            var parameterId = parametersFromDb
+                .AsEnumerable()
+                .First(x => x.ParameterName == parameterName).Id;
+
             var playersNames = playerFromDb.ToDictionary(x => x.Id, x => x.Name);
 
-            return playerResultFromDb.Where(x => x.ParameterNameId == parameterId).ToDictionary(x => playersNames[x.PlayerNameId], x => x.SecondsCount);
+            return playerResultFromDb
+                .Where(x => x.ParameterNameId == parameterId)
+                .ToDictionary(x => playersNames[x.PlayerNameId], x => x.SecondsCount);
         }
     }
 }
