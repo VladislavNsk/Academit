@@ -22,18 +22,20 @@ namespace Minesweeper.View
         private readonly NewRecordForm newRecordForm;
 
         private readonly Color cellColor = Color.FromArgb(72, 110, 240);
-        private readonly Dictionary<int, Color> colors = new Dictionary<int, Color>
+
+        private enum Colors
         {
-            [-1] = Color.White,
-            [1] = Color.Blue,
-            [2] = Color.Green,
-            [3] = Color.Red,
-            [4] = Color.MediumPurple,
-            [5] = Color.Purple,
-            [6] = Color.Gray,
-            [7] = Color.Brown,
-            [8] = Color.Black
-        };
+            White = -1,
+            NoColor,
+            Blue,
+            Green,
+            Red,
+            Mediu,
+            Purpl,
+            Gray,
+            Brown,
+            Black
+        }
 
         public MainForm(ParametersForm parametersForm, HighScoreTableForm highScoreTableForm, NewRecordForm newRecordForm)
         {
@@ -208,11 +210,12 @@ namespace Minesweeper.View
             if (value == 0 || value == -1)
             {
                 control.Text = null;
+                control.Enabled = false;
             }
             else
             {
                 control.Text = value.ToString();
-                control.ForeColor = colors[value];
+                control.ForeColor = Color.FromName(Enum.GetName(typeof(Colors), value));
             }
 
             control.BackColor = Color.White;
@@ -227,17 +230,7 @@ namespace Minesweeper.View
 
                 if (control.BackgroundImage == null)
                 {
-                    control.Enabled = false;
-
-                    if (values[i] != 0)
-                    {
-                        control.Text = values[i].ToString();
-                        control.ForeColor = colors[values[i]];
-                        control.Enabled = true;
-                    }
-
-                    control.BackColor = Color.White;
-                    control.Font = cellsFont;
+                    OpenCell(control, values[i]);
                 }
             }
         }
