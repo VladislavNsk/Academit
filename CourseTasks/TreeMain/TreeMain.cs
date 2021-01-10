@@ -15,14 +15,14 @@ namespace TreeMain
                 Console.WriteLine("Дерево содержит искомый элемент");
             }
 
-            tree.RecursionDepthVisit((t) => Console.Write(t + " "));
+            tree.RecursionDepthVisit(t => Console.Write(t + " "));
             Console.WriteLine();
 
             foreach (var treeItem in tree.VisitInWidth())
             {
                 if (treeItem != null)
                 {
-                    Console.Write(treeItem.ToUpper() + " ");
+                    Console.Write(treeItem.ToUpper() + " +++ ");
                 }
             }
 

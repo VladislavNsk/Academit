@@ -428,7 +428,7 @@ namespace TreeMain
 
         public IEnumerator<T> GetEnumerator()
         {
-            return (IEnumerator<T>)VisitInWidth();
+            return VisitInWidth().GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
