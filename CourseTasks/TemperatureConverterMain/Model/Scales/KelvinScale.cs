@@ -2,18 +2,16 @@
 {
     public class KelvinScale : IScale
     {
-        public double Degrees { get; set; }
-
         public string Name => "Кельвина";
 
-        public double GetDefaultValue()
+        public double GetDefaultTemperatureInScale(double degrees)
         {
-            return Degrees - 273.15;
+            return degrees - 273.15;
         }
 
-        public double GetValueAboutOtherScale(IScale otherScale)
+        public double GetTemperatureInCurrentScale(IScale otherScale, double degrees)
         {
-            return otherScale.GetDefaultValue() + 273.15;
+            return otherScale.GetDefaultTemperatureInScale(degrees) + 273.15;
         }
     }
 }

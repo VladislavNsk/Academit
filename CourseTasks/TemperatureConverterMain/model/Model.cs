@@ -6,7 +6,7 @@ namespace TemperatureConverterMain.Model
     public class Model
     {
         private readonly ScalesList scalesList;
-        public event Action Changes;
+        public event Action<double> Changes;
         public event Action<string> AddScale;
         public event Action<string> RemoveScale;
 
@@ -31,25 +31,18 @@ namespace TemperatureConverterMain.Model
             AddScale?.Invoke(scaleName);
         }
 
-        public string[] GetScalesRange()
+        public string[] GetNames()
         {
             return scalesList.GetNames();
         }
 
-        public void Convert(string sourceScale, string resultScale, int degrees)
+        public void Convert(string sourceScale, string resultScale, double degrees)
         {
             var scaleFrom = scalesList.GetScale(sourceScale);
             var scaleTo = scalesList.GetScale(resultScale);
+            var result = scaleTo.GetTemperatureInCurrentScale(scaleFrom, degrees);
 
-            scaleFrom.Degrees = degrees;
-            scaleTo.Degrees = scaleTo.GetValueAboutOtherScale(scaleFrom);
-
-            Changes?.Invoke();
-        }
-
-        public double GetResult(string resultScale)
-        {
-            return scalesList.GetScale(resultScale).Degrees;
+            Changes?.Invoke(result);
         }
     }
 }

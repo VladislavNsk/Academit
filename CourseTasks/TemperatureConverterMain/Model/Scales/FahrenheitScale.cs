@@ -2,18 +2,16 @@
 {
     public class FahrenheitScale : IScale
     {
-        public double Degrees { get; set; }
-
         public string Name => "Фаренгейта";
 
-        public double GetDefaultValue()
+        public double GetDefaultTemperatureInScale(double degrees)
         {
-            return (Degrees - 32) * 5 / 9;
+            return (degrees - 32) * 5 / 9;
         }
 
-        public double GetValueAboutOtherScale(IScale otherScale)
+        public double GetTemperatureInCurrentScale(IScale otherScale, double degrees)
         {
-            return otherScale.GetDefaultValue() * 9 / 5 + 32;
+            return otherScale.GetDefaultTemperatureInScale(degrees) * 9 / 5 + 32;
         }
     }
 }

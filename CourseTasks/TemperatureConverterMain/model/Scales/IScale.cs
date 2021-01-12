@@ -4,10 +4,8 @@
     {
         string Name { get; }
 
-        double Degrees { get; set; }
+        double GetDefaultTemperatureInScale(double degrees);
 
-        double GetDefaultValue();
-
-        double GetValueAboutOtherScale(IScale otherScale);
+        double GetTemperatureInCurrentScale(IScale otherScale, double degrees);
     }
 }

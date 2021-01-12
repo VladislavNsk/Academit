@@ -2,18 +2,16 @@
 {
     public class CelsiusScale : IScale
     {
-        public double Degrees { get; set; }
-
         public string Name => "Цельсия";
 
-        public double GetDefaultValue()
+        public double GetDefaultTemperatureInScale(double degrees)
         {
-            return Degrees;
+            return degrees;
         }
 
-        public double GetValueAboutOtherScale(IScale otherScale)
+        public double GetTemperatureInCurrentScale(IScale otherScale, double degrees)
         {
-            return otherScale.GetDefaultValue();
+            return otherScale.GetDefaultTemperatureInScale(degrees);
         }
     }
 }
