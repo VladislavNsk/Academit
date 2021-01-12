@@ -1,4 +1,5 @@
-﻿using TemperatureConverterMain.View;
+﻿using System;
+using TemperatureConverterMain.View;
 
 namespace TemperatureConverterMain.Presenter
 {
@@ -42,7 +43,7 @@ namespace TemperatureConverterMain.Presenter
 
         private void Model_res()
         {
-            view.SetResultDegrees(model.GetResult(view.ResultScale).ToString("#.##"));
+            view.SetResultDegrees(model.GetResult(Math.Round(view.ResultScale, 2)).ToString());
         }
     }
 }

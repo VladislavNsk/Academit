@@ -33,13 +33,13 @@ namespace TemperatureConverterMain.Model
 
         public string[] GetScalesRange()
         {
-            return scalesList.GetScalesRange();
+            return scalesList.GetNames();
         }
 
         public void Convert(string sourceScale, string resultScale, int degrees)
         {
-            var scaleFrom = scalesList.Get(sourceScale);
-            var scaleTo = scalesList.Get(resultScale);
+            var scaleFrom = scalesList.GetScale(sourceScale);
+            var scaleTo = scalesList.GetScale(resultScale);
 
             scaleFrom.Degrees = degrees;
             scaleTo.Degrees = scaleTo.GetValueAboutOtherScale(scaleFrom);
@@ -49,7 +49,7 @@ namespace TemperatureConverterMain.Model
 
         public double GetResult(string resultScale)
         {
-            return scalesList.Get(resultScale).Degrees;
+            return scalesList.GetScale(resultScale).Degrees;
         }
     }
 }

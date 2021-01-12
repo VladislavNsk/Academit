@@ -29,12 +29,12 @@ namespace TemperatureConverterMain.Model.Scales
             RemoveScale?.Invoke(scale.Name);
         }
 
-        public string[] GetScalesRange()
+        public string[] GetNames()
         {
             return scales.Select(scale => scale.Name).ToArray();
         }
 
-        public IScale Get(string scaleName)
+        public IScale GetScale(string scaleName)
         {
             return scales.Find(s => s.Name == scaleName);
         }
