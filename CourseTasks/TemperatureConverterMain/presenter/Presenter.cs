@@ -1,4 +1,5 @@
-﻿using TemperatureConverterMain.View;
+﻿using System;
+using TemperatureConverterMain.View;
 
 namespace TemperatureConverterMain.Presenter
 {
@@ -22,12 +23,12 @@ namespace TemperatureConverterMain.Presenter
 
         private void OnConvertButton_Click()
         {
-            model.Convert(view.SourceScale, view.ResultScale, int.Parse(view.SourceDegrees));
+            model.Convert(view.SourceScale, view.ResultScale, double.Parse(view.SourceDegrees));
         }
 
         private void View_LoadForm()
         {
-            view.AddScaleRange(model.GetScalesRange());
+            view.AddScaleRange(model.GetNames());
         }
 
         private void Model_RemoveScaleName(string scaleName)
@@ -40,9 +41,9 @@ namespace TemperatureConverterMain.Presenter
             view.AddScale(scaleName);
         }
 
-        private void Model_res()
+        private void Model_res(double degrees)
         {
-            view.SetResultDegrees(model.GetResult(view.ResultScale).ToString("#.##"));
+            view.SetResultDegrees(Math.Round(degrees, 2).ToString());
         }
     }
 }
