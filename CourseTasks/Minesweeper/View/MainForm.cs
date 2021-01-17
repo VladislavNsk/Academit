@@ -457,7 +457,7 @@ namespace Minesweeper.View
 
         public void SetGameTime(int secondsCount)
         {
-            gameTime.Text = secondsCount.ToString();
+            Invoke((Action)(() => gameTime.Text = secondsCount.ToString()));
         }
 
         private void OnFillHighScoreTable(string parameterName)
